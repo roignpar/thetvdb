@@ -87,20 +87,6 @@ pub enum SeriesStatus {
     Unknown,
 }
 
-fn deserialize_optional_date<'de, D>(deserializer: D) -> Result<Option<Date<Utc>>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    if s.is_empty() {
-        return Ok(None);
-    }
-
-    let ndate = NaiveDate::parse_from_str(&s, "%Y-%m-%d").map_err(serde::de::Error::custom)?;
-
-    Ok(Some(Utc.from_utc_date(&ndate)))
-}
-
 fn deserialize_optional_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
 where
     D: Deserializer<'de>,
@@ -154,6 +140,20 @@ where
         let t = NaiveTime::parse_from_str(&s, "%l:%M %p").map_err(serde::de::Error::custom)?;
 
         Ok(Some(t))
+    }
+}
+
+fn deserialize_optional_date<'de, D>(deserializer: D) -> Result<Option<Date<Utc>>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+    if s.is_empty() {
+        Ok(None)
+    } else {
+        let nd = NaiveDate::parse_from_str(&s, "%Y-%m-%d").map_err(serde::de::Error::custom)?;
+
+        Ok(Some(Utc.from_utc_date(&nd)))
     }
 }
 
