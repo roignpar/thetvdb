@@ -7,8 +7,8 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 
 use crate::error::{Error, Result};
-use crate::response::*;
 use crate::params::*;
+use crate::response::*;
 
 const BASE_URL: &str = "https://api.thetvdb.com/";
 
@@ -52,6 +52,23 @@ impl Client {
         api_errors(&res)?;
 
         Ok(res.json::<ResponseData<Vec<SearchSeries>>>().await?.data)
+    }
+
+    pub async fn series<I>(&self, id: I) -> Result<Series>
+    where
+        I: Into<SeriesID>,
+    {
+        let id = id.into();
+
+        let res = self
+            .prep_req(Method::GET, self.series_url(id))
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<Series>>().await?.data)
     }
 
     fn create<S>(api_key: S) -> Self
@@ -128,6 +145,10 @@ impl Client {
     fn search_url(&self) -> Url {
         self.base_url.join("/search/series").unwrap()
     }
+
+    fn series_url(&self, id: SeriesID) -> Url {
+        self.base_url.join(&format!("/series/{}", id)).unwrap()
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -162,5 +183,6 @@ mod test {
 
         client.login_url();
         client.search_url();
+        client.series_url(1);
     }
 }
