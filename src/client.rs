@@ -1,8 +1,9 @@
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
+use chrono::{DateTime, FixedOffset};
 use futures::lock::Mutex;
-use reqwest::{Client as HttpClient, Method, RequestBuilder, Response};
+use reqwest::{header::HeaderValue, Client as HttpClient, Method, RequestBuilder, Response};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -69,6 +70,29 @@ impl Client {
         api_errors(&res)?;
 
         Ok(res.json::<ResponseData<Series>>().await?.data)
+    }
+
+    pub async fn series_last_modified<I>(&self, id: I) -> Result<DateTime<FixedOffset>>
+    where
+        I: Into<SeriesID>,
+    {
+        let id = id.into();
+
+        let res = self
+            .prep_req(Method::HEAD, self.series_url(id))
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        let lm_header = res
+            .headers()
+            .get("Last-Modified")
+            .ok_or(Error::MissingLastModified)
+            .map(HeaderValue::to_str)??;
+
+        Ok(DateTime::parse_from_rfc2822(lm_header)?)
     }
 
     fn create<S>(api_key: S) -> Self

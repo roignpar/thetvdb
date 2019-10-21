@@ -23,6 +23,15 @@ pub enum Error {
 
     #[fail(display = "Not found")]
     NotFound,
+
+    #[fail(display = "Non-parsable HTTP header: {}", _0)]
+    InvalidHTTPHeader(#[cause] reqwest::header::ToStrError),
+
+    #[fail(display = "Last modified data missing")]
+    MissingLastModified,
+
+    #[fail(display = "Invalid date format: {}", _0)]
+    InvalidDateFormat(#[cause] chrono::format::ParseError),
 }
 
 impl From<JsonError> for Error {
@@ -40,5 +49,17 @@ impl From<ReqwestError> for Error {
 impl From<std::io::Error> for Error {
     fn from(e: std::io::Error) -> Self {
         Self::IO(e)
+    }
+}
+
+impl From<reqwest::header::ToStrError> for Error {
+    fn from(e: reqwest::header::ToStrError) -> Self {
+        Self::InvalidHTTPHeader(e)
+    }
+}
+
+impl From<chrono::format::ParseError> for Error {
+    fn from(e: chrono::format::ParseError) -> Self {
+        Self::InvalidDateFormat(e)
     }
 }
