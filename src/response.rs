@@ -66,6 +66,23 @@ pub struct Series {
     pub zap2it_id: Option<String>,
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Actor {
+    pub id: u32,
+    pub series_id: SeriesID,
+    pub name: String,
+    pub role: String,
+    pub sort_order: u32,
+    #[serde(deserialize_with = "deserialize_optional_string")]
+    pub image: Option<String>,
+    pub image_author: Option<u32>,
+    #[serde(deserialize_with = "deserialize_optional_date_time")]
+    pub image_added: Option<DateTime<Utc>>,
+    #[serde(deserialize_with = "deserialize_optional_date_time")]
+    pub last_updated: Option<DateTime<Utc>>,
+}
+
 impl From<&SearchSeries> for SeriesID {
     fn from(s: &SearchSeries) -> SeriesID {
         s.id
@@ -164,7 +181,7 @@ where
     D: Deserializer<'de>,
 {
     let s = String::deserialize(deserializer)?;
-    if s.is_empty() {
+    if s.is_empty() || is_zero_date_time_str(&s) {
         Ok(None)
     } else {
         let ndt = NaiveDateTime::parse_from_str(&s, "%Y-%m-%d %H:%M:%S")
@@ -172,4 +189,8 @@ where
 
         Ok(Some(Utc.from_utc_datetime(&ndt)))
     }
+}
+
+fn is_zero_date_time_str(s: &str) -> bool {
+    s == "0000-00-00 00:00:00"
 }

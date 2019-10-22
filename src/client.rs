@@ -95,6 +95,23 @@ impl Client {
         Ok(DateTime::parse_from_rfc2822(lm_header)?)
     }
 
+    pub async fn series_actors<I>(&self, id: I) -> Result<Vec<Actor>>
+    where
+        I: Into<SeriesID>,
+    {
+        let id = id.into();
+
+        let res = self
+            .prep_req(Method::GET, self.actors_url(id))
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<Vec<Actor>>>().await?.data)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -173,6 +190,10 @@ impl Client {
     fn series_url(&self, id: SeriesID) -> Url {
         self.base_url.join(&format!("/series/{}", id)).unwrap()
     }
+
+    fn actors_url(&self, id: SeriesID) -> Url {
+        self.base_url.join(&format!("/series/{}/actors", id)).unwrap()
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -208,5 +229,6 @@ mod test {
         client.login_url();
         client.search_url();
         client.series_url(1);
+        client.actors_url(1);
     }
 }
