@@ -117,7 +117,7 @@ impl Client {
         S: Into<String>,
     {
         Client {
-            base_url: Url::parse(BASE_URL).unwrap(),
+            base_url: Url::parse(BASE_URL).expect("could not parse BASE_URL"),
             api_key: api_key.into(),
             token: Mutex::new(None),
             token_created: Mutex::new(None),
@@ -174,25 +174,39 @@ impl Client {
             .http_client
             .request(method, url)
             .header("Content-Type", "application/json")
-            .bearer_auth(self.token.lock().await.as_ref().unwrap());
+            .bearer_auth(
+                self.token
+                    .lock()
+                    .await
+                    .as_ref()
+                    .expect("missing token although ensured valid"),
+            );
 
         Ok(req)
     }
 
     fn login_url(&self) -> Url {
-        self.base_url.join("/login").unwrap()
+        self.base_url
+            .join("/login")
+            .expect("could not parse login url")
     }
 
     fn search_url(&self) -> Url {
-        self.base_url.join("/search/series").unwrap()
+        self.base_url
+            .join("/search/series")
+            .expect("could not parse search url")
     }
 
     fn series_url(&self, id: SeriesID) -> Url {
-        self.base_url.join(&format!("/series/{}", id)).unwrap()
+        self.base_url
+            .join(&format!("/series/{}", id))
+            .expect("could not parse series url")
     }
 
     fn actors_url(&self, id: SeriesID) -> Url {
-        self.base_url.join(&format!("/series/{}/actors", id)).unwrap()
+        self.base_url
+            .join(&format!("/series/{}/actors", id))
+            .expect("could not parse actors url")
     }
 }
 
