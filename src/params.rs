@@ -37,7 +37,7 @@ where
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct EpisodeParams {
     pub(crate) series_id: SeriesID,
     pub(crate) page: u16,
