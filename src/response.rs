@@ -1,4 +1,4 @@
-use chrono::{Date, DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc, Weekday};
+use chrono::{Date, DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 use serde::{Deserialize, Deserializer};
 
 #[derive(Debug, Deserialize)]
@@ -32,8 +32,8 @@ pub struct Series {
     // although not in the official docs,
     // `added_by` is returned by the API
     pub added_by: Option<u32>,
-    #[serde(deserialize_with = "deserialize_optional_weekday")]
-    pub airs_day_of_week: Option<Weekday>,
+    #[serde(deserialize_with = "deserialize_optional_string")]
+    pub airs_day_of_week: Option<String>,
     #[serde(deserialize_with = "deserialize_optional_naive_time")]
     pub airs_time: Option<NaiveTime>,
     pub aliases: Vec<String>,
@@ -125,24 +125,6 @@ where
         Ok(None)
     } else {
         Ok(Some(f))
-    }
-}
-
-fn deserialize_optional_weekday<'de, D>(deserializer: D) -> Result<Option<Weekday>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    if s.is_empty() {
-        Ok(None)
-    } else {
-        // because chrono::ParseWeekdayError doesn't impl std::fmt::Display
-        // we cannot simply wrap it with serde::de::Error::custom
-        let weekday = s
-            .parse()
-            .map_err(|e| serde::de::Error::custom(format!("failed to parse weekday: {:?}", e)))?;
-
-        Ok(Some(weekday))
     }
 }
 
