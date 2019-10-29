@@ -1,5 +1,6 @@
 use chrono::{Date, DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 use serde::{Deserialize, Deserializer};
+use serde_json::Value;
 
 #[derive(Debug, Deserialize)]
 pub struct ResponseData<T> {
@@ -108,11 +109,10 @@ fn deserialize_optional_string<'de, D>(deserializer: D) -> Result<Option<String>
 where
     D: Deserializer<'de>,
 {
-    let s = String::deserialize(deserializer)?;
-    if s.is_empty() {
-        Ok(None)
-    } else {
-        Ok(Some(s))
+    let v = Value::deserialize(deserializer)?;
+    match v {
+        Value::String(s) if !s.is_empty() => Ok(Some(s)),
+        _ => Ok(None),
     }
 }
 
