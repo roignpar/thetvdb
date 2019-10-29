@@ -5,10 +5,10 @@ name = "thetvdb"
 version = "0.0.1"
 
 [dependencies]
-failure = "~0.1.5"
-serde = { version = "1.0.101", features = ["derive"] }
+failure = "0.1.6"
+serde = { version = "1.0.102", features = ["derive"] }
 url = "2.1.0"
-serde_json = "1.0.40"
+serde_json = "1.0.41"
 reqwest = { version = "0.10.0-alpha.1", features = ["json"] }
-chrono = { version = "~0.4.9", features = ["serde"] }
-futures-preview = { version = "=0.3.0-alpha.19", features = ["async-await"] }
+chrono = { version = "0.4.9", features = ["serde"] }
+futures-preview = { version = "0.3.0-alpha.19", features = ["async-await"] }
