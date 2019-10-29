@@ -39,27 +39,27 @@ where
 
 #[derive(Debug, Clone)]
 pub struct EpisodeParams {
-    pub(crate) id: SeriesID,
+    pub(crate) series_id: SeriesID,
     pub(crate) page: u16,
 }
 
 impl EpisodeParams {
-    pub fn new<I>(id: I) -> Self
+    pub fn new<I>(series_id: I) -> Self
     where
         I: Into<SeriesID>,
     {
-        let id = id.into();
+        let series_id = series_id.into();
 
-        Self { id, page: 1 }
+        Self { series_id, page: 1 }
     }
 
-    pub fn with_page<I>(id: I, page: u16) -> Self
+    pub fn with_page<I>(series_id: I, page: u16) -> Self
     where
         I: Into<SeriesID>,
     {
-        let id = id.into();
+        let series_id = series_id.into();
 
-        Self { id, page }
+        Self { series_id, page }
     }
 
     pub fn set_page(&mut self, page: u16) {

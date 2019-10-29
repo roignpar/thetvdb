@@ -114,7 +114,7 @@ impl Client {
 
     pub async fn series_episodes(&self, params: EpisodeParams) -> Result<EpisodePage> {
         let res = self
-            .prep_req(Method::GET, self.episodes_url(params.id))
+            .prep_req(Method::GET, self.episodes_url(params.series_id))
             .await?
             .query(&[("page", params.page)])
             .send()
@@ -123,7 +123,7 @@ impl Client {
         api_errors(&res)?;
 
         let mut page: EpisodePage = res.json().await?;
-        page.series_id = params.id;
+        page.series_id = params.series_id;
 
         Ok(page)
     }
