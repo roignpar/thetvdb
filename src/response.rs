@@ -2,7 +2,7 @@ use chrono::{Date, DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc}
 use serde::{Deserialize, Deserializer};
 use serde_json::Value;
 
-use crate::params::EpisodeParams;
+use crate::params::{EpisodeParams, EpisodeQuery, EpisodeQueryParams};
 
 #[derive(Debug, Deserialize)]
 pub struct ResponseData<T> {
@@ -151,26 +151,6 @@ pub struct EpisodePage {
 }
 
 impl EpisodePage {
-    pub fn current_page(&self) -> u16 {
-        self.links.current_page()
-    }
-
-    pub fn first_page(&self) -> u16 {
-        self.links.first
-    }
-
-    pub fn last_page(&self) -> u16 {
-        self.links.last
-    }
-
-    pub fn next_page(&self) -> Option<u16> {
-        self.links.next
-    }
-
-    pub fn prev_page(&self) -> Option<u16> {
-        self.links.prev
-    }
-
     pub fn next_page_params(&self) -> Option<EpisodeParams> {
         self.next_page()
             .map(|n| EpisodeParams::with_page(self.series_id, n))
@@ -183,7 +163,30 @@ impl EpisodePage {
 }
 
 #[derive(Debug, Deserialize)]
-struct PageLinks {
+pub struct EpisodeQueryPage {
+    #[serde(rename = "data")]
+    pub episodes: Vec<Episode>,
+    #[serde(skip)]
+    pub(crate) series_id: SeriesID,
+    #[serde(skip)]
+    pub(crate) query: EpisodeQuery,
+    links: PageLinks,
+}
+
+impl EpisodeQueryPage {
+    pub fn next_page_query_params(&self) -> Option<EpisodeQueryParams> {
+        self.next_page()
+            .map(|n| EpisodeQueryParams::with_page(self.series_id, n))
+    }
+
+    pub fn prev_page_query_params(&self) -> Option<EpisodeQueryParams> {
+        self.prev_page()
+            .map(|p| EpisodeQueryParams::with_page(self.series_id, p))
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct PageLinks {
     first: u16,
     last: u16,
     next: Option<u16>,
@@ -197,6 +200,42 @@ impl PageLinks {
             (None, Some(p)) => p + 1,
             _ => self.first,
         }
+    }
+}
+
+pub trait Pagination {
+    fn links(&self) -> &PageLinks;
+
+    fn current_page(&self) -> u16 {
+        self.links().current_page()
+    }
+
+    fn first_page(&self) -> u16 {
+        self.links().first
+    }
+
+    fn last_page(&self) -> u16 {
+        self.links().last
+    }
+
+    fn next_page(&self) -> Option<u16> {
+        self.links().next
+    }
+
+    fn prev_page(&self) -> Option<u16> {
+        self.links().prev
+    }
+}
+
+impl Pagination for EpisodePage {
+    fn links(&self) -> &PageLinks {
+        &self.links
+    }
+}
+
+impl Pagination for EpisodeQueryPage {
+    fn links(&self) -> &PageLinks {
+        &self.links
     }
 }
 

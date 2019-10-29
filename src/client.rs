@@ -128,6 +128,30 @@ impl Client {
         Ok(page)
     }
 
+    pub async fn series_episodes_query(
+        &self,
+        query_params: EpisodeQueryParams,
+    ) -> Result<EpisodeQueryPage> {
+        let res = self
+            .prep_req(
+                Method::GET,
+                self.episodes_query_url(query_params.params.series_id),
+            )
+            .await?
+            .query(&[("page", query_params.params.page)])
+            .query(&query_params.query)
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        let mut page: EpisodeQueryPage = res.json().await?;
+        page.series_id = query_params.params.series_id;
+        page.query = query_params.query;
+
+        Ok(page)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -230,6 +254,12 @@ impl Client {
             .join(&format!("/series/{}/episodes", id))
             .expect("could not parse episodes url")
     }
+
+    fn episodes_query_url(&self, id: SeriesID) -> Url {
+        self.base_url
+            .join(&format!("/series/{}/episodes/query", id))
+            .expect("could not parse episodes query url")
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -267,5 +297,6 @@ mod test {
         client.series_url(1);
         client.actors_url(1);
         client.episodes_url(1);
+        client.episodes_query_url(1);
     }
 }

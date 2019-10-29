@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use serde::Serialize;
+
 use crate::response::SeriesID;
 
 #[derive(Debug)]
@@ -86,5 +88,102 @@ where
 {
     fn series_id(&'a self) -> SeriesID {
         SeriesID::from(self)
+    }
+}
+
+#[derive(Debug, Default, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct EpisodeQuery {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    absolute_number: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    aired_season: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    aired_episode: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    dvd_season: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    dvd_episode: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    imdb_id: Option<String>,
+}
+
+#[derive(Debug)]
+pub struct EpisodeQueryParams {
+    pub(crate) params: EpisodeParams,
+    pub(crate) query: EpisodeQuery,
+}
+
+impl EpisodeQueryParams {
+    pub fn new<I>(series_id: I) -> Self
+    where
+        I: Into<SeriesID>,
+    {
+        Self {
+            params: EpisodeParams::new(series_id),
+            query: Default::default(),
+        }
+    }
+
+    pub fn with_page<I>(series_id: I, page: u16) -> Self
+    where
+        I: Into<SeriesID>,
+    {
+        Self {
+            params: EpisodeParams::with_page(series_id, page),
+            query: Default::default(),
+        }
+    }
+
+    pub fn absolute_number(mut self, number: u16) -> Self {
+        self.query.absolute_number = Some(number);
+        self
+    }
+
+    pub fn aired_season(mut self, season: u16) -> Self {
+        self.query.aired_season = Some(season);
+        self
+    }
+
+    pub fn aired_episode(mut self, episode: u16) -> Self {
+        self.query.aired_episode = Some(episode);
+        self
+    }
+
+    pub fn dvd_season(mut self, season: u16) -> Self {
+        self.query.dvd_season = Some(season);
+        self
+    }
+
+    pub fn dvd_episode(mut self, episode: u16) -> Self {
+        self.query.dvd_episode = Some(episode);
+        self
+    }
+
+    pub fn imdb_id(mut self, id: String) -> Self {
+        self.query.imdb_id = Some(id);
+        self
+    }
+}
+
+pub trait GetEpisodeQueryParams<'a> {
+    fn series_id(&'a self) -> SeriesID;
+
+    fn episode_query_params(&'a self) -> EpisodeQueryParams {
+        EpisodeQueryParams::new(self.series_id())
+    }
+
+    fn episode_query_params_page(&'a self, page: u16) -> EpisodeQueryParams {
+        EpisodeQueryParams::with_page(self.series_id(), page)
+    }
+}
+
+impl<'a, T> GetEpisodeQueryParams<'a> for T
+where
+    T: 'a,
+    SeriesID: From<&'a T>,
+{
+    fn series_id(&'a self) -> SeriesID {
+        self.into()
     }
 }
