@@ -112,6 +112,22 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<Actor>>>().await?.data)
     }
 
+    pub async fn series_episodes(&self, params: EpisodeParams) -> Result<EpisodePage> {
+        let res = self
+            .prep_req(Method::GET, self.episodes_url(params.id))
+            .await?
+            .query(&[("page", params.page)])
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        let mut page: EpisodePage = res.json().await?;
+        page.series_id = params.id;
+
+        Ok(page)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -208,6 +224,12 @@ impl Client {
             .join(&format!("/series/{}/actors", id))
             .expect("could not parse actors url")
     }
+
+    fn episodes_url(&self, id: SeriesID) -> Url {
+        self.base_url
+            .join(&format!("/series/{}/episodes", id))
+            .expect("could not parse episodes url")
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -244,5 +266,6 @@ mod test {
         client.search_url();
         client.series_url(1);
         client.actors_url(1);
+        client.episodes_url(1);
     }
 }

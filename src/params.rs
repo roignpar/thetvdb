@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::response::SeriesID;
+
 #[derive(Debug)]
 pub enum SearchBy<S> {
     Name(S),
@@ -32,5 +34,57 @@ where
         };
 
         map
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct EpisodeParams {
+    pub(crate) id: SeriesID,
+    pub(crate) page: u16,
+}
+
+impl EpisodeParams {
+    pub fn new<I>(id: I) -> Self
+    where
+        I: Into<SeriesID>,
+    {
+        let id = id.into();
+
+        Self { id, page: 1 }
+    }
+
+    pub fn with_page<I>(id: I, page: u16) -> Self
+    where
+        I: Into<SeriesID>,
+    {
+        let id = id.into();
+
+        Self { id, page }
+    }
+
+    pub fn set_page(&mut self, page: u16) {
+        self.page = page;
+    }
+}
+
+pub trait GetEpisodeParams<'a> {
+    fn series_id(&'a self) -> SeriesID;
+
+    fn episode_params(&'a self) -> EpisodeParams {
+        EpisodeParams::new(self.series_id())
+    }
+
+    fn episode_params_page(&'a self, page: u16) -> EpisodeParams {
+        EpisodeParams::with_page(self.series_id(), page)
+    }
+}
+
+impl<'a, T> GetEpisodeParams<'a> for T
+where
+    T: 'a,
+    SeriesID: From<&'a T>,
+{
+    fn series_id(&'a self) -> SeriesID {
+        SeriesID::from(self)
     }
 }

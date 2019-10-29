@@ -2,6 +2,8 @@ use chrono::{Date, DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc}
 use serde::{Deserialize, Deserializer};
 use serde_json::Value;
 
+use crate::params::EpisodeParams;
+
 #[derive(Debug, Deserialize)]
 pub struct ResponseData<T> {
     pub data: T,
@@ -82,6 +84,120 @@ pub struct Actor {
     pub image_added: Option<DateTime<Utc>>,
     #[serde(deserialize_with = "deserialize_optional_date_time")]
     pub last_updated: Option<DateTime<Utc>>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Episode {
+    pub id: u32,
+    pub aired_season: u16,
+    #[serde(rename = "airedSeasonID")]
+    pub aired_season_id: u32,
+    pub aired_episode_number: u16,
+    pub episode_name: String,
+    #[serde(deserialize_with = "deserialize_optional_date")]
+    pub first_aired: Option<Date<Utc>>,
+    pub guest_stars: Vec<String>,
+    pub directors: Vec<String>,
+    pub writers: Vec<String>,
+    #[serde(deserialize_with = "deserialize_optional_string")]
+    pub overview: Option<String>,
+    pub language: EpisodeLanguage,
+    #[serde(deserialize_with = "deserialize_optional_string")]
+    pub production_code: Option<String>,
+    #[serde(deserialize_with = "deserialize_optional_string")]
+    pub show_url: Option<String>,
+    #[serde(with = "chrono::serde::ts_seconds")]
+    pub last_updated: DateTime<Utc>,
+    #[serde(deserialize_with = "deserialize_optional_string")]
+    pub dvd_discid: Option<String>,
+    pub dvd_season: Option<u16>,
+    pub dvd_episode_number: Option<u16>,
+    pub dvd_chapter: Option<u16>,
+    pub absolute_number: Option<u16>,
+    #[serde(deserialize_with = "deserialize_optional_string")]
+    pub filename: Option<String>,
+    pub series_id: SeriesID,
+    pub last_updated_by: Option<u32>,
+    pub airs_after_season: Option<u16>,
+    pub airs_before_season: Option<u16>,
+    pub airs_before_episode: Option<u16>,
+    pub thumb_author: Option<u32>,
+    #[serde(deserialize_with = "deserialize_optional_date_time")]
+    pub thumb_added: Option<DateTime<Utc>>,
+    pub thumb_width: Option<String>,
+    pub thumb_height: Option<String>,
+    #[serde(deserialize_with = "deserialize_optional_string")]
+    pub imdb_id: Option<String>,
+    #[serde(deserialize_with = "deserialize_optional_float")]
+    pub site_rating: Option<f32>,
+    pub site_rating_count: u32,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EpisodeLanguage {
+    pub episode_name: String,
+    pub overview: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct EpisodePage {
+    #[serde(rename = "data")]
+    pub episodes: Vec<Episode>,
+    #[serde(skip)]
+    pub(crate) series_id: SeriesID,
+    links: PageLinks,
+}
+
+impl EpisodePage {
+    pub fn current_page(&self) -> u16 {
+        self.links.current_page()
+    }
+
+    pub fn first_page(&self) -> u16 {
+        self.links.first
+    }
+
+    pub fn last_page(&self) -> u16 {
+        self.links.last
+    }
+
+    pub fn next_page(&self) -> Option<u16> {
+        self.links.next
+    }
+
+    pub fn prev_page(&self) -> Option<u16> {
+        self.links.prev
+    }
+
+    pub fn next_page_params(&self) -> Option<EpisodeParams> {
+        self.next_page()
+            .map(|n| EpisodeParams::with_page(self.series_id, n))
+    }
+
+    pub fn prev_page_params(&self) -> Option<EpisodeParams> {
+        self.prev_page()
+            .map(|p| EpisodeParams::with_page(self.series_id, p))
+    }
+}
+
+#[derive(Debug, Deserialize)]
+struct PageLinks {
+    first: u16,
+    last: u16,
+    next: Option<u16>,
+    prev: Option<u16>,
+}
+
+impl PageLinks {
+    fn current_page(&self) -> u16 {
+        match (self.next, self.prev) {
+            (Some(n), _) => n - 1,
+            (None, Some(p)) => p + 1,
+            _ => self.first,
+        }
+    }
 }
 
 impl From<&SearchSeries> for SeriesID {
