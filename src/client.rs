@@ -59,10 +59,8 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
-        let id = id.into();
-
         let res = self
-            .prep_req(Method::GET, self.series_url(id))
+            .prep_req(Method::GET, self.series_url(id.into()))
             .await?
             .send()
             .await?;
@@ -76,10 +74,8 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
-        let id = id.into();
-
         let res = self
-            .prep_req(Method::HEAD, self.series_url(id))
+            .prep_req(Method::HEAD, self.series_url(id.into()))
             .await?
             .send()
             .await?;
@@ -99,10 +95,8 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
-        let id = id.into();
-
         let res = self
-            .prep_req(Method::GET, self.actors_url(id))
+            .prep_req(Method::GET, self.actors_url(id.into()))
             .await?
             .send()
             .await?;
