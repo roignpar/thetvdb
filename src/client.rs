@@ -146,6 +146,21 @@ impl Client {
         Ok(page)
     }
 
+    pub async fn series_episodes_summary<I>(&self, id: I) -> Result<EpisodeSummary>
+    where
+        I: Into<SeriesID>,
+    {
+        let res = self
+            .prep_req(Method::GET, self.episodes_summary_url(id.into()))
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<EpisodeSummary>>().await?.data)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -254,6 +269,12 @@ impl Client {
             .join(&format!("/series/{}/episodes/query", id))
             .expect("could not parse episodes query url")
     }
+
+    fn episodes_summary_url(&self, id: SeriesID) -> Url {
+        self.base_url
+            .join(&format!("/series/{}/episodes/summary", id))
+            .expect("could not parse episodes summary url")
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -292,5 +313,6 @@ mod test {
         client.actors_url(1);
         client.episodes_url(1);
         client.episodes_query_url(1);
+        client.episodes_summary_url(1);
     }
 }

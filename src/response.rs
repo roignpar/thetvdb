@@ -239,6 +239,17 @@ impl Pagination for EpisodeQueryPage {
     }
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EpisodeSummary {
+    pub aired_seasons: Vec<String>,
+    #[serde(deserialize_with = "deserialize_u16_string")]
+    pub aired_episodes: u16,
+    pub dvd_seasons: Vec<String>,
+    #[serde(deserialize_with = "deserialize_u16_string")]
+    pub dvd_episodes: u16,
+}
+
 impl From<&SearchSeries> for SeriesID {
     fn from(s: &SearchSeries) -> SeriesID {
         s.id
@@ -326,6 +337,15 @@ where
 
         Ok(Some(Utc.from_utc_datetime(&ndt)))
     }
+}
+
+fn deserialize_u16_string<'de, D>(deserializer: D) -> Result<u16, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    String::deserialize(deserializer)?
+        .parse()
+        .map_err(serde::de::Error::custom)
 }
 
 fn is_zero_date_time_str(s: &str) -> bool {
