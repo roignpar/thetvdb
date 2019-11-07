@@ -47,7 +47,7 @@ pub struct Series {
     pub genre: Vec<String>,
     pub id: SeriesID,
     pub imdb_id: Option<String>,
-    #[serde(with = "chrono::serde::ts_seconds")]
+    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
     pub last_updated: DateTime<Utc>,
     pub network: String,
     #[serde(deserialize_with = "deserialize_optional_string")]
@@ -107,7 +107,7 @@ pub struct Episode {
     pub production_code: Option<String>,
     #[serde(deserialize_with = "deserialize_optional_string")]
     pub show_url: Option<String>,
-    #[serde(with = "chrono::serde::ts_seconds")]
+    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
     pub last_updated: DateTime<Utc>,
     #[serde(deserialize_with = "deserialize_optional_string")]
     pub dvd_discid: Option<String>,
