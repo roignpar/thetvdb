@@ -96,7 +96,7 @@ impl Client {
         I: Into<SeriesID>,
     {
         let res = self
-            .prep_req(Method::GET, self.actors_url(id.into()))
+            .prep_req(Method::GET, self.series_actors_url(id.into()))
             .await?
             .send()
             .await?;
@@ -108,7 +108,7 @@ impl Client {
 
     pub async fn series_episodes(&self, params: EpisodeParams) -> Result<EpisodePage> {
         let res = self
-            .prep_req(Method::GET, self.episodes_url(params.series_id))
+            .prep_req(Method::GET, self.series_episodes_url(params.series_id))
             .await?
             .query(&[("page", params.page)])
             .send()
@@ -129,7 +129,7 @@ impl Client {
         let res = self
             .prep_req(
                 Method::GET,
-                self.episodes_query_url(query_params.params.series_id),
+                self.series_episodes_query_url(query_params.params.series_id),
             )
             .await?
             .query(&[("page", query_params.params.page)])
@@ -151,7 +151,7 @@ impl Client {
         I: Into<SeriesID>,
     {
         let res = self
-            .prep_req(Method::GET, self.episodes_summary_url(id.into()))
+            .prep_req(Method::GET, self.series_episodes_summary_url(id.into()))
             .await?
             .send()
             .await?;
@@ -326,25 +326,25 @@ impl Client {
             .expect("could not parse series url")
     }
 
-    fn actors_url(&self, id: SeriesID) -> Url {
+    fn series_actors_url(&self, id: SeriesID) -> Url {
         self.base_url
             .join(&format!("/series/{}/actors", id))
             .expect("could not parse actors url")
     }
 
-    fn episodes_url(&self, id: SeriesID) -> Url {
+    fn series_episodes_url(&self, id: SeriesID) -> Url {
         self.base_url
             .join(&format!("/series/{}/episodes", id))
             .expect("could not parse episodes url")
     }
 
-    fn episodes_query_url(&self, id: SeriesID) -> Url {
+    fn series_episodes_query_url(&self, id: SeriesID) -> Url {
         self.base_url
             .join(&format!("/series/{}/episodes/query", id))
             .expect("could not parse episodes query url")
     }
 
-    fn episodes_summary_url(&self, id: SeriesID) -> Url {
+    fn series_episodes_summary_url(&self, id: SeriesID) -> Url {
         self.base_url
             .join(&format!("/series/{}/episodes/summary", id))
             .expect("could not parse episodes summary url")
