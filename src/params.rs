@@ -312,3 +312,9 @@ impl SeriesFilterKeys {
         self
     }
 }
+
+impl Default for SeriesFilterKeys {
+    fn default() -> Self {
+        Self::new()
+    }
+}
