@@ -160,8 +160,11 @@ impl EpisodeQueryParams {
         self
     }
 
-    pub fn imdb_id(mut self, id: String) -> Self {
-        self.query.imdb_id = Some(id);
+    pub fn imdb_id<S>(mut self, id: S) -> Self
+    where
+        S: Into<String>,
+    {
+        self.query.imdb_id = Some(id.into());
         self
     }
 }
