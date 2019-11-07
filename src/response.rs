@@ -1,8 +1,9 @@
-use chrono::{Date, DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
-use serde::{Deserialize, Deserializer};
-use serde_json::Value;
+use chrono::{Date, DateTime, NaiveTime, Utc};
+use serde::Deserialize;
 
 use crate::params::{EpisodeParams, EpisodeQuery, EpisodeQueryParams};
+
+mod deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct ResponseData<T> {
@@ -15,9 +16,9 @@ pub type SeriesID = u32;
 #[serde(rename_all = "camelCase")]
 pub struct SearchSeries {
     pub aliases: Vec<String>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub banner: Option<String>,
-    #[serde(deserialize_with = "deserialize_optional_date")]
+    #[serde(deserialize_with = "deserialize::optional_date")]
     pub first_aired: Option<Date<Utc>>,
     pub id: SeriesID,
     pub network: String,
@@ -30,19 +31,19 @@ pub struct SearchSeries {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Series {
-    #[serde(deserialize_with = "deserialize_optional_date_time")]
+    #[serde(deserialize_with = "deserialize::optional_date_time")]
     pub added: Option<DateTime<Utc>>,
     // although not in the official docs,
     // `added_by` is returned by the API
     pub added_by: Option<u32>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub airs_day_of_week: Option<String>,
-    #[serde(deserialize_with = "deserialize_optional_naive_time")]
+    #[serde(deserialize_with = "deserialize::optional_naive_time")]
     pub airs_time: Option<NaiveTime>,
     pub aliases: Vec<String>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub banner: Option<String>,
-    #[serde(deserialize_with = "deserialize_optional_date")]
+    #[serde(deserialize_with = "deserialize::optional_date")]
     pub first_aired: Option<Date<Utc>>,
     pub genre: Vec<String>,
     pub id: SeriesID,
@@ -50,22 +51,22 @@ pub struct Series {
     #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
     pub last_updated: DateTime<Utc>,
     pub network: String,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub network_id: Option<String>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub overview: Option<String>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub rating: Option<String>,
     pub runtime: String,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub series_id: Option<String>,
     pub series_name: String,
-    #[serde(deserialize_with = "deserialize_optional_float")]
+    #[serde(deserialize_with = "deserialize::optional_float")]
     pub site_rating: Option<f32>,
     pub site_rating_count: u32,
     pub slug: String,
     pub status: SeriesStatus,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub zap2it_id: Option<String>,
 }
 
@@ -77,12 +78,12 @@ pub struct Actor {
     pub name: String,
     pub role: String,
     pub sort_order: u32,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub image: Option<String>,
     pub image_author: Option<u32>,
-    #[serde(deserialize_with = "deserialize_optional_date_time")]
+    #[serde(deserialize_with = "deserialize::optional_date_time")]
     pub image_added: Option<DateTime<Utc>>,
-    #[serde(deserialize_with = "deserialize_optional_date_time")]
+    #[serde(deserialize_with = "deserialize::optional_date_time")]
     pub last_updated: Option<DateTime<Utc>>,
 }
 
@@ -95,27 +96,27 @@ pub struct Episode {
     pub aired_season_id: u32,
     pub aired_episode_number: u16,
     pub episode_name: String,
-    #[serde(deserialize_with = "deserialize_optional_date")]
+    #[serde(deserialize_with = "deserialize::optional_date")]
     pub first_aired: Option<Date<Utc>>,
     pub guest_stars: Vec<String>,
     pub directors: Vec<String>,
     pub writers: Vec<String>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub overview: Option<String>,
     pub language: EpisodeLanguage,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub production_code: Option<String>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub show_url: Option<String>,
     #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
     pub last_updated: DateTime<Utc>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub dvd_discid: Option<String>,
     pub dvd_season: Option<u16>,
     pub dvd_episode_number: Option<u16>,
     pub dvd_chapter: Option<u16>,
     pub absolute_number: Option<u16>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub filename: Option<String>,
     pub series_id: SeriesID,
     pub last_updated_by: Option<u32>,
@@ -123,13 +124,13 @@ pub struct Episode {
     pub airs_before_season: Option<u16>,
     pub airs_before_episode: Option<u16>,
     pub thumb_author: Option<u32>,
-    #[serde(deserialize_with = "deserialize_optional_date_time")]
+    #[serde(deserialize_with = "deserialize::optional_date_time")]
     pub thumb_added: Option<DateTime<Utc>>,
     pub thumb_width: Option<String>,
     pub thumb_height: Option<String>,
-    #[serde(deserialize_with = "deserialize_optional_string")]
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub imdb_id: Option<String>,
-    #[serde(deserialize_with = "deserialize_optional_float")]
+    #[serde(deserialize_with = "deserialize::optional_float")]
     pub site_rating: Option<f32>,
     pub site_rating_count: u32,
 }
@@ -243,10 +244,10 @@ impl Pagination for EpisodeQueryPage {
 #[serde(rename_all = "camelCase")]
 pub struct EpisodeSummary {
     pub aired_seasons: Vec<String>,
-    #[serde(deserialize_with = "deserialize_u16_string")]
+    #[serde(deserialize_with = "deserialize::u16_string")]
     pub aired_episodes: u16,
     pub dvd_seasons: Vec<String>,
-    #[serde(deserialize_with = "deserialize_u16_string")]
+    #[serde(deserialize_with = "deserialize::u16_string")]
     pub dvd_episodes: u16,
 }
 
@@ -269,85 +270,4 @@ pub enum SeriesStatus {
     Upcoming,
     #[serde(rename = "")]
     Unknown,
-}
-
-fn deserialize_optional_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let v = Value::deserialize(deserializer)?;
-    match v {
-        Value::String(s) if !s.is_empty() => Ok(Some(s)),
-        _ => Ok(None),
-    }
-}
-
-fn deserialize_optional_float<'de, D>(deserializer: D) -> Result<Option<f32>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let f = f32::deserialize(deserializer)?;
-    if f == 0.0 {
-        Ok(None)
-    } else {
-        Ok(Some(f))
-    }
-}
-
-fn deserialize_optional_naive_time<'de, D>(deserializer: D) -> Result<Option<NaiveTime>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    if s.is_empty() {
-        Ok(None)
-    } else {
-        let t = NaiveTime::parse_from_str(&s, "%l:%M %p").map_err(serde::de::Error::custom)?;
-
-        Ok(Some(t))
-    }
-}
-
-fn deserialize_optional_date<'de, D>(deserializer: D) -> Result<Option<Date<Utc>>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    if s.is_empty() {
-        Ok(None)
-    } else {
-        let nd = NaiveDate::parse_from_str(&s, "%Y-%m-%d").map_err(serde::de::Error::custom)?;
-
-        Ok(Some(Utc.from_utc_date(&nd)))
-    }
-}
-
-fn deserialize_optional_date_time<'de, D>(
-    deserializer: D,
-) -> Result<Option<DateTime<Utc>>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    if s.is_empty() || is_zero_date_time_str(&s) {
-        Ok(None)
-    } else {
-        let ndt = NaiveDateTime::parse_from_str(&s, "%Y-%m-%d %H:%M:%S")
-            .map_err(serde::de::Error::custom)?;
-
-        Ok(Some(Utc.from_utc_datetime(&ndt)))
-    }
-}
-
-fn deserialize_u16_string<'de, D>(deserializer: D) -> Result<u16, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    String::deserialize(deserializer)?
-        .parse()
-        .map_err(serde::de::Error::custom)
-}
-
-fn is_zero_date_time_str(s: &str) -> bool {
-    s == "0000-00-00 00:00:00"
 }
