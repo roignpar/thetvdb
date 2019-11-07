@@ -327,3 +327,25 @@ pub struct SeriesImages {
     pub seasonwide: Option<u32>,
     pub series: Option<u32>,
 }
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Image {
+    pub id: u32,
+    pub key_type: String,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub sub_key: Option<String>,
+    pub file_name: String,
+    pub language_id: u16,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub resolution: Option<String>,
+    pub ratings_info: ImageRatingsInfo,
+    pub thumbnail: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ImageRatingsInfo {
+    pub average: f32,
+    pub count: u32,
+}

@@ -321,3 +321,73 @@ impl Default for SeriesFilterKeys {
         Self::new()
     }
 }
+
+#[derive(Debug, Default, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ImageQueryParams {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    key_type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    resolution: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    sub_key: Option<String>,
+}
+
+impl ImageQueryParams {
+    pub fn with_key_type<S>(key_type: S) -> Self
+    where
+        S: Into<String>,
+    {
+        Self {
+            key_type: Some(key_type.into()),
+            ..Default::default()
+        }
+    }
+
+    pub fn with_resolution<S>(resolution: S) -> Self
+    where
+        S: Into<String>,
+    {
+        Self {
+            resolution: Some(resolution.into()),
+            ..Default::default()
+        }
+    }
+
+    pub fn with_sub_key<S>(sub_key: S) -> Self
+    where
+        S: Into<String>,
+    {
+        Self {
+            sub_key: Some(sub_key.into()),
+            ..Default::default()
+        }
+    }
+
+    pub fn key_type<S>(mut self, key_type: S) -> Self
+    where
+        S: Into<String>,
+    {
+        self.key_type = Some(key_type.into());
+
+        self
+    }
+
+    pub fn resolution<S>(mut self, resolution: S) -> Self
+    where
+        S: Into<String>,
+    {
+        self.resolution = Some(resolution.into());
+
+        self
+    }
+
+    pub fn sub_key<S>(mut self, sub_key: S) -> Self
+    where
+        S: Into<String>,
+    {
+        self.sub_key = Some(sub_key.into());
+
+        self
+    }
+}
