@@ -220,6 +220,21 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<Image>>>().await?.data)
     }
 
+    pub async fn series_images_query_params<I>(&self, id: I) -> Result<Vec<ImageQueryKey>>
+    where
+        I: Into<SeriesID>,
+    {
+        let res = self
+            .prep_req(Method::GET, self.series_images_query_params_url(id.into()))
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<Vec<ImageQueryKey>>>().await?.data)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -352,6 +367,12 @@ impl Client {
             .join(&format!("/series/{}/images/query", id))
             .expect("could not parse series images query url")
     }
+
+    fn series_images_query_params_url(&self, id: SeriesID) -> Url {
+        self.base_url
+            .join(&format!("/series/{}/images/query/params", id))
+            .expect("could not parse series images query params url")
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -394,5 +415,6 @@ mod test {
         client.series_filter_url(1);
         client.series_images_url(1);
         client.series_images_query_url(1);
+        client.series_images_query_params_url(1);
     }
 }

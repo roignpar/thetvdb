@@ -349,3 +349,13 @@ pub struct ImageRatingsInfo {
     pub average: f32,
     pub count: u32,
 }
+
+#[derive(Debug, Default, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct ImageQueryKey {
+    pub key_type: String,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub language_id: Option<String>,
+    pub resolution: Vec<String>,
+    pub sub_key: Vec<String>,
+}
