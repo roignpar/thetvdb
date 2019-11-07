@@ -185,6 +185,21 @@ impl Client {
         Ok(res.json::<ResponseData<FilteredSeries>>().await?.data)
     }
 
+    pub async fn series_images<I>(&self, id: I) -> Result<SeriesImages>
+    where
+        I: Into<SeriesID>,
+    {
+        let res = self
+            .prep_req(Method::GET, self.series_images_url(id.into()))
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<SeriesImages>>().await?.data)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -305,6 +320,12 @@ impl Client {
             .join(&format!("/series/{}/filter", id))
             .expect("could not parse series filter url")
     }
+
+    fn series_images_url(&self, id: SeriesID) -> Url {
+        self.base_url
+            .join(&format!("/series/{}/images", id))
+            .expect("could not parse series images url")
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -345,5 +366,6 @@ mod test {
         client.episodes_query_url(1);
         client.episodes_summary_url(1);
         client.series_filter_url(1);
+        client.series_images_url(1);
     }
 }

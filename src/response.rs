@@ -292,6 +292,15 @@ pub struct EpisodeSummary {
     pub dvd_episodes: u16,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct SeriesImages {
+    pub fanart: Option<u32>,
+    pub poster: Option<u32>,
+    pub season: Option<u32>,
+    pub seasonwide: Option<u32>,
+    pub series: Option<u32>,
+}
+
 impl From<&SearchSeries> for SeriesID {
     fn from(s: &SearchSeries) -> SeriesID {
         s.id
