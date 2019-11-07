@@ -200,7 +200,11 @@ impl Client {
         Ok(res.json::<ResponseData<SeriesImages>>().await?.data)
     }
 
-    pub async fn series_images_query<I>(&self, id: I, params: ImageQueryParams) -> Result<Vec<Image>>
+    pub async fn series_images_query<I>(
+        &self,
+        id: I,
+        params: ImageQueryParams,
+    ) -> Result<Vec<Image>>
     where
         I: Into<SeriesID>,
     {
