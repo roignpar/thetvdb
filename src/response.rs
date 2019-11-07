@@ -12,6 +12,18 @@ pub struct ResponseData<T> {
 
 pub type SeriesID = u32;
 
+impl From<&SearchSeries> for SeriesID {
+    fn from(s: &SearchSeries) -> SeriesID {
+        s.id
+    }
+}
+
+impl From<&Series> for SeriesID {
+    fn from(s: &Series) -> SeriesID {
+        s.id
+    }
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SearchSeries {
@@ -109,6 +121,21 @@ pub struct FilteredSeries {
     pub status: Option<SeriesStatus>,
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub zap2it_id: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub enum SeriesStatus {
+    Ended,
+    Continuing,
+    Upcoming,
+    #[serde(rename = "")]
+    Unknown,
+}
+
+impl Default for SeriesStatus {
+    fn default() -> Self {
+        Self::Unknown
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -299,31 +326,4 @@ pub struct SeriesImages {
     pub season: Option<u32>,
     pub seasonwide: Option<u32>,
     pub series: Option<u32>,
-}
-
-impl From<&SearchSeries> for SeriesID {
-    fn from(s: &SearchSeries) -> SeriesID {
-        s.id
-    }
-}
-
-impl From<&Series> for SeriesID {
-    fn from(s: &Series) -> SeriesID {
-        s.id
-    }
-}
-
-#[derive(Debug, Deserialize)]
-pub enum SeriesStatus {
-    Ended,
-    Continuing,
-    Upcoming,
-    #[serde(rename = "")]
-    Unknown,
-}
-
-impl Default for SeriesStatus {
-    fn default() -> Self {
-        Self::Unknown
-    }
 }
