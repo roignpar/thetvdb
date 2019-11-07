@@ -161,6 +161,30 @@ impl Client {
         Ok(res.json::<ResponseData<EpisodeSummary>>().await?.data)
     }
 
+    pub async fn series_filter<I>(
+        &self,
+        id: I,
+        filter_keys: SeriesFilterKeys,
+    ) -> Result<FilteredSeries>
+    where
+        I: Into<SeriesID>,
+    {
+        if filter_keys.is_empty() {
+            return Err(Error::MissingSeriesFilterKeys);
+        }
+
+        let res = self
+            .prep_req(Method::GET, self.series_filter_url(id.into()))
+            .await?
+            .query(&[("keys", filter_keys.keys_query)])
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<FilteredSeries>>().await?.data)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -275,6 +299,12 @@ impl Client {
             .join(&format!("/series/{}/episodes/summary", id))
             .expect("could not parse episodes summary url")
     }
+
+    fn series_filter_url(&self, id: SeriesID) -> Url {
+        self.base_url
+            .join(&format!("/series/{}/filter", id))
+            .expect("could not parse series filter url")
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -314,5 +344,6 @@ mod test {
         client.episodes_url(1);
         client.episodes_query_url(1);
         client.episodes_summary_url(1);
+        client.series_filter_url(1);
     }
 }

@@ -70,6 +70,47 @@ pub struct Series {
     pub zap2it_id: Option<String>,
 }
 
+// same as Series, but all fields are optional
+#[derive(Debug, Default, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct FilteredSeries {
+    #[serde(deserialize_with = "deserialize::optional_date_time")]
+    pub added: Option<DateTime<Utc>>,
+    pub added_by: Option<u32>,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub airs_day_of_week: Option<String>,
+    #[serde(deserialize_with = "deserialize::optional_naive_time")]
+    pub airs_time: Option<NaiveTime>,
+    pub aliases: Option<Vec<String>>,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub banner: Option<String>,
+    #[serde(deserialize_with = "deserialize::optional_date")]
+    pub first_aired: Option<Date<Utc>>,
+    pub genre: Option<Vec<String>>,
+    pub id: Option<SeriesID>,
+    pub imdb_id: Option<String>,
+    #[serde(deserialize_with = "deserialize::optional_ts_seconds_date_time")]
+    pub last_updated: Option<DateTime<Utc>>,
+    pub network: Option<String>,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub network_id: Option<String>,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub overview: Option<String>,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub rating: Option<String>,
+    pub runtime: Option<String>,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub series_id: Option<String>,
+    pub series_name: Option<String>,
+    #[serde(deserialize_with = "deserialize::optional_float")]
+    pub site_rating: Option<f32>,
+    pub site_rating_count: Option<u32>,
+    pub slug: Option<String>,
+    pub status: Option<SeriesStatus>,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub zap2it_id: Option<String>,
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Actor {
@@ -270,4 +311,10 @@ pub enum SeriesStatus {
     Upcoming,
     #[serde(rename = "")]
     Unknown,
+}
+
+impl Default for SeriesStatus {
+    fn default() -> Self {
+        Self::Unknown
+    }
 }

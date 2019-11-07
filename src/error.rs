@@ -32,6 +32,9 @@ pub enum Error {
 
     #[fail(display = "Invalid date format: {}", _0)]
     InvalidDateFormat(#[cause] chrono::format::ParseError),
+
+    #[fail(display = "No series filter keys provided")]
+    MissingSeriesFilterKeys,
 }
 
 impl From<JsonError> for Error {

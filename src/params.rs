@@ -187,3 +187,128 @@ where
         self.into()
     }
 }
+
+pub struct SeriesFilterKeys {
+    pub(crate) keys_query: String,
+}
+
+impl SeriesFilterKeys {
+    pub fn new() -> Self {
+        Self {
+            // if all keys are added, 200 bytes would be used
+            keys_query: String::with_capacity(200),
+        }
+    }
+
+    pub fn network_id(self) -> Self {
+        self.push_key("networkId")
+    }
+
+    // NOTE: V2.2.0 of the API doesn't return the
+    // `lastUpdated` field on series filter requests;
+    //
+    // TODO: enable when API is fixed
+    // https://forums.thetvdb.com/viewtopic.php?f=17&t=22325&p=162247#p162247
+    //
+    //pub fn last_updated(self) -> Self {
+    //self.push_key("lastUpdated")
+    //}
+
+    pub fn airs_time(self) -> Self {
+        self.push_key("airsTime")
+    }
+
+    pub fn site_rating(self) -> Self {
+        self.push_key("siteRating")
+    }
+
+    pub fn series_name(self) -> Self {
+        self.push_key("seriesName")
+    }
+
+    pub fn first_aired(self) -> Self {
+        self.push_key("firstAired")
+    }
+
+    pub fn runtime(self) -> Self {
+        self.push_key("runtime")
+    }
+
+    pub fn overview(self) -> Self {
+        self.push_key("overview")
+    }
+
+    pub fn banner(self) -> Self {
+        self.push_key("banner")
+    }
+
+    pub fn series_id(self) -> Self {
+        self.push_key("seriesId")
+    }
+
+    pub fn genre(self) -> Self {
+        self.push_key("genre")
+    }
+
+    pub fn airs_day_of_week(self) -> Self {
+        self.push_key("airsDayOfWeek")
+    }
+
+    pub fn imdb_id(self) -> Self {
+        self.push_key("imdbId")
+    }
+
+    pub fn added_by(self) -> Self {
+        self.push_key("addedBy")
+    }
+
+    pub fn site_rating_count(self) -> Self {
+        self.push_key("siteRatingCount")
+    }
+
+    pub fn id(self) -> Self {
+        self.push_key("id")
+    }
+
+    pub fn status(self) -> Self {
+        self.push_key("status")
+    }
+
+    pub fn network(self) -> Self {
+        self.push_key("network")
+    }
+
+    pub fn rating(self) -> Self {
+        self.push_key("rating")
+    }
+
+    pub fn zap2it_id(self) -> Self {
+        self.push_key("zap2itId")
+    }
+
+    pub fn added(self) -> Self {
+        self.push_key("added")
+    }
+
+    pub fn slug(self) -> Self {
+        self.push_key("slug")
+    }
+
+    pub fn aliases(self) -> Self {
+        self.push_key("aliases")
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.keys_query.is_empty()
+    }
+
+    fn push_key(mut self, key: &str) -> Self {
+        if !self.keys_query.is_empty() {
+            self.keys_query.push(',');
+        }
+
+        self.keys_query.push_str(key);
+
+        self
+    }
+}
