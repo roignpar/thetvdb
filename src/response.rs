@@ -43,7 +43,7 @@ pub struct SearchSeries {
     pub id: SeriesID,
     pub network: String,
     pub overview: Option<String>,
-    pub series_name: String,
+    pub series_name: Option<String>,
     pub slug: String,
     pub status: SeriesStatus,
 }
