@@ -235,7 +235,10 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<ImageQueryKey>>>().await?.data)
     }
 
-    pub async fn episode<I>(&self, id: I) -> Result<Episode> where I: Into<EpisodeID> {
+    pub async fn episode<I>(&self, id: I) -> Result<Episode>
+    where
+        I: Into<EpisodeID>,
+    {
         let res = self
             .prep_req(Method::GET, self.episodes_url(id.into()))
             .await?
