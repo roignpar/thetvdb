@@ -24,6 +24,14 @@ impl From<&Series> for SeriesID {
     }
 }
 
+pub type EpisodeID = u32;
+
+impl From<&Episode> for EpisodeID {
+    fn from(e: &Episode) -> EpisodeID {
+        e.id
+    }
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SearchSeries {
@@ -159,12 +167,13 @@ pub struct Actor {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Episode {
-    pub id: u32,
-    pub aired_season: u16,
+    pub id: EpisodeID,
+    pub aired_season: Option<u16>,
     #[serde(rename = "airedSeasonID")]
-    pub aired_season_id: u32,
+    pub aired_season_id: Option<u32>,
     pub aired_episode_number: u16,
-    pub episode_name: String,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub episode_name: Option<String>,
     #[serde(deserialize_with = "deserialize::optional_date")]
     pub first_aired: Option<Date<Utc>>,
     pub guest_stars: Vec<String>,

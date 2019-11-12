@@ -235,6 +235,24 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<ImageQueryKey>>>().await?.data)
     }
 
+    pub async fn episode<I>(&self, id: I) -> Result<Episode> where I: Into<EpisodeID> {
+        let res = self
+            .prep_req(Method::GET, self.episodes_url(id.into()))
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        // the API will return an empty episode if id is not found
+        let episode = res.json::<ResponseData<Episode>>().await?.data;
+        if episode.id == 0 {
+            return Err(Error::NotFound);
+        }
+
+        Ok(episode)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -373,6 +391,12 @@ impl Client {
             .join(&format!("/series/{}/images/query/params", id))
             .expect("could not parse series images query params url")
     }
+
+    fn episodes_url(&self, id: EpisodeID) -> Url {
+        self.base_url
+            .join(&format!("/episodes/{}", id))
+            .expect("could not parse episodes url")
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -416,5 +440,6 @@ mod test {
         client.series_images_url(1);
         client.series_images_query_url(1);
         client.series_images_query_params_url(1);
+        client.episodes_url(1);
     }
 }
