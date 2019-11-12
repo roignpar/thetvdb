@@ -72,7 +72,8 @@ pub struct Series {
     pub runtime: String,
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub series_id: Option<String>,
-    pub series_name: String,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub series_name: Option<String>,
     #[serde(deserialize_with = "deserialize::optional_float")]
     pub site_rating: Option<f32>,
     pub site_rating_count: u32,
