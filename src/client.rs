@@ -408,10 +408,10 @@ mod test {
         client.login_url();
         client.search_url();
         client.series_url(1);
-        client.actors_url(1);
-        client.episodes_url(1);
-        client.episodes_query_url(1);
-        client.episodes_summary_url(1);
+        client.series_actors_url(1);
+        client.series_episodes_url(1);
+        client.series_episodes_query_url(1);
+        client.series_episodes_summary_url(1);
         client.series_filter_url(1);
         client.series_images_url(1);
         client.series_images_query_url(1);
