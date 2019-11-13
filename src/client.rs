@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 
 use crate::error::{Error, Result};
+use crate::language::*;
 use crate::params::*;
 use crate::response::*;
 
@@ -256,6 +257,33 @@ impl Client {
         Ok(episode)
     }
 
+    pub async fn languages(&self) -> Result<Vec<Language>> {
+        let res = self
+            .prep_req(Method::GET, self.languages_url())
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<Vec<Language>>>().await?.data)
+    }
+
+    pub async fn language<I>(&self, id: I) -> Result<Language>
+    where
+        I: Into<LanguageID>,
+    {
+        let res = self
+            .prep_req(Method::GET, self.language_url(id.into()))
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<Language>>().await?.data)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -400,6 +428,18 @@ impl Client {
             .join(&format!("/episodes/{}", id))
             .expect("could not parse episodes url")
     }
+
+    fn languages_url(&self) -> Url {
+        self.base_url
+            .join("/languages")
+            .expect("could not parse languages url")
+    }
+
+    fn language_url(&self, id: LanguageID) -> Url {
+        self.base_url
+            .join(&format!("/languages/{}", id))
+            .expect("could not parse language url")
+    }
 }
 
 fn api_errors(res: &Response) -> Result<()> {
@@ -444,5 +484,7 @@ mod test {
         client.series_images_query_url(1);
         client.series_images_query_params_url(1);
         client.episodes_url(1);
+        client.languages_url();
+        client.language_url(1);
     }
 }
