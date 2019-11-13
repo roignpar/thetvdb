@@ -1,9 +1,13 @@
 use chrono::{Date, DateTime, NaiveTime, Utc};
 use serde::Deserialize;
+use url::Url;
 
+use crate::error::*;
 use crate::params::{EpisodeParams, EpisodeQuery, EpisodeQueryParams};
 
 mod deserialize;
+
+const BASE_BANNER_URL: &str = "https://www.thetvdb.com/banners/";
 
 #[derive(Debug, Deserialize)]
 pub struct ResponseData<T> {
@@ -46,6 +50,12 @@ pub struct SearchSeries {
     pub series_name: Option<String>,
     pub slug: String,
     pub status: SeriesStatus,
+}
+
+impl SearchSeries {
+    pub fn banner_url(&self) -> Result<Url> {
+        opt_image_url(&self.banner)
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -91,6 +101,12 @@ pub struct Series {
     pub zap2it_id: Option<String>,
 }
 
+impl Series {
+    pub fn banner_url(&self) -> Result<Url> {
+        opt_image_url(&self.banner)
+    }
+}
+
 // same as Series, but all fields are optional
 #[derive(Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
@@ -132,6 +148,12 @@ pub struct FilteredSeries {
     pub zap2it_id: Option<String>,
 }
 
+impl FilteredSeries {
+    pub fn banner_url(&self) -> Result<Url> {
+        opt_image_url(&self.banner)
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub enum SeriesStatus {
     Ended,
@@ -162,6 +184,12 @@ pub struct Actor {
     pub image_added: Option<DateTime<Utc>>,
     #[serde(deserialize_with = "deserialize::optional_date_time")]
     pub last_updated: Option<DateTime<Utc>>,
+}
+
+impl Actor {
+    pub fn image_url(&self) -> Result<Url> {
+        opt_image_url(&self.image)
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -211,6 +239,12 @@ pub struct Episode {
     #[serde(deserialize_with = "deserialize::optional_float")]
     pub site_rating: Option<f32>,
     pub site_rating_count: u32,
+}
+
+impl Episode {
+    pub fn filename_url(&self) -> Result<Url> {
+        opt_image_url(&self.filename)
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -353,6 +387,16 @@ pub struct Image {
     pub thumbnail: String,
 }
 
+impl Image {
+    pub fn file_name_url(&self) -> Result<Url> {
+        image_url(&self.file_name)
+    }
+
+    pub fn thumbnail_url(&self) -> Result<Url> {
+        image_url(&self.thumbnail)
+    }
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ImageRatingsInfo {
@@ -368,4 +412,15 @@ pub struct ImageQueryKey {
     pub language_id: Option<String>,
     pub resolution: Vec<String>,
     pub sub_key: Vec<String>,
+}
+
+fn image_url(file_name: &str) -> Result<Url> {
+    Ok(Url::parse(BASE_BANNER_URL)?.join(file_name)?)
+}
+
+fn opt_image_url(file_name: &Option<String>) -> Result<Url> {
+    match file_name {
+        None => Err(Error::MissingImage),
+        Some(f) => image_url(&f),
+    }
 }

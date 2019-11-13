@@ -1,6 +1,7 @@
 use failure::Fail;
 use reqwest::Error as ReqwestError;
 use serde_json::error::Error as JsonError;
+use url::ParseError as UrlParseError;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -35,6 +36,12 @@ pub enum Error {
 
     #[fail(display = "No series filter keys provided")]
     MissingSeriesFilterKeys,
+
+    #[fail(display = "Image data is missing")]
+    MissingImage,
+
+    #[fail(display = "Invalid url: {}", _0)]
+    InvalidUrl(#[cause] UrlParseError),
 }
 
 impl From<JsonError> for Error {
@@ -64,5 +71,11 @@ impl From<reqwest::header::ToStrError> for Error {
 impl From<chrono::format::ParseError> for Error {
     fn from(e: chrono::format::ParseError) -> Self {
         Self::InvalidDateFormat(e)
+    }
+}
+
+impl From<UrlParseError> for Error {
+    fn from(e: UrlParseError) -> Self {
+        Self::InvalidUrl(e)
     }
 }
