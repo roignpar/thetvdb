@@ -24,6 +24,7 @@ pub struct Client {
     token: Mutex<Option<String>>,
     token_created: Mutex<Option<Instant>>,
     http_client: HttpClient,
+    lang_abbr: String,
 }
 
 impl Client {
@@ -38,6 +39,17 @@ impl Client {
         Ok(client)
     }
 
+    pub fn set_language(&mut self, language: Language) {
+        self.lang_abbr = language.abbr().into();
+    }
+
+    pub fn set_language_abbr<S>(&mut self, abbr: S)
+    where
+        S: Into<String>,
+    {
+        self.lang_abbr = abbr.into();
+    }
+
     pub async fn search<S>(&self, param: SearchBy<S>) -> Result<Vec<SearchSeries>>
     where
         S: Into<String>,
@@ -45,7 +57,7 @@ impl Client {
         let param: HashMap<String, String> = param.into();
 
         let res = self
-            .prep_req(Method::GET, self.search_url())
+            .prep_lang_req(Method::GET, self.search_url())
             .await?
             .query(&param)
             .send()
@@ -61,7 +73,7 @@ impl Client {
         I: Into<SeriesID>,
     {
         let res = self
-            .prep_req(Method::GET, self.series_url(id.into()))
+            .prep_lang_req(Method::GET, self.series_url(id.into()))
             .await?
             .send()
             .await?;
@@ -128,7 +140,7 @@ impl Client {
         query_params: EpisodeQueryParams,
     ) -> Result<EpisodeQueryPage> {
         let res = self
-            .prep_req(
+            .prep_lang_req(
                 Method::GET,
                 self.series_episodes_query_url(query_params.params.series_id),
             )
@@ -175,7 +187,7 @@ impl Client {
         }
 
         let res = self
-            .prep_req(Method::GET, self.series_filter_url(id.into()))
+            .prep_lang_req(Method::GET, self.series_filter_url(id.into()))
             .await?
             .query(&[("keys", filter_keys.keys_query)])
             .send()
@@ -191,7 +203,7 @@ impl Client {
         I: Into<SeriesID>,
     {
         let res = self
-            .prep_req(Method::GET, self.series_images_url(id.into()))
+            .prep_lang_req(Method::GET, self.series_images_url(id.into()))
             .await?
             .send()
             .await?;
@@ -210,7 +222,7 @@ impl Client {
         I: Into<SeriesID>,
     {
         let res = self
-            .prep_req(Method::GET, self.series_images_query_url(id.into()))
+            .prep_lang_req(Method::GET, self.series_images_query_url(id.into()))
             .await?
             .query(&params)
             .send()
@@ -226,7 +238,7 @@ impl Client {
         I: Into<SeriesID>,
     {
         let res = self
-            .prep_req(Method::GET, self.series_images_query_params_url(id.into()))
+            .prep_lang_req(Method::GET, self.series_images_query_params_url(id.into()))
             .await?
             .send()
             .await?;
@@ -240,8 +252,10 @@ impl Client {
     where
         I: Into<EpisodeID>,
     {
+        let id = id.into();
+
         let res = self
-            .prep_req(Method::GET, self.episodes_url(id.into()))
+            .prep_lang_req(Method::GET, self.episodes_url(id))
             .await?
             .send()
             .await?;
@@ -294,6 +308,7 @@ impl Client {
             token: Mutex::new(None),
             token_created: Mutex::new(None),
             http_client: HttpClient::new(),
+            lang_abbr: "en".to_string(),
         }
     }
 
@@ -355,6 +370,12 @@ impl Client {
             );
 
         Ok(req)
+    }
+
+    async fn prep_lang_req(&self, method: Method, url: Url) -> Result<RequestBuilder> {
+        self.prep_req(method, url)
+            .await
+            .map(|r| r.header("Accept-Language", &self.lang_abbr))
     }
 
     fn login_url(&self) -> Url {
