@@ -298,6 +298,19 @@ impl Client {
         Ok(res.json::<ResponseData<Language>>().await?.data)
     }
 
+    pub async fn updated(&self, params: UpdatedParams) -> Result<Vec<SeriesUpdate>> {
+        let res = self
+            .prep_lang_req(Method::GET, self.updated_url())
+            .await?
+            .query(&params)
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<Vec<SeriesUpdate>>>().await?.data)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -460,6 +473,12 @@ impl Client {
         self.base_url
             .join(&format!("/languages/{}", id))
             .expect("could not parse language url")
+    }
+
+    fn updated_url(&self) -> Url {
+        self.base_url
+            .join("/updated/query")
+            .expect("could not parse updated url")
     }
 }
 

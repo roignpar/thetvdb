@@ -1,8 +1,10 @@
 use std::collections::HashMap;
 
+use chrono::{DateTime, Utc};
 use serde::Serialize;
 
 use crate::response::SeriesID;
+use crate::serialize;
 
 #[derive(Debug)]
 pub enum SearchBy<S> {
@@ -389,5 +391,43 @@ impl ImageQueryParams {
         self.sub_key = Some(sub_key.into());
 
         self
+    }
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdatedParams {
+    #[serde(serialize_with = "chrono::serde::ts_seconds::serialize")]
+    from_time: DateTime<Utc>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    to_time: Option<serialize::Timestamp>,
+}
+
+impl UpdatedParams {
+    pub fn new<D>(from: D) -> Self
+    where
+        D: Into<DateTime<Utc>>,
+    {
+        Self {
+            from_time: from.into(),
+            to_time: None,
+        }
+    }
+
+    pub fn with_to_time<D>(from: D, to: D) -> Self
+    where
+        D: Into<DateTime<Utc>>,
+    {
+        Self {
+            from_time: from.into(),
+            to_time: Some(serialize::Timestamp(to.into())),
+        }
+    }
+
+    pub fn set_to_time<D>(&mut self, to: D)
+    where
+        D: Into<DateTime<Utc>>,
+    {
+        self.to_time = Some(serialize::Timestamp(to.into()));
     }
 }

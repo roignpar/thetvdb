@@ -27,6 +27,12 @@ impl From<&Series> for SeriesID {
     }
 }
 
+impl From<&SeriesUpdate> for SeriesID {
+    fn from(s: &SeriesUpdate) -> SeriesID {
+        s.id
+    }
+}
+
 pub type EpisodeID = u32;
 
 impl From<&Episode> for EpisodeID {
@@ -411,6 +417,14 @@ pub struct ImageQueryKey {
     pub language_id: Option<String>,
     pub resolution: Vec<String>,
     pub sub_key: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SeriesUpdate {
+    pub id: SeriesID,
+    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
+    pub last_updated: DateTime<Utc>,
 }
 
 fn image_url(file_name: &str) -> Result<Url> {
