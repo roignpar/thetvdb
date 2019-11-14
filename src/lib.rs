@@ -1,3 +1,5 @@
+mod deserialize;
+
 pub mod client;
 pub mod error;
 pub mod language;

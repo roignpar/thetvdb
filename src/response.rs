@@ -2,10 +2,9 @@ use chrono::{Date, DateTime, NaiveTime, Utc};
 use serde::Deserialize;
 use url::Url;
 
+use crate::deserialize;
 use crate::error::*;
 use crate::params::{EpisodeParams, EpisodeQuery, EpisodeQueryParams};
-
-mod deserialize;
 
 const BASE_BANNER_URL: &str = "https://www.thetvdb.com/banners/";
 
