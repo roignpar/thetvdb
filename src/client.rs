@@ -1,7 +1,6 @@
 use std::collections::HashMap;
-use std::time::{Duration, Instant};
 
-use chrono::{DateTime, FixedOffset};
+use chrono::{DateTime, Duration, FixedOffset, Utc};
 use futures::lock::Mutex;
 use reqwest::{header::HeaderValue, Client as HttpClient, Method, RequestBuilder, Response};
 use serde::{Deserialize, Serialize};
@@ -14,15 +13,13 @@ use crate::response::*;
 
 const BASE_URL: &str = "https://api.thetvdb.com/";
 
-// 23 hours and 59 minutes
-const TOKEN_VALID: Duration = Duration::from_secs(60 * 60 * 24 - 60);
-
 #[derive(Debug)]
 pub struct Client {
     base_url: Url,
     api_key: String,
     token: Mutex<Option<String>>,
-    token_created: Mutex<Option<Instant>>,
+    token_created: Mutex<Option<DateTime<Utc>>>,
+    token_expires: Mutex<Option<DateTime<Utc>>>,
     http_client: HttpClient,
     lang_abbr: String,
 }
@@ -320,6 +317,7 @@ impl Client {
             api_key: api_key.into(),
             token: Mutex::new(None),
             token_created: Mutex::new(None),
+            token_expires: Mutex::new(None),
             http_client: HttpClient::new(),
             lang_abbr: "en".to_string(),
         }
@@ -339,23 +337,24 @@ impl Client {
 
         let TokenResp { token } = res.json().await?;
 
-        self.set_token(token).await;
+        self.set_token(token).await?;
 
         Ok(())
     }
 
     async fn ensure_valid_token(&self) -> Result<()> {
-        match (
-            self.token_created.lock().await.as_ref(),
-            self.token.lock().await.as_ref(),
-        ) {
-            (Some(moment), Some(_)) if moment.elapsed() <= TOKEN_VALID => Ok(()),
+        match self.token_expires.lock().await.as_ref() {
+            Some(moment) if *moment - Duration::minutes(1) >= Utc::now() => Ok(()),
 
             _ => self.login().await,
         }
     }
 
-    async fn set_token(&self, new_token: String) {
+    async fn set_token(&self, new_token: String) -> Result<()> {
+        // TheTVDB API JWT public key is not available,
+        // thus the use of `dangerous_unsafe_decode`
+        let payload = jsonwebtoken::dangerous_unsafe_decode::<TokenPayload>(&new_token)?.claims;
+
         futures::join!(
             async {
                 let mut token = self.token.lock().await;
@@ -363,9 +362,15 @@ impl Client {
             },
             async {
                 let mut token_created = self.token_created.lock().await;
-                *token_created = Some(Instant::now());
+                *token_created = Some(payload.orig_iat);
             },
+            async {
+                let mut token_expires = self.token_expires.lock().await;
+                *token_expires = Some(payload.exp)
+            }
         );
+
+        Ok(())
     }
 
     async fn prep_req(&self, method: Method, url: Url) -> Result<RequestBuilder> {
@@ -499,6 +504,14 @@ struct AuthBody<'a> {
 #[derive(Deserialize)]
 struct TokenResp {
     token: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct TokenPayload {
+    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
+    orig_iat: DateTime<Utc>,
+    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
+    exp: DateTime<Utc>,
 }
 
 #[cfg(test)]

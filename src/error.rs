@@ -1,4 +1,5 @@
 use failure::Fail;
+use jsonwebtoken::errors::Error as JWTError;
 use reqwest::Error as ReqwestError;
 use serde_json::error::Error as JsonError;
 use url::ParseError as UrlParseError;
@@ -42,6 +43,9 @@ pub enum Error {
 
     #[fail(display = "Invalid url: {}", _0)]
     InvalidUrl(#[cause] UrlParseError),
+
+    #[fail(display = "Could not decode authentication JWT: {}", _0)]
+    InvalidJWT(#[cause] JWTError),
 }
 
 impl From<JsonError> for Error {
@@ -77,5 +81,11 @@ impl From<chrono::format::ParseError> for Error {
 impl From<UrlParseError> for Error {
     fn from(e: UrlParseError) -> Self {
         Self::InvalidUrl(e)
+    }
+}
+
+impl From<JWTError> for Error {
+    fn from(e: JWTError) -> Self {
+        Self::InvalidJWT(e)
     }
 }
