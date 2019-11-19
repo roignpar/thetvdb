@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use chrono::{DateTime, Duration, FixedOffset, Utc};
+use chrono::{DateTime, Duration, Utc};
 use futures::lock::Mutex;
 use reqwest::{header::HeaderValue, Client as HttpClient, Method, RequestBuilder, Response};
 use serde::{Deserialize, Serialize};
