@@ -80,7 +80,7 @@ impl Client {
         Ok(res.json::<ResponseData<Series>>().await?.data)
     }
 
-    pub async fn series_last_modified<I>(&self, id: I) -> Result<DateTime<FixedOffset>>
+    pub async fn series_last_modified<I>(&self, id: I) -> Result<DateTime<Utc>>
     where
         I: Into<SeriesID>,
     {
@@ -98,7 +98,7 @@ impl Client {
             .ok_or(Error::MissingLastModified)
             .map(HeaderValue::to_str)??;
 
-        Ok(DateTime::parse_from_rfc2822(lm_header)?)
+        Ok(DateTime::parse_from_rfc2822(lm_header)?.into())
     }
 
     pub async fn series_actors<I>(&self, id: I) -> Result<Vec<Actor>>
