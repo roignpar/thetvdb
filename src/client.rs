@@ -496,12 +496,12 @@ fn api_errors(res: &Response) -> Result<()> {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 struct AuthBody<'a> {
     apikey: &'a str,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 struct TokenResp {
     token: String,
 }
