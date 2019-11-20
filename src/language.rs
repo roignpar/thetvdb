@@ -5,7 +5,7 @@ pub type LanguageID = u16;
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Language {
-    id: LanguageID,
+    pub id: LanguageID,
     abbreviation: String,
     pub name: String,
     pub english_name: String,
