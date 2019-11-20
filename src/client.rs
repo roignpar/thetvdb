@@ -1,3 +1,9 @@
+#![deny(missing_docs, missing_debug_implementations, unsafe_code)]
+
+//! Contains TheTVDB API async client.
+//!
+//! Check [`Client`](./struct.Client.html) documentation for more info.
+
 use std::collections::HashMap;
 
 use chrono::{DateTime, Duration, Utc};
@@ -13,6 +19,11 @@ use crate::response::*;
 
 const BASE_URL: &str = "https://api.thetvdb.com/";
 
+/// TheTVDB API async client.
+///
+/// You will need a valid API key to create a new client.
+/// To generate a key log in and go to the [API Keys
+/// page](https://thetvdb.com/dashboard/account/apikeys).
 #[derive(Debug)]
 pub struct Client {
     base_url: Url,
@@ -25,6 +36,10 @@ pub struct Client {
 }
 
 impl Client {
+    /// Create a new client and authenticate using the given api key.
+    ///
+    /// # Errors
+    /// Will fail if the api key is not valid.
     pub async fn new<S>(api_key: S) -> Result<Self>
     where
         S: Into<String>,
@@ -36,10 +51,69 @@ impl Client {
         Ok(client)
     }
 
+    /// Set the language for the client.
+    ///
+    /// The language abbreviation will be set as the `Accept-Language` header
+    /// when sending API requests that support it.
+    ///
+    /// The default language is **English**.
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, LanguageID, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let mut client = Client::new("KEY").await?;
+    /// #
+    /// let planet_earth_ii = client.series(318408 as SeriesID).await?;
+    ///
+    /// assert_eq!(
+    ///     planet_earth_ii.series_name,
+    ///     Some("Planet Earth II".to_string())
+    /// );
+    ///
+    /// let korean = client.language(32 as LanguageID).await?;
+    ///
+    /// client.set_language(korean);
+    ///
+    /// let planet_earth_ii_ko = client.series(318408 as SeriesID).await?;
+    ///
+    /// assert_eq!(
+    ///     planet_earth_ii_ko.series_name,
+    ///     Some("살아있는 지구 II".to_string())
+    /// );
+    ///
+    /// assert_eq!(planet_earth_ii.id, planet_earth_ii_ko.id);
+    /// # Ok(()) }
+    /// ```
     pub fn set_language(&mut self, language: Language) {
         self.lang_abbr = language.abbr().into();
     }
 
+    /// Set the language abbreviation directly.
+    ///
+    /// Read [`set_language`](#method.set_language) documentation for more info.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, LanguageID, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let mut client = Client::new("KEY").await?;
+    /// #
+    /// client.set_language_abbr("ko");
+    ///
+    /// let planet_earth_ii_ko = client.series(318408 as SeriesID).await?;
+    ///
+    /// assert_eq!(
+    ///     planet_earth_ii_ko.series_name,
+    ///     Some("살아있는 지구 II".to_string())
+    /// );
+    /// # Ok(()) }
+    /// ```
     pub fn set_language_abbr<S>(&mut self, abbr: S)
     where
         S: Into<String>,
@@ -47,6 +121,29 @@ impl Client {
         self.lang_abbr = abbr.into();
     }
 
+    /// Search for series providing either a (partial) name, IMDb id, slug or Zap2it id.
+    ///
+    /// Sends a `GET` request to the `/search/series` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// use thetvdb::SearchBy;
+    ///
+    /// let results = client.search(SearchBy::ImdbID("tt5491994")).await?;
+    ///
+    /// assert_eq!(
+    ///     results[0].series_name,
+    ///     Some("Planet Earth II".to_string())
+    /// );
+    /// # Ok(()) }
+    /// ```
     pub async fn search<S>(&self, param: SearchBy<S>) -> Result<Vec<SearchSeries>>
     where
         S: Into<String>,
@@ -65,6 +162,54 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<SearchSeries>>>().await?.data)
     }
 
+    /// Get a series by its id.
+    ///
+    /// Sends a `GET` request to the `/series/{id}` API endpoint.
+    ///
+    /// References to `SearchSeries`, `Series`, `SeriesUpdate` or any
+    /// type that impls `Into<SeriesID>` can also be used for ids.
+    ///
+    /// # Examples
+    /// Use a literal id.
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let series = client.series(318408 as SeriesID).await?;
+    ///
+    /// assert_eq!(
+    ///     series.series_name,
+    ///     Some("Planet Earth II".to_string())
+    /// );
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// Use a search result.
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SearchBy};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let results = client.search(SearchBy::ImdbID("tt5491994")).await?;
+    ///
+    /// let series = client.series(&results[0]).await?;
+    ///
+    /// assert_eq!(
+    ///     series.series_name,
+    ///     Some("Planet Earth II".to_string())
+    /// );
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the series is not found.
     pub async fn series<I>(&self, id: I) -> Result<Series>
     where
         I: Into<SeriesID>,
@@ -80,6 +225,29 @@ impl Client {
         Ok(res.json::<ResponseData<Series>>().await?.data)
     }
 
+    /// Get the last modified time of a series.
+    ///
+    /// Sends a HEAD request to the `/series/{id}` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// use chrono::Utc;
+    ///
+    /// let last_modified = client.series_last_modified(318408 as SeriesID).await?;
+    ///
+    /// assert!(last_modified < Utc::now());
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the series is not found.
     pub async fn series_last_modified<I>(&self, id: I) -> Result<DateTime<Utc>>
     where
         I: Into<SeriesID>,
@@ -101,6 +269,27 @@ impl Client {
         Ok(DateTime::parse_from_rfc2822(lm_header)?.into())
     }
 
+    /// Get a list of actors playing in a given series.
+    ///
+    /// Sends a `GET` request to the `/series/{id}/actors` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let actors = client.series_actors(318408 as SeriesID).await?;
+    ///
+    /// assert_eq!(&actors[0].name, "David Attenborough");
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the series is not found.
     pub async fn series_actors<I>(&self, id: I) -> Result<Vec<Actor>>
     where
         I: Into<SeriesID>,
@@ -116,6 +305,45 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<Actor>>>().await?.data)
     }
 
+    /// Get a page of a series' episodes.
+    ///
+    /// Sends a `GET` request to the `/series/{id}/episodes` API endpoint.
+    ///
+    /// A page contains 100 episodes at most.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// use thetvdb::EpisodeParams;
+    ///
+    /// // get the first page
+    /// let episode_params = EpisodeParams::new(121361 as SeriesID);
+    /// let episode_page = client.series_episodes(episode_params).await?;
+    ///
+    /// // get the next page
+    /// let next_page_params = episode_page.next_page_params().unwrap();
+    /// let next_page = client.series_episodes(next_page_params).await?;
+    ///
+    /// // get the previous page
+    /// let prev_page_params = next_page.prev_page_params().unwrap();
+    /// let prev_page = client.series_episodes(prev_page_params).await?;
+    ///
+    /// // get a custom page
+    /// let custom_page_params = EpisodeParams::with_page(121361 as SeriesID, 2);
+    /// let custom_page = client.series_episodes(custom_page_params).await?;
+    ///
+    /// // print an episode
+    /// println!("{:#?}", episode_page.episodes[0]);
+    /// # Ok(()) }
+    /// ```
+    /// # Errors
+    /// Will return an error if the series is not found.
     pub async fn series_episodes(&self, params: EpisodeParams) -> Result<EpisodePage> {
         let res = self
             .prep_req(Method::GET, self.series_episodes_url(params.series_id))
@@ -132,6 +360,42 @@ impl Client {
         Ok(page)
     }
 
+    /// Get a page of a series' episodes queried with the given params.
+    ///
+    /// Sends a `GET` request to the `/series/{id}/episodes/query` API endpoint.
+    ///
+    /// Check [series_episodes](#method.series_episodes) for pagination examples.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// use thetvdb::EpisodeQueryParams;
+    ///
+    /// let query = EpisodeQueryParams::new(318408 as SeriesID)
+    ///     .absolute_number(1)
+    ///     .aired_season(1)
+    ///     .aired_episode(1)
+    ///     .dvd_season(1)
+    ///     .dvd_episode(1);
+    ///
+    /// let episode_page = client.series_episodes_query(query).await?;
+    ///
+    /// assert_eq!(
+    ///     episode_page.episodes[0].episode_name,
+    ///     Some("Islands".to_string())
+    /// );
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the series is not found or
+    /// the data set is empty.
     pub async fn series_episodes_query(
         &self,
         query_params: EpisodeQueryParams,
@@ -156,6 +420,27 @@ impl Client {
         Ok(page)
     }
 
+    /// Get the summary of a series' episodes.
+    ///
+    /// Sends a `GET` request to the `/series/{id}/episodes/summary` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let summary = client.series_episodes_summary(318408 as SeriesID).await?;
+    ///
+    /// assert_eq!(summary.aired_episodes, 18);
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the series is not found.
     pub async fn series_episodes_summary<I>(&self, id: I) -> Result<EpisodeSummary>
     where
         I: Into<SeriesID>,
@@ -171,6 +456,38 @@ impl Client {
         Ok(res.json::<ResponseData<EpisodeSummary>>().await?.data)
     }
 
+    /// Get only selected fields of a series.
+    ///
+    /// Sends a `GET` request to the `/series/{id}/filter` API endpoint.
+    ///
+    /// This can be more efficient than getting all the fields.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// use thetvdb::SeriesFilterKeys;
+    ///
+    /// let keys = SeriesFilterKeys::new().series_name();
+    ///
+    /// let filtered_series = client.series_filter(318408 as SeriesID, keys).await?;
+    ///
+    /// assert_eq!(
+    ///     filtered_series.series_name,
+    ///     Some("Planet Earth II".to_string())
+    /// );
+    ///
+    /// assert_eq!(filtered_series.id, None);
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the series is not found.
     pub async fn series_filter<I>(
         &self,
         id: I,
@@ -195,6 +512,27 @@ impl Client {
         Ok(res.json::<ResponseData<FilteredSeries>>().await?.data)
     }
 
+    /// Get a summary of a series' images.
+    ///
+    /// Sends a `GET` request to the `/series/{id}/images` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let image_summary = client.series_images(318408 as SeriesID).await?;
+    ///
+    /// assert_eq!(image_summary.poster, Some(8));
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the series is not found.
     pub async fn series_images<I>(&self, id: I) -> Result<SeriesImages>
     where
         I: Into<SeriesID>,
@@ -210,6 +548,42 @@ impl Client {
         Ok(res.json::<ResponseData<SeriesImages>>().await?.data)
     }
 
+    /// Get a series' images based on query parameters.
+    ///
+    /// Sends a `GET` request to the `/series/{id}/images/query` API endpoint.
+    ///
+    /// Each series may have different available image types.
+    /// To find out which key types, resolutions and subkeys are available for
+    /// a series use the [`series_images_query_params`](#method.series_images_query_params)
+    /// method.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// use thetvdb::ImageQueryParams;
+    ///
+    /// let params = ImageQueryParams::with_key_type("poster");
+    ///
+    /// let images = client.
+    ///     series_images_query(318408 as SeriesID, params)
+    ///     .await?;
+    ///
+    /// assert_eq!(images.len(), 8);
+    ///
+    /// // print an image's URL
+    /// println!("{}", images[0].file_name_url()?);
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the series is not found or
+    /// the data set is empty.
     pub async fn series_images_query<I>(
         &self,
         id: I,
@@ -230,6 +604,30 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<Image>>>().await?.data)
     }
 
+    /// Get a series' available image key types, resolutions and subkeys.
+    ///
+    /// Sends a `GET` request to the `/series/{id}/images/query/params` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let image_keys = client
+    ///     .series_images_query_params(318408 as SeriesID)
+    ///     .await?;
+    ///
+    /// // print resolutions available for the first image key type
+    /// println!("{:#?}", image_keys[0].resolution);
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the series is not found.
     pub async fn series_images_query_params<I>(&self, id: I) -> Result<Vec<ImageQueryKey>>
     where
         I: Into<SeriesID>,
@@ -245,6 +643,28 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<ImageQueryKey>>>().await?.data)
     }
 
+    /// Get an episode by its id.
+    ///
+    /// Sends a `GET` request to the `/episodes/{id}` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, EpisodeID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let episode = client.episode(5812389 as EpisodeID).await?;
+    ///
+    /// assert_eq!(episode.episode_name, Some("Islands".to_string()));
+    /// assert_eq!(episode.series_id, 318408);
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the episode is not found.
     pub async fn episode<I>(&self, id: I) -> Result<Episode>
     where
         I: Into<EpisodeID>,
@@ -268,6 +688,28 @@ impl Client {
         Ok(episode)
     }
 
+    /// Get a list of all the available languages.
+    ///
+    /// Sends a `GET` request to the `/languages` API endpoint.
+    ///
+    /// Languages can be used to [`set_language`](#method.set_language)
+    /// on the client.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, EpisodeID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let languages = client.languages().await?;
+    ///
+    /// // print all the languages
+    /// println!("{:#?}", languages);
+    /// # Ok(()) }
+    /// ```
     pub async fn languages(&self) -> Result<Vec<Language>> {
         let res = self
             .prep_req(Method::GET, self.languages_url())
@@ -280,6 +722,29 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<Language>>>().await?.data)
     }
 
+    /// Get a language by its id.
+    ///
+    /// Sends a `GET` request to the `/languages/{id}` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, LanguageID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let japanese = client.language(25 as LanguageID).await?;
+    ///
+    /// assert_eq!(japanese.abbr(), "ja".to_string());
+    /// assert_eq!(japanese.name, "日本語".to_string());
+    /// assert_eq!(japanese.english_name, "Japanese".to_string());
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if the language is not found.
     pub async fn language<I>(&self, id: I) -> Result<Language>
     where
         I: Into<LanguageID>,
@@ -295,6 +760,42 @@ impl Client {
         Ok(res.json::<ResponseData<Language>>().await?.data)
     }
 
+    /// Get a list of series updated within a given time period.
+    ///
+    /// Sends a `GET` request to the `/updated/query` API endpoint.
+    ///
+    /// If `to_time` is not set or more than one week after `from_time`,
+    /// the API sets the timespan to one week.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result, LanguageID};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// use thetvdb::UpdatedParams;
+    /// use chrono::DateTime;
+    ///
+    /// let from = DateTime::parse_from_rfc3339("2019-11-10T12:00:00-00:00")?;
+    /// let to = DateTime::parse_from_rfc3339("2019-11-10T12:10:00-00:00")?;
+    ///
+    /// let timespan = UpdatedParams::with_to_time(from, to);
+    ///
+    /// let updates = client.updated(timespan).await?;
+    ///
+    /// assert_eq!(updates.len(), 7);
+    ///
+    /// // results can be used to fetch full series data
+    /// let series = client.series(&updates[0]).await?;
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// # Errors
+    /// Will return an error if there are no updated series within the
+    /// given timespan.
     pub async fn updated(&self, params: UpdatedParams) -> Result<Vec<SeriesUpdate>> {
         let res = self
             .prep_lang_req(Method::GET, self.updated_url())
