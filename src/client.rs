@@ -539,5 +539,6 @@ mod test {
         client.episodes_url(1);
         client.languages_url();
         client.language_url(1);
+        client.updated_url();
     }
 }
