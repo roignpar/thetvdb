@@ -170,7 +170,7 @@ impl Client {
     /// type that impls `Into<SeriesID>` can also be used for ids.
     ///
     /// # Examples
-    /// Use a literal id.
+    /// Use a literal id:
     /// ```no_run
     /// # use thetvdb::{Client, error::Result};
     /// #
@@ -188,7 +188,7 @@ impl Client {
     /// # Ok(()) }
     /// ```
     ///
-    /// Use a search result.
+    /// Use a search result:
     /// ```no_run
     /// # use thetvdb::{Client, error::Result, SearchBy};
     /// #
