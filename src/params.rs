@@ -247,10 +247,6 @@ impl SeriesFilterKeys {
         self.push_key("banner")
     }
 
-    pub fn series_id(self) -> Self {
-        self.push_key("seriesId")
-    }
-
     pub fn genre(self) -> Self {
         self.push_key("genre")
     }

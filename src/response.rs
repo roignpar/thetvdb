@@ -125,8 +125,6 @@ pub struct Series {
     pub rating: Option<String>,
     pub runtime: String,
     #[serde(deserialize_with = "deserialize::optional_string")]
-    pub series_id: Option<String>,
-    #[serde(deserialize_with = "deserialize::optional_string")]
     pub series_name: Option<String>,
     #[serde(deserialize_with = "deserialize::optional_float")]
     pub site_rating: Option<f32>,
@@ -176,8 +174,6 @@ pub struct FilteredSeries {
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub rating: Option<String>,
     pub runtime: Option<String>,
-    #[serde(deserialize_with = "deserialize::optional_string")]
-    pub series_id: Option<String>,
     pub series_name: Option<String>,
     #[serde(deserialize_with = "deserialize::optional_float")]
     pub site_rating: Option<f32>,
