@@ -1,6 +1,6 @@
 #![deny(missing_docs, missing_debug_implementations, unsafe_code)]
 
-//! Contains TheTVDB API async client.
+//! TheTVDB API async client.
 //!
 //! Check [`Client`](./struct.Client.html) documentation for more info.
 
