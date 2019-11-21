@@ -15,7 +15,7 @@ pub struct ResponseData<T> {
     pub data: T,
 }
 
-#[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd, Ord, Eq, Deserialize)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize)]
 pub struct SeriesID(pub u32);
 
 impl fmt::Display for SeriesID {

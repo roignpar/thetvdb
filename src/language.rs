@@ -2,7 +2,7 @@ use std::fmt;
 
 use serde::Deserialize;
 
-#[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd, Ord, Eq, Deserialize)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize)]
 pub struct LanguageID(pub u16);
 
 impl fmt::Display for LanguageID {
