@@ -59,7 +59,7 @@ impl Client {
     /// The default language is **English**.
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, LanguageID, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result, SeriesID};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -73,7 +73,7 @@ impl Client {
     ///     Some("Planet Earth II".to_string())
     /// );
     ///
-    /// let korean = client.language(32 as LanguageID).await?;
+    /// let korean = client.language(32).await?;
     ///
     /// client.set_language(korean);
     ///
@@ -97,7 +97,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, LanguageID, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result, SeriesID};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -728,14 +728,14 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, LanguageID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// let japanese = client.language(25 as LanguageID).await?;
+    /// let japanese = client.language(25).await?;
     ///
     /// assert_eq!(japanese.abbr(), "ja".to_string());
     /// assert_eq!(japanese.name, "日本語".to_string());
@@ -769,7 +769,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, LanguageID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -1039,7 +1039,7 @@ mod test {
         client.series_images_query_params_url(1);
         client.episodes_url(1);
         client.languages_url();
-        client.language_url(1);
+        client.language_url(LanguageID(1));
         client.updated_url();
     }
 }
