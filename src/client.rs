@@ -59,14 +59,14 @@ impl Client {
     /// The default language is **English**.
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
     /// #
     /// # let mut client = Client::new("KEY").await?;
     /// #
-    /// let planet_earth_ii = client.series(318408 as SeriesID).await?;
+    /// let planet_earth_ii = client.series(318408).await?;
     ///
     /// assert_eq!(
     ///     planet_earth_ii.series_name,
@@ -77,7 +77,7 @@ impl Client {
     ///
     /// client.set_language(korean);
     ///
-    /// let planet_earth_ii_ko = client.series(318408 as SeriesID).await?;
+    /// let planet_earth_ii_ko = client.series(318408).await?;
     ///
     /// assert_eq!(
     ///     planet_earth_ii_ko.series_name,
@@ -97,7 +97,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -106,7 +106,7 @@ impl Client {
     /// #
     /// client.set_language_abbr("ko");
     ///
-    /// let planet_earth_ii_ko = client.series(318408 as SeriesID).await?;
+    /// let planet_earth_ii_ko = client.series(318408).await?;
     ///
     /// assert_eq!(
     ///     planet_earth_ii_ko.series_name,
@@ -172,14 +172,14 @@ impl Client {
     /// # Examples
     /// Use a literal id.
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// let series = client.series(318408 as SeriesID).await?;
+    /// let series = client.series(318408).await?;
     ///
     /// assert_eq!(
     ///     series.series_name,
@@ -231,7 +231,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -240,7 +240,7 @@ impl Client {
     /// #
     /// use chrono::Utc;
     ///
-    /// let last_modified = client.series_last_modified(318408 as SeriesID).await?;
+    /// let last_modified = client.series_last_modified(318408).await?;
     ///
     /// assert!(last_modified < Utc::now());
     /// # Ok(()) }
@@ -275,14 +275,14 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// let actors = client.series_actors(318408 as SeriesID).await?;
+    /// let actors = client.series_actors(318408).await?;
     ///
     /// assert_eq!(&actors[0].name, "David Attenborough");
     /// # Ok(()) }
@@ -313,7 +313,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -323,7 +323,7 @@ impl Client {
     /// use thetvdb::EpisodeParams;
     ///
     /// // get the first page
-    /// let episode_params = EpisodeParams::new(121361 as SeriesID);
+    /// let episode_params = EpisodeParams::new(121361);
     /// let episode_page = client.series_episodes(episode_params).await?;
     ///
     /// // get the next page
@@ -335,7 +335,7 @@ impl Client {
     /// let prev_page = client.series_episodes(prev_page_params).await?;
     ///
     /// // get a custom page
-    /// let custom_page_params = EpisodeParams::with_page(121361 as SeriesID, 2);
+    /// let custom_page_params = EpisodeParams::with_page(121361, 2);
     /// let custom_page = client.series_episodes(custom_page_params).await?;
     ///
     /// // print an episode
@@ -368,7 +368,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -377,7 +377,7 @@ impl Client {
     /// #
     /// use thetvdb::EpisodeQueryParams;
     ///
-    /// let query = EpisodeQueryParams::new(318408 as SeriesID)
+    /// let query = EpisodeQueryParams::new(318408)
     ///     .absolute_number(1)
     ///     .aired_season(1)
     ///     .aired_episode(1)
@@ -426,14 +426,14 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// let summary = client.series_episodes_summary(318408 as SeriesID).await?;
+    /// let summary = client.series_episodes_summary(318408).await?;
     ///
     /// assert_eq!(summary.aired_episodes, 18);
     /// # Ok(()) }
@@ -464,7 +464,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -475,7 +475,7 @@ impl Client {
     ///
     /// let keys = SeriesFilterKeys::new().series_name();
     ///
-    /// let filtered_series = client.series_filter(318408 as SeriesID, keys).await?;
+    /// let filtered_series = client.series_filter(318408, keys).await?;
     ///
     /// assert_eq!(
     ///     filtered_series.series_name,
@@ -518,14 +518,14 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// let image_summary = client.series_images(318408 as SeriesID).await?;
+    /// let image_summary = client.series_images(318408).await?;
     ///
     /// assert_eq!(image_summary.poster, Some(8));
     /// # Ok(()) }
@@ -559,7 +559,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -571,7 +571,7 @@ impl Client {
     /// let params = ImageQueryParams::with_key_type("poster");
     ///
     /// let images = client.
-    ///     series_images_query(318408 as SeriesID, params)
+    ///     series_images_query(318408, params)
     ///     .await?;
     ///
     /// assert_eq!(images.len(), 8);
@@ -610,7 +610,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -618,7 +618,7 @@ impl Client {
     /// # let client = Client::new("KEY").await?;
     /// #
     /// let image_keys = client
-    ///     .series_images_query_params(318408 as SeriesID)
+    ///     .series_images_query_params(318408)
     ///     .await?;
     ///
     /// // print resolutions available for the first image key type
@@ -649,7 +649,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, EpisodeID};
+    /// # use thetvdb::{Client, error::Result, EpisodeID, SeriesID};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -659,7 +659,7 @@ impl Client {
     /// let episode = client.episode(5812389 as EpisodeID).await?;
     ///
     /// assert_eq!(episode.episode_name, Some("Islands".to_string()));
-    /// assert_eq!(episode.series_id, 318408);
+    /// assert_eq!(episode.series_id, SeriesID(318408));
     /// # Ok(()) }
     /// ```
     ///
@@ -1028,15 +1028,15 @@ mod test {
 
         client.login_url();
         client.search_url();
-        client.series_url(1);
-        client.series_actors_url(1);
-        client.series_episodes_url(1);
-        client.series_episodes_query_url(1);
-        client.series_episodes_summary_url(1);
-        client.series_filter_url(1);
-        client.series_images_url(1);
-        client.series_images_query_url(1);
-        client.series_images_query_params_url(1);
+        client.series_url(SeriesID(1));
+        client.series_actors_url(SeriesID(1));
+        client.series_episodes_url(SeriesID(1));
+        client.series_episodes_query_url(SeriesID(1));
+        client.series_episodes_summary_url(SeriesID(1));
+        client.series_filter_url(SeriesID(1));
+        client.series_images_url(SeriesID(1));
+        client.series_images_query_url(SeriesID(1));
+        client.series_images_query_params_url(SeriesID(1));
         client.episodes_url(1);
         client.languages_url();
         client.language_url(LanguageID(1));
