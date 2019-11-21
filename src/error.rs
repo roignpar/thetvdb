@@ -41,6 +41,9 @@ pub enum Error {
     #[fail(display = "Image data is missing")]
     MissingImage,
 
+    #[fail(display = "Series slug is missing")]
+    MissingSeriesSlug,
+
     #[fail(display = "Invalid url: {}", _0)]
     InvalidUrl(#[cause] UrlParseError),
 

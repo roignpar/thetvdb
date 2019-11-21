@@ -8,6 +8,7 @@ use crate::deserialize;
 use crate::error::*;
 use crate::params::{EpisodeParams, EpisodeQuery, EpisodeQueryParams};
 
+const BASE_SERIES_URL: &str = "https://www.thetvdb.com/series/";
 const BASE_BANNER_URL: &str = "https://www.thetvdb.com/banners/";
 
 #[derive(Debug, Deserialize)]
@@ -89,6 +90,10 @@ impl SearchSeries {
     pub fn banner_url(&self) -> Result<Url> {
         opt_image_url(&self.banner)
     }
+
+    pub fn website_url(&self) -> Result<Url> {
+        series_website_url(&self.slug)
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -138,6 +143,10 @@ impl Series {
     pub fn banner_url(&self) -> Result<Url> {
         opt_image_url(&self.banner)
     }
+
+    pub fn website_url(&self) -> Result<Url> {
+        series_website_url(&self.slug)
+    }
 }
 
 // same as Series, but all fields are optional
@@ -184,6 +193,13 @@ pub struct FilteredSeries {
 impl FilteredSeries {
     pub fn banner_url(&self) -> Result<Url> {
         opt_image_url(&self.banner)
+    }
+
+    pub fn website_url(&self) -> Result<Url> {
+        match self.slug.as_ref() {
+            Some(s) => series_website_url(&s),
+            None => Err(Error::MissingSeriesSlug),
+        }
     }
 }
 
@@ -464,4 +480,8 @@ fn opt_image_url(file_name: &Option<String>) -> Result<Url> {
         None => Err(Error::MissingImage),
         Some(f) => image_url(&f),
     }
+}
+
+fn series_website_url(slug: &str) -> Result<Url> {
+    Ok(Url::parse(BASE_SERIES_URL)?.join(slug)?)
 }
