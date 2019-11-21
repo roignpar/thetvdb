@@ -7,9 +7,7 @@ use url::Url;
 use crate::deserialize;
 use crate::error::*;
 use crate::params::{EpisodeParams, EpisodeQuery, EpisodeQueryParams};
-
-const BASE_SERIES_URL: &str = "https://www.thetvdb.com/series/";
-const BASE_BANNER_URL: &str = "https://www.thetvdb.com/banners/";
+use crate::urls::URLS;
 
 #[derive(Debug, Deserialize)]
 pub struct ResponseData<T> {
@@ -472,7 +470,7 @@ pub struct SeriesUpdate {
 }
 
 fn image_url(file_name: &str) -> Result<Url> {
-    Ok(Url::parse(BASE_BANNER_URL)?.join(file_name)?)
+    Ok(URLS.banner.join(file_name)?)
 }
 
 fn opt_image_url(file_name: &Option<String>) -> Result<Url> {
@@ -483,5 +481,5 @@ fn opt_image_url(file_name: &Option<String>) -> Result<Url> {
 }
 
 fn series_website_url(slug: &str) -> Result<Url> {
-    Ok(Url::parse(BASE_SERIES_URL)?.join(slug)?)
+    Ok(URLS.series.join(slug)?)
 }

@@ -1,5 +1,6 @@
 mod deserialize;
 mod serialize;
+mod urls;
 
 pub mod client;
 pub mod error;
