@@ -48,7 +48,20 @@ impl From<&SeriesUpdate> for SeriesID {
     }
 }
 
-pub type EpisodeID = u32;
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize)]
+pub struct EpisodeID(pub u32);
+
+impl fmt::Display for EpisodeID {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+impl From<u32> for EpisodeID {
+    fn from(i: u32) -> Self {
+        Self(i)
+    }
+}
 
 impl From<&Episode> for EpisodeID {
     fn from(e: &Episode) -> EpisodeID {

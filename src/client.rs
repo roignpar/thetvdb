@@ -649,14 +649,14 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, EpisodeID, SeriesID};
+    /// # use thetvdb::{Client, error::Result, SeriesID};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// let episode = client.episode(5812389 as EpisodeID).await?;
+    /// let episode = client.episode(5812389).await?;
     ///
     /// assert_eq!(episode.episode_name, Some("Islands".to_string()));
     /// assert_eq!(episode.series_id, SeriesID(318408));
@@ -697,7 +697,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, EpisodeID};
+    /// # use thetvdb::{Client, error::Result};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -1037,7 +1037,7 @@ mod test {
         client.series_images_url(SeriesID(1));
         client.series_images_query_url(SeriesID(1));
         client.series_images_query_params_url(SeriesID(1));
-        client.episodes_url(1);
+        client.episodes_url(EpisodeID(1));
         client.languages_url();
         client.language_url(LanguageID(1));
         client.updated_url();
