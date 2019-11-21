@@ -10,8 +10,8 @@ use crate::params::{EpisodeParams, EpisodeQuery, EpisodeQueryParams};
 use crate::urls::URLS;
 
 #[derive(Debug, Deserialize)]
-pub struct ResponseData<T> {
-    pub data: T,
+pub(crate) struct ResponseData<T> {
+    pub(crate) data: T,
 }
 
 #[derive(Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize)]
