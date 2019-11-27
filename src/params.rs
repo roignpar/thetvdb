@@ -54,8 +54,10 @@ impl EpisodeParams {
         Self { series_id, page }
     }
 
-    pub fn set_page(&mut self, page: u16) {
+    pub fn page(mut self, page: u16) -> Self {
         self.page = page;
+
+        self
     }
 }
 
@@ -123,6 +125,11 @@ impl EpisodeQueryParams {
             params: EpisodeParams::with_page(series_id, page),
             query: Default::default(),
         }
+    }
+
+    pub fn page(mut self, page: u16) -> Self {
+        self.params.page = page;
+        self
     }
 
     pub fn absolute_number(mut self, number: u16) -> Self {
