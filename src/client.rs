@@ -364,7 +364,7 @@ impl Client {
     ///
     /// Sends a `GET` request to the `/series/{id}/episodes/query` API endpoint.
     ///
-    /// Check [series_episodes](#method.series_episodes) for pagination examples.
+    /// Check [`series_episodes`](#method.series_episodes) for pagination examples.
     ///
     /// # Examples
     /// ```no_run
