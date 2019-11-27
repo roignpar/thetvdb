@@ -4,6 +4,9 @@
 use lazy_static::lazy_static;
 use url::Url;
 
+const SERIES_BASE_URL: &str = "https://www.thetvdb.com/series/";
+const BANNER_BASE_URL: &str = "https://www.thetvdb.com/banners/";
+
 pub(crate) struct BaseUrls {
     pub(crate) series: Url,
     pub(crate) banner: Url,
@@ -11,9 +14,18 @@ pub(crate) struct BaseUrls {
 
 lazy_static! {
     pub(crate) static ref URLS: BaseUrls = BaseUrls {
-        series: Url::parse("https://www.thetvdb.com/series/")
-            .expect("could not parse series base url"),
-        banner: Url::parse("https://www.thetvdb.com/banners/")
-            .expect("could not parse banner base url")
+        series: Url::parse(SERIES_BASE_URL).expect("could not parse series base url"),
+        banner: Url::parse(BANNER_BASE_URL).expect("could not parse banner base url")
     };
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn urls_parse() {
+        Url::parse(SERIES_BASE_URL).unwrap();
+        Url::parse(BANNER_BASE_URL).unwrap();
+    }
 }
