@@ -1,6 +1,6 @@
 #![deny(missing_docs, missing_debug_implementations, unsafe_code)]
 
-//! Possible errors that can occur while using this crate and error helpers.
+//! Errors that may occur while using this crate.
 
 use std::io::Error as IOError;
 
