@@ -1016,7 +1016,7 @@ struct TokenPayload {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use url::Url;
 
     use super::*;
