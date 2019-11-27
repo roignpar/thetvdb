@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 
 use chrono::{DateTime, Utc};
 use serde::Serialize;
@@ -14,30 +13,19 @@ pub enum SearchBy<S> {
     Slug(S),
 }
 
-// SearchBy needs to be transformed into a query param and deriving
-// Serialize doesn't help:
-// "top-level serializer supports only maps and structs";
-//
-// implementing Into instead of From because clippy incorrectly
-// complains: https://github.com/rust-lang/rust-clippy/issues/3899
-impl<S, B> Into<HashMap<String, String, B>> for SearchBy<S>
+impl<S> SearchBy<S>
 where
-    S: Into<String>,
-    B: std::hash::BuildHasher + Default,
+    S: AsRef<str>,
 {
-    fn into(self) -> HashMap<String, String, B> {
+    pub(crate) fn query_param(&self) -> [(&str, &str); 1] {
         use SearchBy::*;
 
-        let mut map = HashMap::default();
-
         match self {
-            Name(name) => map.insert("name".to_string(), name.into()),
-            ImdbID(id) => map.insert("imdbId".to_string(), id.into()),
-            Zap2itID(id) => map.insert("zap2itId".to_string(), id.into()),
-            Slug(slug) => map.insert("slug".to_string(), slug.into()),
-        };
-
-        map
+            Name(name) => [("name", name.as_ref())],
+            ImdbID(id) => [("imdbId", id.as_ref())],
+            Zap2itID(id) => [("zap2itId", id.as_ref())],
+            Slug(slug) => [("slug", slug.as_ref())],
+        }
     }
 }
 

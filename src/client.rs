@@ -4,8 +4,6 @@
 //!
 //! Check [`Client`](./struct.Client.html) documentation for more info.
 
-use std::collections::HashMap;
-
 use chrono::{DateTime, Duration, Utc};
 use futures::lock::Mutex;
 use reqwest::{header::HeaderValue, Client as HttpClient, Method, RequestBuilder, Response};
@@ -146,14 +144,12 @@ impl Client {
     /// ```
     pub async fn search<S>(&self, param: SearchBy<S>) -> Result<Vec<SearchSeries>>
     where
-        S: Into<String>,
+        S: AsRef<str>,
     {
-        let param: HashMap<String, String> = param.into();
-
         let res = self
             .prep_lang_req(Method::GET, self.search_url())
             .await?
-            .query(&param)
+            .query(&param.query_param())
             .send()
             .await?;
 
