@@ -1,3 +1,6 @@
+#![deny(missing_docs, missing_debug_implementations, unsafe_code)]
+
+//! Parameters used by `Client` to send API requests.
 
 use chrono::{DateTime, Utc};
 use serde::Serialize;
@@ -5,12 +8,17 @@ use serde::Serialize;
 use crate::response::SeriesID;
 use crate::serialize;
 
+/// Parameter used to search for series with
+/// [`Client.search`](../client/struct.Client.html#method.search).
 #[derive(Debug)]
 pub enum SearchBy<S> {
+    /// Search by (partial) name.
     Name(S),
     /// Search by IMDb ID.
     IMDbID(S),
+    /// Search by Zap2it ID.
     Zap2itID(S),
+    /// Search by slug.
     Slug(S),
 }
 
@@ -30,6 +38,8 @@ where
     }
 }
 
+/// Parameters used to get a series' episodes with
+/// [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes).
 #[derive(Debug)]
 pub struct EpisodeParams {
     pub(crate) series_id: SeriesID,
@@ -37,6 +47,7 @@ pub struct EpisodeParams {
 }
 
 impl EpisodeParams {
+    /// Create new parameters for the given series.
     pub fn new<I>(series_id: I) -> Self
     where
         I: Into<SeriesID>,
@@ -46,6 +57,7 @@ impl EpisodeParams {
         Self { series_id, page: 1 }
     }
 
+    /// Create new parameters for the given series with page.
     pub fn with_page<I>(series_id: I, page: u16) -> Self
     where
         I: Into<SeriesID>,
@@ -55,6 +67,7 @@ impl EpisodeParams {
         Self { series_id, page }
     }
 
+    /// Set the `page` parameter.
     pub fn page(mut self, page: u16) -> Self {
         self.page = page;
 
@@ -62,13 +75,19 @@ impl EpisodeParams {
     }
 }
 
+/// Trait used to create episode parameters.
+///
+/// Implemented for all types that `impl Into<SeriesID>`.
 pub trait GetEpisodeParams<'a> {
+    /// Get the series to create the parameters for.
     fn series_id(&'a self) -> SeriesID;
 
+    /// Create episode params for the series returned by `series_id`.
     fn episode_params(&'a self) -> EpisodeParams {
         EpisodeParams::new(self.series_id())
     }
 
+    /// Create episode params with page for the series returned by `series_id`.
     fn episode_params_page(&'a self, page: u16) -> EpisodeParams {
         EpisodeParams::with_page(self.series_id(), page)
     }
@@ -101,6 +120,8 @@ pub(crate) struct EpisodeQuery {
     imdb_id: Option<String>,
 }
 
+/// Parameters used to query for a series episodes with
+/// [`Client.series_episodes_query`](../client/struct.Client.html#method.series_episodes_query).
 #[derive(Debug)]
 pub struct EpisodeQueryParams {
     pub(crate) params: EpisodeParams,
@@ -108,6 +129,7 @@ pub struct EpisodeQueryParams {
 }
 
 impl EpisodeQueryParams {
+    /// Create new parameters for the given series.
     pub fn new<I>(series_id: I) -> Self
     where
         I: Into<SeriesID>,
@@ -118,6 +140,7 @@ impl EpisodeQueryParams {
         }
     }
 
+    /// Create new parameters for given series with page.
     pub fn with_page<I>(series_id: I, page: u16) -> Self
     where
         I: Into<SeriesID>,
@@ -128,36 +151,43 @@ impl EpisodeQueryParams {
         }
     }
 
+    /// Set the `page` parameter.
     pub fn page(mut self, page: u16) -> Self {
         self.params.page = page;
         self
     }
 
+    /// Set the `absoluteNumber` parameter.
     pub fn absolute_number(mut self, number: u16) -> Self {
         self.query.absolute_number = Some(number);
         self
     }
 
+    /// Set the `airedSeason` parameter.
     pub fn aired_season(mut self, season: u16) -> Self {
         self.query.aired_season = Some(season);
         self
     }
 
+    /// Set the `airedEpisode` parameter.
     pub fn aired_episode(mut self, episode: u16) -> Self {
         self.query.aired_episode = Some(episode);
         self
     }
 
+    /// Set the `dvdSeason` parameter.
     pub fn dvd_season(mut self, season: u16) -> Self {
         self.query.dvd_season = Some(season);
         self
     }
 
+    /// Set the `dvdEpisode` parameter.
     pub fn dvd_episode(mut self, episode: u16) -> Self {
         self.query.dvd_episode = Some(episode);
         self
     }
 
+    /// Set the `imdbId` parameter.
     pub fn imdb_id<S>(mut self, id: S) -> Self
     where
         S: Into<String>,
@@ -167,13 +197,19 @@ impl EpisodeQueryParams {
     }
 }
 
+/// Trait used to create episode query parameters.
+///
+/// Implemented for all types that `impl Into<SeriesID>`.
 pub trait GetEpisodeQueryParams<'a> {
+    /// Get the series to create the parameters for.
     fn series_id(&'a self) -> SeriesID;
 
+    /// Create episode query params for the series returned by `series_id`.
     fn episode_query_params(&'a self) -> EpisodeQueryParams {
         EpisodeQueryParams::new(self.series_id())
     }
 
+    /// Create episode query params with page for the series returned by `series_id`.
     fn episode_query_params_page(&'a self, page: u16) -> EpisodeQueryParams {
         EpisodeQueryParams::with_page(self.series_id(), page)
     }
@@ -189,11 +225,17 @@ where
     }
 }
 
+/// Parameters used to filter series fields with
+/// [`Client.series_filter`](../client/struct.Client.html#method.series_filter).
+///
+/// The words "key" and "field" are used interchangeably in this context.
+#[derive(Debug)]
 pub struct SeriesFilterKeys {
     pub(crate) keys_query: String,
 }
 
 impl SeriesFilterKeys {
+    /// Create a new list of filter keys.
     pub fn new() -> Self {
         Self {
             // if all keys are added, 200 bytes would be used
@@ -201,6 +243,7 @@ impl SeriesFilterKeys {
         }
     }
 
+    /// Add `network_id` to key list.
     pub fn network_id(self) -> Self {
         self.push_key("networkId")
     }
@@ -211,90 +254,112 @@ impl SeriesFilterKeys {
     // TODO: enable when API is fixed
     // https://forums.thetvdb.com/viewtopic.php?f=17&t=22325&p=162247#p162247
     //
+    ///// Add `last_updated` to key list.
     //pub fn last_updated(self) -> Self {
     //self.push_key("lastUpdated")
     //}
 
+    /// Add `airs_time` to key list.
     pub fn airs_time(self) -> Self {
         self.push_key("airsTime")
     }
 
+    /// Add `site_rating` to key list.
     pub fn site_rating(self) -> Self {
         self.push_key("siteRating")
     }
 
+    /// Add `series_name` to key list.
     pub fn series_name(self) -> Self {
         self.push_key("seriesName")
     }
 
+    /// Add `first_aired` to key list.
     pub fn first_aired(self) -> Self {
         self.push_key("firstAired")
     }
 
+    /// Add `runtime` to key list.
     pub fn runtime(self) -> Self {
         self.push_key("runtime")
     }
 
+    /// Add `overview` to key list.
     pub fn overview(self) -> Self {
         self.push_key("overview")
     }
 
+    /// Add `banner` to key list.
     pub fn banner(self) -> Self {
         self.push_key("banner")
     }
 
+    /// Add `genre` to key list.
     pub fn genre(self) -> Self {
         self.push_key("genre")
     }
 
+    /// Add `airs_day_of_week` to key list.
     pub fn airs_day_of_week(self) -> Self {
         self.push_key("airsDayOfWeek")
     }
 
+    /// Add `imdb_id` to key list.
     pub fn imdb_id(self) -> Self {
         self.push_key("imdbId")
     }
 
+    /// Add `added_by` to key list.
     pub fn added_by(self) -> Self {
         self.push_key("addedBy")
     }
 
+    /// Add `site_rating_count` to key list.
     pub fn site_rating_count(self) -> Self {
         self.push_key("siteRatingCount")
     }
 
+    /// Add `id` to key list.
     pub fn id(self) -> Self {
         self.push_key("id")
     }
 
+    /// Add `status` to key list.
     pub fn status(self) -> Self {
         self.push_key("status")
     }
 
+    /// Add `network` to key list.
     pub fn network(self) -> Self {
         self.push_key("network")
     }
 
+    /// Add `rating` to key list.
     pub fn rating(self) -> Self {
         self.push_key("rating")
     }
 
+    /// Add `zap2it_id` to key list.
     pub fn zap2it_id(self) -> Self {
         self.push_key("zap2itId")
     }
 
+    /// Add `added` to key list.
     pub fn added(self) -> Self {
         self.push_key("added")
     }
 
+    /// Add `slug` to key list.
     pub fn slug(self) -> Self {
         self.push_key("slug")
     }
 
+    /// Add `aliases` to key list.
     pub fn aliases(self) -> Self {
         self.push_key("aliases")
     }
 
+    /// Returns `true` if no keys have been added to the list.
     pub fn is_empty(&self) -> bool {
         self.keys_query.is_empty()
     }
@@ -316,6 +381,8 @@ impl Default for SeriesFilterKeys {
     }
 }
 
+/// Parameters used to get series images with
+/// [`Client.series_images_query`](../client/struct.Client.html#method.series_images_query).
 #[derive(Debug, Default, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ImageQueryParams {
@@ -328,6 +395,7 @@ pub struct ImageQueryParams {
 }
 
 impl ImageQueryParams {
+    /// Create new parameters with the given key type.
     pub fn with_key_type<S>(key_type: S) -> Self
     where
         S: Into<String>,
@@ -338,6 +406,7 @@ impl ImageQueryParams {
         }
     }
 
+    /// Create new parameters with the given resolution.
     pub fn with_resolution<S>(resolution: S) -> Self
     where
         S: Into<String>,
@@ -348,6 +417,7 @@ impl ImageQueryParams {
         }
     }
 
+    /// Create new parameters with the given subkey.
     pub fn with_sub_key<S>(sub_key: S) -> Self
     where
         S: Into<String>,
@@ -358,6 +428,7 @@ impl ImageQueryParams {
         }
     }
 
+    /// Set the key type.
     pub fn key_type<S>(mut self, key_type: S) -> Self
     where
         S: Into<String>,
@@ -367,6 +438,7 @@ impl ImageQueryParams {
         self
     }
 
+    /// Set the resolution.
     pub fn resolution<S>(mut self, resolution: S) -> Self
     where
         S: Into<String>,
@@ -376,6 +448,7 @@ impl ImageQueryParams {
         self
     }
 
+    /// Set the subkey.
     pub fn sub_key<S>(mut self, sub_key: S) -> Self
     where
         S: Into<String>,
@@ -386,6 +459,8 @@ impl ImageQueryParams {
     }
 }
 
+/// Parameters used to get updated series with
+/// [`Client.updated`](../client/struct.Client.html#method.updated).
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UpdatedParams {
@@ -396,6 +471,7 @@ pub struct UpdatedParams {
 }
 
 impl UpdatedParams {
+    /// Create new parameters with the given `from` time.
     pub fn new<D>(from: D) -> Self
     where
         D: Into<DateTime<Utc>>,
@@ -406,6 +482,7 @@ impl UpdatedParams {
         }
     }
 
+    /// Create new parameters with the given `from` and `to` times.
     pub fn with_to_time<D>(from: D, to: D) -> Self
     where
         D: Into<DateTime<Utc>>,
@@ -416,6 +493,7 @@ impl UpdatedParams {
         }
     }
 
+    /// Set `to_time` parameter.
     pub fn set_to_time<D>(&mut self, to: D)
     where
         D: Into<DateTime<Utc>>,
