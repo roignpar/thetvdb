@@ -78,6 +78,24 @@ impl EpisodeParams {
 /// Trait used to create episode parameters.
 ///
 /// Implemented for all types that `impl Into<SeriesID>`.
+///
+/// # Examples
+/// ```no_run
+/// # use thetvdb::{Client, error::Result};
+/// #
+/// # #[tokio::main]
+/// # async fn main() -> Result<()> {
+/// # let client = Client::new("KEY").await?;
+/// #
+/// use thetvdb::params::GetEpisodeParams;
+///
+/// let series = client.series(318408).await?;
+///
+/// let params = series.episode_params();
+///
+/// let episodes_page = client.series_episodes(params).await?;
+/// # Ok(()) }
+/// ```
 pub trait GetEpisodeParams<'a> {
     /// Get the series to create the parameters for.
     fn series_id(&'a self) -> SeriesID;
@@ -200,6 +218,8 @@ impl EpisodeQueryParams {
 /// Trait used to create episode query parameters.
 ///
 /// Implemented for all types that `impl Into<SeriesID>`.
+///
+/// Similar to [`GetEpisodeParams`](./trait.GetEpisodeParams.html). Check for examples.
 pub trait GetEpisodeQueryParams<'a> {
     /// Get the series to create the parameters for.
     fn series_id(&'a self) -> SeriesID;
