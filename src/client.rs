@@ -134,7 +134,7 @@ impl Client {
     /// #
     /// use thetvdb::SearchBy;
     ///
-    /// let results = client.search(SearchBy::ImdbID("tt5491994")).await?;
+    /// let results = client.search(SearchBy::IMDbID("tt5491994")).await?;
     ///
     /// assert_eq!(
     ///     results[0].series_name,
@@ -193,7 +193,7 @@ impl Client {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// let results = client.search(SearchBy::ImdbID("tt5491994")).await?;
+    /// let results = client.search(SearchBy::IMDbID("tt5491994")).await?;
     ///
     /// let series = client.series(&results[0]).await?;
     ///

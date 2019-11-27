@@ -8,7 +8,8 @@ use crate::serialize;
 #[derive(Debug)]
 pub enum SearchBy<S> {
     Name(S),
-    ImdbID(S),
+    /// Search by IMDb ID.
+    IMDbID(S),
     Zap2itID(S),
     Slug(S),
 }
@@ -22,7 +23,7 @@ where
 
         match self {
             Name(name) => [("name", name.as_ref())],
-            ImdbID(id) => [("imdbId", id.as_ref())],
+            IMDbID(id) => [("imdbId", id.as_ref())],
             Zap2itID(id) => [("zap2itId", id.as_ref())],
             Slug(slug) => [("slug", slug.as_ref())],
         }
