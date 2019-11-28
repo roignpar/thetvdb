@@ -132,7 +132,7 @@ impl Client {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// use thetvdb::SearchBy;
+    /// use thetvdb::params::SearchBy;
     ///
     /// let results = client.search(SearchBy::IMDbID("tt5491994")).await?;
     ///
@@ -186,7 +186,7 @@ impl Client {
     ///
     /// Use a search result:
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SearchBy};
+    /// # use thetvdb::{Client, error::Result, params::SearchBy};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -316,7 +316,7 @@ impl Client {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// use thetvdb::EpisodeParams;
+    /// use thetvdb::params::EpisodeParams;
     ///
     /// // get the first page
     /// let episode_params = EpisodeParams::new(121361);
@@ -371,7 +371,7 @@ impl Client {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// use thetvdb::EpisodeQueryParams;
+    /// use thetvdb::params::EpisodeQueryParams;
     ///
     /// let query = EpisodeQueryParams::new(318408)
     ///     .absolute_number(1)
@@ -467,7 +467,7 @@ impl Client {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// use thetvdb::SeriesFilterKeys;
+    /// use thetvdb::params::SeriesFilterKeys;
     ///
     /// let keys = SeriesFilterKeys::new().series_name();
     ///
@@ -562,7 +562,7 @@ impl Client {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// use thetvdb::ImageQueryParams;
+    /// use thetvdb::params::ImageQueryParams;
     ///
     /// let params = ImageQueryParams::with_key_type("poster");
     ///
@@ -645,7 +645,7 @@ impl Client {
     ///
     /// # Examples
     /// ```no_run
-    /// # use thetvdb::{Client, error::Result, SeriesID};
+    /// # use thetvdb::{Client, error::Result, response::SeriesID};
     /// #
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
@@ -772,7 +772,7 @@ impl Client {
     /// #
     /// # let client = Client::new("KEY").await?;
     /// #
-    /// use thetvdb::UpdatedParams;
+    /// use thetvdb::params::UpdatedParams;
     /// use chrono::DateTime;
     ///
     /// let from = DateTime::parse_from_rfc3339("2019-11-10T12:00:00-00:00")?;

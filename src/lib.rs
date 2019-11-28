@@ -8,7 +8,7 @@
 //! Search for a series by name:
 //! ```no_run
 //! # use thetvdb::error::Result;
-//! use thetvdb::{Client, SearchBy};
+//! use thetvdb::{Client, params::SearchBy};
 //!
 //! # #[tokio::main]
 //! # async fn main() -> Result<()> {
@@ -49,6 +49,3 @@ pub mod params;
 pub mod response;
 
 pub use client::Client;
-pub use language::{Language, LanguageID};
-pub use params::*;
-pub use response::*;
