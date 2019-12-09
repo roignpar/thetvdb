@@ -113,7 +113,7 @@ pub struct SearchSeries {
 }
 
 impl SearchSeries {
-    /// Returns the full url to the series' banner.
+    /// Returns the full URL to the series' banner.
     ///
     /// # Errors
     /// Will fail if series `banner` is `None`.
@@ -121,7 +121,7 @@ impl SearchSeries {
         opt_image_url(&self.banner)
     }
 
-    /// Returns the full `thetvdb.com` website series url.
+    /// Returns the full `thetvdb.com` website series URL.
     ///
     /// # Errors
     /// Will fail if the series `slug` is somehow malformed
@@ -205,7 +205,7 @@ pub struct Series {
 }
 
 impl Series {
-    /// Returns the full url to the series' banner.
+    /// Returns the full URL to the series' banner.
     ///
     /// # Errors
     /// Will fail if series `banner` is `None`.
@@ -213,7 +213,7 @@ impl Series {
         opt_image_url(&self.banner)
     }
 
-    /// Returns the full `thetvdb.com` website series url.
+    /// Returns the full `thetvdb.com` website series URL.
     ///
     /// # Errors
     /// Will fail if the series `slug` is somehow malformed
@@ -299,7 +299,7 @@ pub struct FilteredSeries {
 }
 
 impl FilteredSeries {
-    /// Returns the full url to the series' banner.
+    /// Returns the full URL to the series' banner.
     ///
     /// # Errors
     /// Will fail if series `banner` is `None`.
@@ -307,7 +307,7 @@ impl FilteredSeries {
         opt_image_url(&self.banner)
     }
 
-    /// Returns the full `thetvdb.com` website series url.
+    /// Returns the full `thetvdb.com` website series URL.
     ///
     /// # Errors
     /// Will fail if the series `slug` is somehow malformed
@@ -475,7 +475,7 @@ pub struct Episode {
 }
 
 impl Episode {
-    /// Returns the full url of the episode's image.
+    /// Returns the full URL of the episode's image.
     ///
     /// # Errors
     /// Will fail if episode `filename` is `None`.
