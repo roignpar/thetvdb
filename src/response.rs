@@ -756,6 +756,8 @@ pub struct Image {
     pub file_name: String,
     /// ID of image's language.
     pub language_id: u16,
+    /// Image language abbreviation.
+    pub language: String,
     /// Image resolution.
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub resolution: Option<String>,
