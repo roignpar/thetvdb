@@ -258,8 +258,8 @@ impl SeriesFilterKeys {
     /// Create a new list of filter keys.
     pub fn new() -> Self {
         Self {
-            // if all keys are added, 200 bytes would be used
-            keys_query: String::with_capacity(200),
+            // if all keys are added, this many bytes would be used
+            keys_query: String::with_capacity(226),
         }
     }
 
@@ -377,6 +377,26 @@ impl SeriesFilterKeys {
     /// Add `aliases` to key list.
     pub fn aliases(self) -> Self {
         self.push_key("aliases")
+    }
+
+    /// Add `season` to key list.
+    pub fn season(self) -> Self {
+        self.push_key("season")
+    }
+
+    /// Add `poster` to key list.
+    pub fn poster(self) -> Self {
+        self.push_key("poster")
+    }
+
+    /// Add `fanart` to key list.
+    pub fn fanart(self) -> Self {
+        self.push_key("fanart")
+    }
+
+    /// Add `language` to key list.
+    pub fn language(self) -> Self {
+        self.push_key("language")
     }
 
     /// Returns `true` if no keys have been added to the list.

@@ -153,11 +153,23 @@ pub struct Series {
     pub airs_time: Option<NaiveTime>,
     /// Series aliases.
     pub aliases: Vec<String>,
+    /// Series current season.
+    pub season: String,
     /// Path to the series' banner.
     ///
     /// Use [`banner_url`](#method.banner_url) for a full URL.
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub banner: Option<String>,
+    /// Path to the series' poster.
+    ///
+    /// Use [`poster_url`](#method.poster_url) for a full URL.
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub poster: Option<String>,
+    /// Path to the series' fanart.
+    ///
+    /// Use [`fanart_url`](#method.fanart_url) for a full URL.
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub fanart: Option<String>,
     /// Date when series was first aired.
     #[serde(deserialize_with = "deserialize::optional_date")]
     pub first_aired: Option<Date<Utc>>,
@@ -183,6 +195,8 @@ pub struct Series {
     pub rating: Option<String>,
     /// Series episode runtime.
     pub runtime: String,
+    /// Series language abbreviation.
+    pub language: String,
     /// Name of the series.
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub series_name: Option<String>,
@@ -211,6 +225,22 @@ impl Series {
     /// Will fail if series `banner` is `None`.
     pub fn banner_url(&self) -> Result<Url> {
         opt_image_url(&self.banner)
+    }
+
+    /// Returns the full URL to the series' poster.
+    ///
+    /// # Errors
+    /// Will fail if series `poster` is `None`.`
+    pub fn poster_url(&self) -> Result<Url> {
+        opt_image_url(&self.poster)
+    }
+
+    /// Returns the full URL to the series' fanart.
+    ///
+    /// # Errors
+    /// Will fail if series `fanart` is `None`.
+    pub fn fanart_url(&self) -> Result<Url> {
+        opt_image_url(&self.fanart)
     }
 
     /// Returns the full `thetvdb.com` website series URL.
@@ -250,11 +280,23 @@ pub struct FilteredSeries {
     pub airs_time: Option<NaiveTime>,
     /// Series aliases.
     pub aliases: Option<Vec<String>>,
+    /// Series current season.
+    pub season: Option<String>,
     /// Path to the series' banner.
     ///
     /// Use [`banner_url`](#method.banner_url) for a full URL.
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub banner: Option<String>,
+    /// Path to the series' poster.
+    ///
+    /// Use [`poster_url`](#method.poster_url) for a full URL.
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub poster: Option<String>,
+    /// Path to the series' fanart.
+    ///
+    /// Use [`fanart_url`](#method.fanart_url) for a full URL.
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub fanart: Option<String>,
     /// Date when series was first aired.
     #[serde(deserialize_with = "deserialize::optional_date")]
     pub first_aired: Option<Date<Utc>>,
@@ -280,6 +322,8 @@ pub struct FilteredSeries {
     pub rating: Option<String>,
     /// Series episode runtime.
     pub runtime: Option<String>,
+    /// Series language abbreviation.
+    pub language: Option<String>,
     /// Name of the series.
     pub series_name: Option<String>,
     /// Series rating.
@@ -305,6 +349,22 @@ impl FilteredSeries {
     /// Will fail if series `banner` is `None`.
     pub fn banner_url(&self) -> Result<Url> {
         opt_image_url(&self.banner)
+    }
+
+    /// Returns the full URL to the series' poster.
+    ///
+    /// # Errors
+    /// Will fail if series `poster` is `None`.`
+    pub fn poster_url(&self) -> Result<Url> {
+        opt_image_url(&self.poster)
+    }
+
+    /// Returns the full URL to the series' fanart.
+    ///
+    /// # Errors
+    /// Will fail if series `fanart` is `None`.
+    pub fn fanart_url(&self) -> Result<Url> {
+        opt_image_url(&self.fanart)
     }
 
     /// Returns the full `thetvdb.com` website series URL.
