@@ -268,7 +268,7 @@ impl SeriesFilterKeys {
         self.push_key("networkId")
     }
 
-    // NOTE: V2.2.0 of the API doesn't return the
+    // NOTE: V3.0.0 of the API doesn't return the
     // `lastUpdated` field on series filter requests;
     //
     // TODO: enable when API is fixed
