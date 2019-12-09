@@ -527,11 +527,16 @@ pub struct Episode {
     /// Episode's IMDb ID.
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub imdb_id: Option<String>,
+    /// Episode parental guideline rating.
+    pub content_rating: Option<String>,
     /// Episode rating.
     #[serde(deserialize_with = "deserialize::optional_float")]
     pub site_rating: Option<f32>,
     /// Number of rating votes.
     pub site_rating_count: u32,
+    /// Is this episode a movie?
+    #[serde(deserialize_with = "deserialize::int_bool")]
+    pub is_movie: bool,
 }
 
 impl Episode {

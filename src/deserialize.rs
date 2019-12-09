@@ -89,6 +89,16 @@ where
     }
 }
 
+pub fn int_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    match i32::deserialize(deserializer)? {
+        0 => Ok(false),
+        _ => Ok(true),
+    }
+}
+
 fn is_zero_date_time_str(s: &str) -> bool {
     s == "0000-00-00 00:00:00"
 }
