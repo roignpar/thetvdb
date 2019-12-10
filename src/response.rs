@@ -595,6 +595,18 @@ impl EpisodePage {
         self.prev_page()
             .map(|p| EpisodeParams::with_page(self.series_id, p))
     }
+
+    /// Generate `EpisodeParams` to fetch the first page with
+    /// [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes)
+    pub fn first_page_params(&self) -> EpisodeParams {
+        EpisodeParams::with_page(self.series_id, self.first_page())
+    }
+
+    /// Generate `EpisodeParams` to fetch the last page with
+    /// [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes)
+    pub fn last_page_params(&self) -> EpisodeParams {
+        EpisodeParams::with_page(self.series_id, self.last_page())
+    }
 }
 
 /// Struct used for queried episode pagination returned by
@@ -634,6 +646,18 @@ impl EpisodeQueryPage {
     pub fn prev_page_query_params(&self) -> Option<EpisodeQueryParams> {
         self.prev_page()
             .map(|p| EpisodeQueryParams::with_page_query(self.series_id, p, self.query.clone()))
+    }
+
+    /// Generate `EpisodeQueryParams` to fetch the first page of query results with
+    /// [`Client.series_episodes_query`](../client/struct.Client.html#method.series_episodes_query).
+    pub fn first_page_query_params(&self) -> EpisodeQueryParams {
+        EpisodeQueryParams::with_page_query(self.series_id, self.first_page(), self.query.clone())
+    }
+
+    /// Generate `EpisodeQueryParams` to fetch the last page of query results with
+    /// [`Client.series_episodes_query`](../client/struct.Client.html#method.series_episodes_query).
+    pub fn last_page_query_params(&self) -> EpisodeQueryParams {
+        EpisodeQueryParams::with_page_query(self.series_id, self.last_page(), self.query.clone())
     }
 }
 
