@@ -83,7 +83,7 @@ impl From<&Episode> for EpisodeID {
 /// See [`Client.search`](../client/struct.Client.html#method.search)
 /// and [`Client.series`](../client/struct.Client.html#method.series)
 /// for more info.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SearchSeries {
     /// Series aliases.
@@ -135,7 +135,7 @@ impl SearchSeries {
 /// [`Client.series`](../client/struct.Client.html#method.series).
 ///
 /// See linked method for more info.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Series {
     /// The date and time when the series was added to TheTVDB.
@@ -180,8 +180,8 @@ pub struct Series {
     /// IMDb ID of the series.
     pub imdb_id: Option<String>,
     /// Time and date when series was last updated.
-    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
-    pub last_updated: DateTime<Utc>,
+    #[serde(deserialize_with = "deserialize::optional_ts_seconds_date_time")]
+    pub last_updated: Option<DateTime<Utc>>,
     /// The series' network.
     pub network: String,
     /// The series' network ID.
@@ -404,7 +404,7 @@ impl Default for SeriesStatus {
 /// [`Client.series_actors`](../client/struct.Client.html#method.series_actors).
 ///
 /// See linked method for more info.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Actor {
     /// ID of the actor.
@@ -448,7 +448,7 @@ impl Actor {
 /// and [`Client.episode`](../client/struct.Client.html#method.episode).
 ///
 /// See linked methods for more info.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Episode {
     /// ID of the episode.
@@ -487,8 +487,8 @@ pub struct Episode {
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub show_url: Option<String>,
     /// Date and time when episode was last updated.
-    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
-    pub last_updated: DateTime<Utc>,
+    #[serde(deserialize_with = "deserialize::optional_ts_seconds_date_time")]
+    pub last_updated: Option<DateTime<Utc>>,
     /// Episode DVD ID.
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub dvd_discid: Option<String>,
@@ -550,7 +550,7 @@ impl Episode {
 }
 
 /// Episode language info.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EpisodeLanguage {
     /// Abbreviation of the episode name language.
@@ -764,7 +764,7 @@ pub struct SeriesImages {
 
 /// Image data returned by
 /// [`Client.series_images_query`](../client/struct.Client.html#method.series_images_query).
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Image {
     /// ID of the image.
@@ -808,7 +808,7 @@ impl Image {
 }
 
 /// Image ratings data.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ImageRatingsInfo {
     /// Average rating.
@@ -867,3 +867,6 @@ fn opt_image_url(file_name: &Option<String>) -> Result<Url> {
 fn series_website_url(slug: &str) -> Result<Url> {
     Ok(URLS.series.join(slug)?)
 }
+
+#[cfg(test)]
+mod tests;

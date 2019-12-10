@@ -40,7 +40,7 @@ where
 
 /// Parameters used to get a series' episodes with
 /// [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes).
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct EpisodeParams {
     pub(crate) series_id: SeriesID,
     pub(crate) page: u16,
@@ -121,26 +121,26 @@ where
     }
 }
 
-#[derive(Clone, Debug, Default, Serialize)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct EpisodeQuery {
     #[serde(skip_serializing_if = "Option::is_none")]
-    absolute_number: Option<u16>,
+    pub(crate) absolute_number: Option<u16>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    aired_season: Option<u16>,
+    pub(crate) aired_season: Option<u16>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    aired_episode: Option<u16>,
+    pub(crate) aired_episode: Option<u16>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    dvd_season: Option<u16>,
+    pub(crate) dvd_season: Option<u16>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    dvd_episode: Option<u16>,
+    pub(crate) dvd_episode: Option<u16>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    imdb_id: Option<String>,
+    pub(crate) imdb_id: Option<String>,
 }
 
 /// Parameters used to query for a series episodes with
 /// [`Client.series_episodes_query`](../client/struct.Client.html#method.series_episodes_query).
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct EpisodeQueryParams {
     pub(crate) params: EpisodeParams,
     pub(crate) query: EpisodeQuery,
