@@ -553,3 +553,6 @@ impl UpdatedParams {
         self.to_time = Some(serialize::Timestamp(to.into()));
     }
 }
+
+#[cfg(test)]
+mod tests;
