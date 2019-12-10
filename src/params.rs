@@ -265,11 +265,13 @@ pub struct SeriesFilterKeys {
 }
 
 impl SeriesFilterKeys {
+    /// If all keys are added, this many bytes would be used.
+    const FULL_CAPACITY: usize = 209;
+
     /// Create a new list of filter keys.
     pub fn new() -> Self {
         Self {
-            // if all keys are added, this many bytes would be used
-            keys_query: String::with_capacity(226),
+            keys_query: String::with_capacity(Self::FULL_CAPACITY),
         }
     }
 
