@@ -624,7 +624,7 @@ impl EpisodeQueryPage {
     /// Will return `None` if there is no next page.
     pub fn next_page_query_params(&self) -> Option<EpisodeQueryParams> {
         self.next_page()
-            .map(|n| EpisodeQueryParams::with_page(self.series_id, n))
+            .map(|n| EpisodeQueryParams::with_page_query(self.series_id, n, self.query.clone()))
     }
 
     /// Generate `EpisodeQueryParams` to fetch the previous page of query results with
@@ -633,7 +633,7 @@ impl EpisodeQueryPage {
     /// Will return `None` if there is no previous page.
     pub fn prev_page_query_params(&self) -> Option<EpisodeQueryParams> {
         self.prev_page()
-            .map(|p| EpisodeQueryParams::with_page(self.series_id, p))
+            .map(|p| EpisodeQueryParams::with_page_query(self.series_id, p, self.query.clone()))
     }
 }
 

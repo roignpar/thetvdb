@@ -121,7 +121,7 @@ where
     }
 }
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Clone, Debug, Default, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct EpisodeQuery {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -166,6 +166,16 @@ impl EpisodeQueryParams {
         Self {
             params: EpisodeParams::with_page(series_id, page),
             query: Default::default(),
+        }
+    }
+
+    pub(crate) fn with_page_query<I>(series_id: I, page: u16, query: EpisodeQuery) -> Self
+    where
+        I: Into<SeriesID>,
+    {
+        Self {
+            params: EpisodeParams::with_page(series_id, page),
+            query,
         }
     }
 
