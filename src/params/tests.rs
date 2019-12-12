@@ -126,7 +126,5 @@ fn series_filter_keys() {
     keys = keys.language();
     assert!(keys.keys_query.contains(",language"));
 
-    println!("{}", keys.keys_query);
-
     assert!(keys.is_at_full_capacity());
 }
