@@ -416,6 +416,11 @@ impl SeriesFilterKeys {
         self.keys_query.is_empty()
     }
 
+    #[cfg(test)]
+    pub(crate) fn is_at_full_capacity(&self) -> bool {
+        self.keys_query.len() == Self::FULL_CAPACITY
+    }
+
     fn push_key(mut self, key: &str) -> Self {
         if !self.keys_query.is_empty() {
             self.keys_query.push(',');

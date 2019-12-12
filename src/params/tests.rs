@@ -24,6 +24,7 @@ fn series_filter_keys() {
     let mut keys = SeriesFilterKeys::new();
 
     assert!(keys.is_empty());
+    assert_eq!(keys.keys_query.capacity(), SeriesFilterKeys::FULL_CAPACITY);
 
     assert!(!keys.keys_query.contains("airsTime"));
     keys = keys.airs_time();
@@ -127,6 +128,5 @@ fn series_filter_keys() {
 
     println!("{}", keys.keys_query);
 
-    assert_eq!(keys.keys_query.len(), SeriesFilterKeys::FULL_CAPACITY);
-    assert_eq!(keys.keys_query.capacity(), SeriesFilterKeys::FULL_CAPACITY);
+    assert!(keys.is_at_full_capacity());
 }
