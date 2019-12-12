@@ -93,7 +93,7 @@ impl EpisodeParams {
 ///
 /// let params = series.episode_params();
 ///
-/// let episodes_page = client.series_episodes(params).await?;
+/// let episodes_page = client.series_episodes(&params).await?;
 /// # Ok(()) }
 /// ```
 pub trait GetEpisodeParams<'a> {

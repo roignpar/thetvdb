@@ -320,19 +320,19 @@ impl Client {
     ///
     /// // get the first page
     /// let episode_params = EpisodeParams::new(121361);
-    /// let episode_page = client.series_episodes(episode_params).await?;
+    /// let episode_page = client.series_episodes(&episode_params).await?;
     ///
     /// // get the next page
     /// let next_page_params = episode_page.next_page_params().unwrap();
-    /// let next_page = client.series_episodes(next_page_params).await?;
+    /// let next_page = client.series_episodes(&next_page_params).await?;
     ///
     /// // get the previous page
     /// let prev_page_params = next_page.prev_page_params().unwrap();
-    /// let prev_page = client.series_episodes(prev_page_params).await?;
+    /// let prev_page = client.series_episodes(&prev_page_params).await?;
     ///
     /// // get a custom page
     /// let custom_page_params = EpisodeParams::with_page(121361, 2);
-    /// let custom_page = client.series_episodes(custom_page_params).await?;
+    /// let custom_page = client.series_episodes(&custom_page_params).await?;
     ///
     /// // print an episode
     /// println!("{:#?}", episode_page.episodes[0]);
@@ -340,7 +340,7 @@ impl Client {
     /// ```
     /// # Errors
     /// Will return an error if the series is not found.
-    pub async fn series_episodes(&self, params: EpisodeParams) -> Result<EpisodePage> {
+    pub async fn series_episodes(&self, params: &EpisodeParams) -> Result<EpisodePage> {
         let res = self
             .prep_req(Method::GET, self.series_episodes_url(params.series_id))
             .await?
@@ -380,7 +380,7 @@ impl Client {
     ///     .dvd_season(1)
     ///     .dvd_episode(1);
     ///
-    /// let episode_page = client.series_episodes_query(query).await?;
+    /// let episode_page = client.series_episodes_query(&query).await?;
     ///
     /// assert_eq!(
     ///     episode_page.episodes[0].episode_name,
@@ -394,7 +394,7 @@ impl Client {
     /// the data set is empty.
     pub async fn series_episodes_query(
         &self,
-        query_params: EpisodeQueryParams,
+        query_params: &EpisodeQueryParams,
     ) -> Result<EpisodeQueryPage> {
         let res = self
             .prep_lang_req(
@@ -411,7 +411,7 @@ impl Client {
 
         let mut page: EpisodeQueryPage = res.json().await?;
         page.series_id = query_params.params.series_id;
-        page.query = query_params.query;
+        page.query = query_params.query.clone();
 
         Ok(page)
     }
@@ -471,7 +471,7 @@ impl Client {
     ///
     /// let keys = SeriesFilterKeys::new().series_name();
     ///
-    /// let filtered_series = client.series_filter(318408, keys).await?;
+    /// let filtered_series = client.series_filter(318408, &keys).await?;
     ///
     /// assert_eq!(
     ///     filtered_series.series_name,
@@ -487,7 +487,7 @@ impl Client {
     pub async fn series_filter<I>(
         &self,
         id: I,
-        filter_keys: SeriesFilterKeys,
+        filter_keys: &SeriesFilterKeys,
     ) -> Result<FilteredSeries>
     where
         I: Into<SeriesID>,
@@ -499,7 +499,7 @@ impl Client {
         let res = self
             .prep_lang_req(Method::GET, self.series_filter_url(id.into()))
             .await?
-            .query(&[("keys", filter_keys.keys_query)])
+            .query(&[("keys", &filter_keys.keys_query)])
             .send()
             .await?;
 
@@ -567,7 +567,7 @@ impl Client {
     /// let params = ImageQueryParams::with_key_type("poster");
     ///
     /// let images = client.
-    ///     series_images_query(318408, params)
+    ///     series_images_query(318408, &params)
     ///     .await?;
     ///
     /// assert_eq!(images.len(), 8);
@@ -583,7 +583,7 @@ impl Client {
     pub async fn series_images_query<I>(
         &self,
         id: I,
-        params: ImageQueryParams,
+        params: &ImageQueryParams,
     ) -> Result<Vec<Image>>
     where
         I: Into<SeriesID>,
@@ -780,7 +780,7 @@ impl Client {
     ///
     /// let timespan = UpdatedParams::with_to_time(from, to);
     ///
-    /// let updates = client.updated(timespan).await?;
+    /// let updates = client.updated(&timespan).await?;
     ///
     /// assert_eq!(updates.len(), 7);
     ///
@@ -792,7 +792,7 @@ impl Client {
     /// # Errors
     /// Will return an error if there are no updated series within the
     /// given timespan.
-    pub async fn updated(&self, params: UpdatedParams) -> Result<Vec<SeriesUpdate>> {
+    pub async fn updated(&self, params: &UpdatedParams) -> Result<Vec<SeriesUpdate>> {
         let res = self
             .prep_lang_req(Method::GET, self.updated_url())
             .await?
