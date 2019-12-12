@@ -30,7 +30,7 @@ impl From<u16> for LanguageID {
 pub struct Language {
     /// ID of the language.
     pub id: LanguageID,
-    abbreviation: String,
+    pub(crate) abbreviation: String,
     /// Original name of the language.
     pub name: String,
     /// English name of the language.

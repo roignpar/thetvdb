@@ -1003,39 +1003,13 @@ struct TokenResp {
     token: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 struct TokenPayload {
-    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
+    #[serde(with = "chrono::serde::ts_seconds")]
     orig_iat: DateTime<Utc>,
-    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
+    #[serde(with = "chrono::serde::ts_seconds")]
     exp: DateTime<Utc>,
 }
 
 #[cfg(test)]
-mod tests {
-    use url::Url;
-
-    use super::*;
-
-    #[test]
-    fn urls_must_parse() {
-        Url::parse(BASE_URL).unwrap();
-        let client = Client::create("key");
-
-        client.login_url();
-        client.search_url();
-        client.series_url(SeriesID(1));
-        client.series_actors_url(SeriesID(1));
-        client.series_episodes_url(SeriesID(1));
-        client.series_episodes_query_url(SeriesID(1));
-        client.series_episodes_summary_url(SeriesID(1));
-        client.series_filter_url(SeriesID(1));
-        client.series_images_url(SeriesID(1));
-        client.series_images_query_url(SeriesID(1));
-        client.series_images_query_params_url(SeriesID(1));
-        client.episodes_url(EpisodeID(1));
-        client.languages_url();
-        client.language_url(LanguageID(1));
-        client.updated_url();
-    }
-}
+mod tests;
