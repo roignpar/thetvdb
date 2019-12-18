@@ -88,10 +88,10 @@ impl From<&Episode> for EpisodeID {
 pub struct SearchSeries {
     /// Series aliases.
     pub aliases: Vec<String>,
-    #[serde(deserialize_with = "deserialize::optional_string")]
     /// Path to the series' banner.
     ///
     /// Use [`banner_url`](#method.banner_url) for a full URL.
+    #[serde(deserialize_with = "deserialize::optional_string")]
     pub banner: Option<String>,
     #[serde(deserialize_with = "deserialize::optional_date")]
     /// Date when series was first aired.
@@ -99,7 +99,8 @@ pub struct SearchSeries {
     /// ID of the series.
     pub id: SeriesID,
     /// The series' network.
-    pub network: String,
+    #[serde(deserialize_with = "deserialize::optional_string")]
+    pub network: Option<String>,
     /// Short description of the series.
     pub overview: Option<String>,
     /// Name of the series.
