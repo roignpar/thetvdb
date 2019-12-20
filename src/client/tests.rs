@@ -140,44 +140,30 @@ async fn client_search() {
     let client = authenticated_test_client().await;
 
     let name = "test+series".to_string();
-
-    let name_mock = auth_lang_mock(&client, GET, SEARCH_PATH)
-        .match_query(UrlEncoded("name".to_string(), name.clone()))
-        .create();
-
-    let _ = client.search(SearchBy::Name(&name)).await;
-
-    name_mock.assert();
-
     let imdb_id = "tttest".to_string();
-
-    let imdb_id_mock = auth_lang_mock(&client, GET, SEARCH_PATH)
-        .match_query(UrlEncoded("imdbId".to_string(), imdb_id.clone()))
-        .create();
-
-    let _ = client.search(SearchBy::IMDbID(&imdb_id)).await;
-
-    imdb_id_mock.assert();
-
     let zap2it_id = "1234567".to_string();
-
-    let zap2it_id_mock = auth_lang_mock(&client, GET, SEARCH_PATH)
-        .match_query(UrlEncoded("zap2itId".to_string(), zap2it_id.clone()))
-        .create();
-
-    let _ = client.search(SearchBy::Zap2itID(&zap2it_id)).await;
-
-    zap2it_id_mock.assert();
-
     let slug = "slug-test".to_string();
 
-    let slug_mock = auth_lang_mock(&client, GET, SEARCH_PATH)
-        .match_query(UrlEncoded("slug".to_string(), slug.clone()))
-        .create();
+    let cases = vec![
+        ("name", name.clone(), SearchBy::Name(&name)),
+        ("imdbId", imdb_id.clone(), SearchBy::IMDbID(&imdb_id)),
+        (
+            "zap2itId",
+            zap2it_id.clone(),
+            SearchBy::Zap2itID(&zap2it_id),
+        ),
+        ("slug", slug.clone(), SearchBy::Slug(&slug)),
+    ];
 
-    let _ = client.search(SearchBy::Slug(&slug)).await;
+    for (query_key, query_value, search_by) in cases.into_iter() {
+        let mock = auth_lang_mock(&client, GET, SEARCH_PATH)
+            .match_query(UrlEncoded(query_key.to_string(), query_value))
+            .create();
 
-    slug_mock.assert();
+        let _ = client.search(search_by).await;
+
+        mock.assert();
+    }
 }
 
 #[tokio::test]
@@ -225,24 +211,20 @@ async fn client_series_episodes() {
 
     let url = format!("/series/{}/episodes", SERIES_ID);
 
-    let episodes_mock = auth_mock(&client, GET, url.as_str())
-        .match_query(UrlEncoded("page".to_string(), 1.to_string()))
-        .create();
+    let cases = &[
+        EpisodeParams::new(SERIES_ID),
+        EpisodeParams::with_page(SERIES_ID, 32),
+    ];
 
-    let params = EpisodeParams::new(SERIES_ID);
-    let _ = client.series_episodes(&params).await;
+    for params in cases {
+        let mock = auth_mock(&client, GET, url.as_str())
+            .match_query(UrlEncoded("page".to_string(), params.page.to_string()))
+            .create();
 
-    episodes_mock.assert();
+        let _ = client.series_episodes(&params).await;
 
-    let page = 32;
-
-    let episodes_page_mock = auth_mock(&client, GET, url.as_str())
-        .match_query(UrlEncoded("page".to_string(), page.to_string()))
-        .create();
-
-    let _ = client.series_episodes(&params.page(page)).await;
-
-    episodes_page_mock.assert();
+        mock.assert();
+    }
 }
 
 #[tokio::test]
