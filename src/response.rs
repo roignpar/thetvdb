@@ -184,7 +184,7 @@ pub struct Series {
     #[serde(deserialize_with = "deserialize::optional_ts_seconds_date_time")]
     pub last_updated: Option<DateTime<Utc>>,
     /// The series' network.
-    pub network: String,
+    pub network: Option<String>,
     /// The series' network ID.
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub network_id: Option<String>,
