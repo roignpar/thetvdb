@@ -550,12 +550,15 @@ impl UpdatedParams {
         }
     }
 
-    /// Set `to_time` parameter.
-    pub fn set_to_time<D>(&mut self, to: D)
+    /// Set `toTime` parameter.
+    #[allow(clippy::wrong_self_convention)]
+    pub fn to_time<D>(mut self, to: D) -> Self
     where
         D: Into<DateTime<Utc>>,
     {
         self.to_time = Some(serialize::Timestamp(to.into()));
+
+        self
     }
 }
 
