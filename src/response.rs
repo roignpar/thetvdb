@@ -382,7 +382,7 @@ impl FilteredSeries {
 }
 
 /// Possible series status.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, PartialEq, Deserialize)]
 pub enum SeriesStatus {
     /// Series has ended and no more episodes will be aired.
     Ended,
@@ -730,7 +730,7 @@ impl Pagination for EpisodeQueryPage {
 /// [`Client.series_episodes_summary`](../client/struct.Client.html#method.series_episodes_summary).
 ///
 /// See linked method for more info.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EpisodeSummary {
     /// Number of aired seasons.
