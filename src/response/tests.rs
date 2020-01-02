@@ -53,9 +53,11 @@ fn series_urls() -> Result<()> {
 fn series_urls_errors() {
     let s = Series::default();
 
-    assert_missing_image_err(s.banner_url());
-    assert_missing_image_err(s.poster_url());
-    assert_missing_image_err(s.fanart_url());
+    let urls = vec![s.banner_url(), s.poster_url(), s.fanart_url()];
+
+    for url in urls {
+        assert_missing_image_err(url);
+    }
 }
 
 #[test]
@@ -81,9 +83,11 @@ fn filtered_series_urls() -> Result<()> {
 fn filtered_series_urls_errors() {
     let fs = FilteredSeries::default();
 
-    assert_missing_image_err(fs.banner_url());
-    assert_missing_image_err(fs.poster_url());
-    assert_missing_image_err(fs.fanart_url());
+    let urls = vec![fs.banner_url(), fs.poster_url(), fs.fanart_url()];
+
+    for url in urls {
+        assert_missing_image_err(url);
+    }
 
     match fs.website_url().unwrap_err() {
         Error::MissingSeriesSlug => {}
