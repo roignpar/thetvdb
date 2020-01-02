@@ -2,10 +2,10 @@ use super::*;
 use crate::error::test_util::*;
 use crate::params;
 
-const BANNER: &str = "/path/to/banner.jpg";
-const POSTER: &str = "/path/to/poster.png";
-const FANART: &str = "/path/to/fanart.gif";
-const THUMB: &str = "/path/to/thumbnail.jpeg";
+const BANNER: &str = "path/to/banner.jpg";
+const POSTER: &str = "path/to/poster.png";
+const FANART: &str = "path/to/fanart.gif";
+const THUMB: &str = "path/to/thumbnail.jpeg";
 const SLUG: &str = "series-name";
 
 #[test]

@@ -119,7 +119,7 @@ impl SearchSeries {
     /// # Errors
     /// Will fail if series `banner` is `None`.
     pub fn banner_url(&self) -> Result<Url> {
-        opt_image_url(&self.banner)
+        URLS.opt_image(&self.banner)
     }
 
     /// Returns the full `thetvdb.com` website series URL.
@@ -128,7 +128,7 @@ impl SearchSeries {
     /// Will fail if the series `slug` is somehow malformed
     /// and cannot be parsed into an `Url`.
     pub fn website_url(&self) -> Result<Url> {
-        series_website_url(&self.slug)
+        URLS.series_website(&self.slug)
     }
 }
 
@@ -225,7 +225,7 @@ impl Series {
     /// # Errors
     /// Will fail if series `banner` is `None`.
     pub fn banner_url(&self) -> Result<Url> {
-        opt_image_url(&self.banner)
+        URLS.opt_image(&self.banner)
     }
 
     /// Returns the full URL to the series' poster.
@@ -233,7 +233,7 @@ impl Series {
     /// # Errors
     /// Will fail if series `poster` is `None`.`
     pub fn poster_url(&self) -> Result<Url> {
-        opt_image_url(&self.poster)
+        URLS.opt_image(&self.poster)
     }
 
     /// Returns the full URL to the series' fanart.
@@ -241,7 +241,7 @@ impl Series {
     /// # Errors
     /// Will fail if series `fanart` is `None`.
     pub fn fanart_url(&self) -> Result<Url> {
-        opt_image_url(&self.fanart)
+        URLS.opt_image(&self.fanart)
     }
 
     /// Returns the full `thetvdb.com` website series URL.
@@ -250,7 +250,7 @@ impl Series {
     /// Will fail if the series `slug` is somehow malformed
     /// and cannot be parsed into an `Url`.
     pub fn website_url(&self) -> Result<Url> {
-        series_website_url(&self.slug)
+        URLS.series_website(&self.slug)
     }
 }
 
@@ -349,7 +349,7 @@ impl FilteredSeries {
     /// # Errors
     /// Will fail if series `banner` is `None`.
     pub fn banner_url(&self) -> Result<Url> {
-        opt_image_url(&self.banner)
+        URLS.opt_image(&self.banner)
     }
 
     /// Returns the full URL to the series' poster.
@@ -357,7 +357,7 @@ impl FilteredSeries {
     /// # Errors
     /// Will fail if series `poster` is `None`.`
     pub fn poster_url(&self) -> Result<Url> {
-        opt_image_url(&self.poster)
+        URLS.opt_image(&self.poster)
     }
 
     /// Returns the full URL to the series' fanart.
@@ -365,7 +365,7 @@ impl FilteredSeries {
     /// # Errors
     /// Will fail if series `fanart` is `None`.
     pub fn fanart_url(&self) -> Result<Url> {
-        opt_image_url(&self.fanart)
+        URLS.opt_image(&self.fanart)
     }
 
     /// Returns the full `thetvdb.com` website series URL.
@@ -375,7 +375,7 @@ impl FilteredSeries {
     /// and cannot be parsed into an `Url`.
     pub fn website_url(&self) -> Result<Url> {
         match self.slug.as_ref() {
-            Some(s) => series_website_url(&s),
+            Some(s) => URLS.series_website(&s),
             None => Err(Error::MissingSeriesSlug),
         }
     }
@@ -439,7 +439,7 @@ impl Actor {
     /// # Errors
     /// Will fail if series `image` is `None`.
     pub fn image_url(&self) -> Result<Url> {
-        opt_image_url(&self.image)
+        URLS.opt_image(&self.image)
     }
 }
 
@@ -546,7 +546,7 @@ impl Episode {
     /// # Errors
     /// Will fail if episode `filename` is `None`.
     pub fn filename_url(&self) -> Result<Url> {
-        opt_image_url(&self.filename)
+        URLS.opt_image(&self.filename)
     }
 }
 
@@ -799,12 +799,12 @@ pub struct Image {
 impl Image {
     /// Returns the full URL of the image file.
     pub fn file_name_url(&self) -> Result<Url> {
-        image_url(&self.file_name)
+        URLS.image(&self.file_name)
     }
 
     /// Returns the full URL of the image's thumbnail.
     pub fn thumbnail_url(&self) -> Result<Url> {
-        image_url(&self.thumbnail)
+        URLS.image(&self.thumbnail)
     }
 }
 
@@ -852,21 +852,6 @@ pub struct SeriesUpdate {
     /// Date and time that series was last updated.
     #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
     pub last_updated: DateTime<Utc>,
-}
-
-fn image_url(file_name: &str) -> Result<Url> {
-    Ok(URLS.banner.join(file_name)?)
-}
-
-fn opt_image_url(file_name: &Option<String>) -> Result<Url> {
-    match file_name {
-        None => Err(Error::MissingImage),
-        Some(f) => image_url(&f),
-    }
-}
-
-fn series_website_url(slug: &str) -> Result<Url> {
-    Ok(URLS.series.join(slug)?)
 }
 
 #[cfg(test)]
