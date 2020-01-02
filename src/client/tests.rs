@@ -106,9 +106,6 @@ async fn client_login() -> Result<()> {
     Ok(())
 }
 
-#[tokio::test]
-async fn client_sends_token() {}
-
 #[test]
 fn client_set_language() {
     let mut client = test_client();
