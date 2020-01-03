@@ -22,6 +22,7 @@ const SEARCH_PATH: &str = "/search/series";
 const SERIES_ID: u32 = 32167;
 const EPISODE_ID: u32 = 76123;
 const LANGUAGE_ID: u16 = 5;
+const MOVIE_ID: u32 = 9181;
 
 const API_KEY: &str = "TEST_API_KEY";
 
@@ -73,6 +74,7 @@ fn urls_must_parse() {
     client.languages_url();
     client.language_url(LanguageID(1));
     client.updated_url();
+    client.movies_url(MovieID(1));
 }
 
 #[tokio::test]
@@ -425,6 +427,19 @@ async fn client_updated() {
     let _ = client.updated(&params).await;
 
     updated_mock.assert();
+}
+
+#[tokio::test]
+async fn client_movie() {
+    let client = authenticated_test_client().await;
+
+    let url = format!("/movies/{}", MOVIE_ID);
+
+    let movie_mock = auth_lang_mock(&client, GET, url.as_str()).create();
+
+    let _ = client.movie(MOVIE_ID).await;
+
+    movie_mock.assert();
 }
 
 fn test_client() -> Client {
