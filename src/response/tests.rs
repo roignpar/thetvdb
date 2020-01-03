@@ -7,6 +7,7 @@ const POSTER: &str = "path/to/poster.png";
 const FANART: &str = "path/to/fanart.gif";
 const THUMB: &str = "path/to/thumbnail.jpeg";
 const SLUG: &str = "series-name";
+const GENRE: &str = "sci-fi";
 
 #[test]
 fn search_series_urls() -> Result<()> {
@@ -257,6 +258,60 @@ fn image_urls() -> Result<()> {
     assert_eq!(i.thumbnail_url()?, URLS.banner.join(THUMB)?);
 
     Ok(())
+}
+
+#[test]
+fn genre_url() -> Result<()> {
+    let g = Genre {
+        url: GENRE.to_string(),
+
+        ..Default::default()
+    };
+
+    assert_eq!(g.full_url()?, URLS.genre.join(GENRE)?);
+
+    Ok(())
+}
+
+#[test]
+fn artwork_urls() -> Result<()> {
+    let a = Artwork {
+        url: BANNER.to_string(),
+        thumb_url: THUMB.to_string(),
+
+        ..Default::default()
+    };
+
+    assert_eq!(a.full_url()?, URLS.banner.join(BANNER)?);
+    assert_eq!(a.full_thumb_url()?, URLS.banner.join(THUMB)?);
+
+    Ok(())
+}
+
+#[test]
+fn person_urls() -> Result<()> {
+    let p = Person {
+        people_image: Some(BANNER.to_string()),
+        role_image: Some(POSTER.to_string()),
+
+        ..Default::default()
+    };
+
+    assert_eq!(p.people_image_url()?, URLS.banner.join(BANNER)?);
+    assert_eq!(p.role_image_url()?, URLS.banner.join(POSTER)?);
+
+    Ok(())
+}
+
+#[test]
+fn person_urls_errors() {
+    let p = Person::default();
+
+    let urls = vec![p.people_image_url(), p.role_image_url()];
+
+    for url in urls {
+        assert_missing_image_err(url);
+    }
 }
 
 fn check_episode_page_params(params: EpisodeParams, id: SeriesID, page: u16) {
