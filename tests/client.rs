@@ -1,4 +1,4 @@
-use chrono::{Duration, TimeZone, Utc};
+use chrono::{Duration, Utc};
 use lazy_static::lazy_static;
 use tokio::sync::{Mutex, MutexGuard};
 
@@ -254,7 +254,41 @@ async fn updated() {
     if updates.is_err() {
         panic!("Error fetching updated series: {:?}", updates.unwrap_err());
     }
+}
 
+#[tokio::test]
+async fn movie() {
+    let guard = get_client().await;
+    let client = guard.as_ref().unwrap();
+
+    let movie = client.movie(TSR.id).await.expect("Error fetching movie");
+
+    assert_eq!(movie, *TSR);
+
+    let genre = movie.genres.iter().find(|g| *g == &*DRAMA);
+    if genre.is_none() {
+        panic!("Expected genre missing from movie genre list");
+    }
+
+    let translation = movie.translations.iter().find(|t| *t == &*TSR_ENG);
+    if translation.is_none() {
+        panic!("Expected translation missing from movie translation list");
+    }
+
+    let release_date = movie.release_dates.iter().find(|r| *r == &*RELEASE);
+    if release_date.is_none() {
+        panic!("Expected release date missing from movie release dates");
+    }
+
+    let remote_id = movie.remoteids.iter().find(|r| *r == &*TSR_IMDB);
+    if remote_id.is_none() {
+        panic!("Expected remote id missing from movie remote id list");
+    }
+
+    let actor = movie.people.actors.iter().find(|a| *a == &*ANDY);
+    if actor.is_none() {
+        panic!("Expected actor missing from movie actor list");
+    }
 }
 
 // Because there is no way to use async fns in lazy_static blocks
