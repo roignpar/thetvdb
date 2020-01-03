@@ -137,3 +137,15 @@ pub(crate) mod test_util {
         panic!("Wrong error kind: expected {:?}, got {:?}", expected, got);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn error_send_sync() {
+        fn assert_send_sync<T: Send + Sync>() {}
+
+        assert_send_sync::<Error>();
+    }
+}

@@ -314,6 +314,40 @@ fn person_urls_errors() {
     }
 }
 
+#[test]
+fn types_send_sync() {
+    fn assert_send_sync<T: Send + Sync>() {}
+
+    assert_send_sync::<SeriesID>();
+    assert_send_sync::<EpisodeID>();
+    assert_send_sync::<SearchSeries>();
+    assert_send_sync::<Series>();
+    assert_send_sync::<FilteredSeries>();
+    assert_send_sync::<SeriesStatus>();
+    assert_send_sync::<Actor>();
+    assert_send_sync::<Episode>();
+    assert_send_sync::<EpisodeLanguage>();
+    assert_send_sync::<EpisodePage>();
+    assert_send_sync::<EpisodeQueryPage>();
+    assert_send_sync::<PageLinks>();
+    assert_send_sync::<EpisodeSummary>();
+    assert_send_sync::<SeriesImages>();
+    assert_send_sync::<Image>();
+    assert_send_sync::<ImageRatingsInfo>();
+    assert_send_sync::<ImageQueryKey>();
+    assert_send_sync::<SeriesUpdate>();
+    assert_send_sync::<MovieID>();
+    assert_send_sync::<Movie>();
+    assert_send_sync::<Genre>();
+    assert_send_sync::<Translation>();
+    assert_send_sync::<ReleaseDate>();
+    assert_send_sync::<Artwork>();
+    assert_send_sync::<Trailer>();
+    assert_send_sync::<RemoteID>();
+    assert_send_sync::<People>();
+    assert_send_sync::<Person>();
+}
+
 fn check_episode_page_params(params: EpisodeParams, id: SeriesID, page: u16) {
     assert_eq!(params.series_id, id);
     assert_eq!(params.page, page);

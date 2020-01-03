@@ -442,6 +442,13 @@ async fn client_movie() {
     movie_mock.assert();
 }
 
+#[test]
+fn client_send_sync() {
+    fn assert_send_sync<T: Send + Sync>() {}
+
+    assert_send_sync::<Client>();
+}
+
 fn test_client() -> Client {
     Client {
         base_url: Url::parse(&mockito::server_url()).unwrap(),

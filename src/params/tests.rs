@@ -128,3 +128,15 @@ fn series_filter_keys() {
 
     assert!(keys.is_at_full_capacity());
 }
+
+#[test]
+fn types_send_sync() {
+    fn assert_send_sync<T: Send + Sync>() {}
+
+    assert_send_sync::<SearchBy<String>>();
+    assert_send_sync::<EpisodeParams>();
+    assert_send_sync::<EpisodeQueryParams>();
+    assert_send_sync::<SeriesFilterKeys>();
+    assert_send_sync::<ImageQueryParams>();
+    assert_send_sync::<UpdatedParams>();
+}
