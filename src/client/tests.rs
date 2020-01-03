@@ -116,7 +116,7 @@ fn client_set_language() {
 
     let mut abbr = "ts".to_string();
 
-    let language = Language {
+    let language = &Language {
         id: LanguageID(1),
         abbreviation: abbr.clone(),
         name: "Test".to_string(),

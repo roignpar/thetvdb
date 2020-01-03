@@ -73,7 +73,7 @@ impl Client {
     ///
     /// let korean = client.language(32).await?;
     ///
-    /// client.set_language(korean);
+    /// client.set_language(&korean);
     ///
     /// let planet_earth_ii_ko = client.series(318408).await?;
     ///
@@ -85,8 +85,8 @@ impl Client {
     /// assert_eq!(planet_earth_ii.id, planet_earth_ii_ko.id);
     /// # Ok(()) }
     /// ```
-    pub fn set_language(&mut self, language: Language) {
-        self.lang_abbr = language.abbreviation;
+    pub fn set_language(&mut self, language: &Language) {
+        self.lang_abbr = language.abbreviation.clone();
     }
 
     /// Set the language abbreviation directly.
