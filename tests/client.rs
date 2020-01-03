@@ -1,4 +1,4 @@
-use chrono::{TimeZone, Utc};
+use chrono::{Duration, TimeZone, Utc};
 use lazy_static::lazy_static;
 use tokio::sync::{Mutex, MutexGuard};
 
@@ -247,15 +247,14 @@ async fn updated() {
     let guard = get_client().await;
     let client = guard.as_ref().unwrap();
 
-    let params =
-        UpdatedParams::new(Utc.timestamp(UPDATED_FROM, 0)).to_time(Utc.timestamp(UPDATED_TO, 0));
+    let params = UpdatedParams::new(Utc::now() - Duration::days(1));
 
-    let updates = client
-        .updated(&params)
-        .await
-        .expect("Error fetching updated");
+    let updates = client.updated(&params).await;
 
-    assert_eq!(updates.len(), UPDATED_COUNT);
+    if updates.is_err() {
+        panic!("Error fetching updated series: {:?}", updates.unwrap_err());
+    }
+
 }
 
 // Because there is no way to use async fns in lazy_static blocks

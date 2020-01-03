@@ -88,10 +88,6 @@ lazy_static! {
 }
 
 pub const EPISODE_COUNT: usize = 18;
-pub const UPDATED_FROM: i64 = 1575108793;
-pub const UPDATED_TO: i64 = 1575109793;
-// Number of updated series between UPDATED_FROM and UPDATED_TO
-pub const UPDATED_COUNT: usize = 6;
 
 impl PartialEq<SearchSeries> for TestSeries {
     fn eq(&self, ss: &SearchSeries) -> bool {
