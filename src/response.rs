@@ -88,6 +88,7 @@ impl From<&Episode> for EpisodeID {
 /// and [`Client.series`](../client/struct.Client.html#method.series)
 /// for more info.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SearchSeries {
     /// Series aliases.
@@ -141,6 +142,7 @@ impl SearchSeries {
 ///
 /// See linked method for more info.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Series {
     /// The date and time when the series was added to TheTVDB.
@@ -270,6 +272,7 @@ impl Series {
 /// For more info see
 /// [`Client.series_filter`](../client/struct.Client.html#method.series_filter).
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase", default)]
 pub struct FilteredSeries {
     /// The date and time when the series was added to TheTVDB.
@@ -387,6 +390,7 @@ impl FilteredSeries {
 
 /// Possible series status.
 #[derive(Debug, PartialEq, Deserialize)]
+#[non_exhaustive]
 pub enum SeriesStatus {
     /// Series has ended and no more episodes will be aired.
     Ended,
@@ -410,6 +414,7 @@ impl Default for SeriesStatus {
 ///
 /// See linked method for more info.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Actor {
     /// ID of the actor.
@@ -454,6 +459,7 @@ impl Actor {
 ///
 /// See linked methods for more info.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Episode {
     /// ID of the episode.
@@ -556,6 +562,7 @@ impl Episode {
 
 /// Episode language info.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EpisodeLanguage {
     /// Abbreviation of the episode name language.
@@ -666,8 +673,8 @@ impl EpisodeQueryPage {
     }
 }
 
-#[derive(Debug, Deserialize)]
 /// Struct used for page links in paginated API results.
+#[derive(Debug, Deserialize)]
 pub struct PageLinks {
     first: u16,
     last: u16,
@@ -734,7 +741,8 @@ impl Pagination for EpisodeQueryPage {
 /// [`Client.series_episodes_summary`](../client/struct.Client.html#method.series_episodes_summary).
 ///
 /// See linked method for more info.
-#[derive(Debug, PartialEq, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EpisodeSummary {
     /// Number of aired seasons.
@@ -754,6 +762,7 @@ pub struct EpisodeSummary {
 ///
 /// See linked method for more info.
 #[derive(Debug, Deserialize)]
+#[non_exhaustive]
 pub struct SeriesImages {
     /// Number of fan art images.
     pub fanart: Option<u32>,
@@ -770,6 +779,7 @@ pub struct SeriesImages {
 /// Image data returned by
 /// [`Client.series_images_query`](../client/struct.Client.html#method.series_images_query).
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Image {
     /// ID of the image.
@@ -814,6 +824,7 @@ impl Image {
 
 /// Image ratings data.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ImageRatingsInfo {
     /// Average rating.
@@ -831,6 +842,7 @@ pub struct ImageRatingsInfo {
 /// and [`Client.series_images_query`](../client/struct.Client.html#method.series_images_query)
 /// for more info.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase", default)]
 pub struct ImageQueryKey {
     /// Key type name.
@@ -849,6 +861,7 @@ pub struct ImageQueryKey {
 ///
 /// See linked method for more info.
 #[derive(Debug, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SeriesUpdate {
     /// ID of the series.

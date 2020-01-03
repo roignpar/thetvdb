@@ -29,6 +29,7 @@ impl From<u32> for MovieID {
 /// Movie data returned by
 /// [`Client.movie`](../client/struct.Client.html#method.movie).
 #[derive(Debug, Deserialize)]
+#[non_exhaustive]
 pub struct Movie {
     /// ID of the movie.
     pub id: MovieID,
@@ -54,6 +55,7 @@ pub struct Movie {
 
 /// Movie genre data.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 pub struct Genre {
     /// Genre path.
     ///
@@ -74,6 +76,7 @@ impl Genre {
 
 /// Movie translation data.
 #[derive(Debug, Deserialize)]
+#[non_exhaustive]
 pub struct Translation {
     /// Translation language code.
     pub language_code: String,
@@ -91,6 +94,7 @@ pub struct Translation {
 
 /// Movie release date data.
 #[derive(Debug, Deserialize)]
+#[non_exhaustive]
 pub struct ReleaseDate {
     /// Type of release date.
     ///
@@ -105,6 +109,7 @@ pub struct ReleaseDate {
 
 /// Movie artwork image data.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 pub struct Artwork {
     /// Artwork's ID.
     pub id: String,
@@ -143,6 +148,7 @@ impl Artwork {
 
 /// Movie trailer data.
 #[derive(Debug, Deserialize)]
+#[non_exhaustive]
 pub struct Trailer {
     /// Trailer full URL.
     pub url: String,
@@ -152,6 +158,7 @@ pub struct Trailer {
 
 /// Movie remote ID data.
 #[derive(Debug, Deserialize)]
+#[non_exhaustive]
 pub struct RemoteID {
     /// The ID.
     pub id: String,
@@ -165,6 +172,7 @@ pub struct RemoteID {
 
 /// Movie people data.
 #[derive(Debug, Deserialize)]
+#[non_exhaustive]
 pub struct People {
     /// List of movie's actors.
     #[serde(default)]
@@ -182,6 +190,7 @@ pub struct People {
 
 /// Movie person (actor, director, etc.) data.
 #[derive(Debug, Default, Deserialize)]
+#[non_exhaustive]
 pub struct Person {
     /// Person ID for this movie.
     pub id: String,

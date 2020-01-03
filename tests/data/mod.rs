@@ -37,6 +37,14 @@ pub struct TestEpisode {
 }
 
 #[derive(Debug)]
+pub struct TestEpisodeSummary {
+    pub aired_seasons: Vec<String>,
+    pub aired_episodes: u16,
+    pub dvd_seasons: Vec<String>,
+    pub dvd_episodes: u16,
+}
+
+#[derive(Debug)]
 pub struct TestLanguage {
     pub id: LanguageID,
     pub abbreviation: String,
@@ -119,7 +127,7 @@ lazy_static! {
         series_id: PEII.id,
         imdb_id: "tt5491994".to_string()
     };
-    pub static ref EPISODE_SUMMARY: EpisodeSummary = EpisodeSummary {
+    pub static ref EPISODE_SUMMARY: TestEpisodeSummary = TestEpisodeSummary {
         aired_seasons: vec!["1".to_string(), "0".to_string()],
         aired_episodes: 18,
         dvd_seasons: vec!["1".to_string(), "0".to_string()],
@@ -252,6 +260,21 @@ impl PartialEq<Episode> for TestEpisode {
 
 impl PartialEq<TestEpisode> for Episode {
     fn eq(&self, te: &TestEpisode) -> bool {
+        te == self
+    }
+}
+
+impl PartialEq<EpisodeSummary> for TestEpisodeSummary {
+    fn eq(&self, e: &EpisodeSummary) -> bool {
+        self.aired_seasons == e.aired_seasons
+            && self.aired_episodes == e.aired_episodes
+            && self.dvd_seasons == e.dvd_seasons
+            && self.dvd_episodes == e.dvd_episodes
+    }
+}
+
+impl PartialEq<TestEpisodeSummary> for EpisodeSummary {
+    fn eq(&self, te: &TestEpisodeSummary) -> bool {
         te == self
     }
 }
