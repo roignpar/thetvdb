@@ -1,4 +1,4 @@
-use chrono::{Date, DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
+use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 use serde::{Deserialize, Deserializer};
 
 pub fn optional_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
@@ -37,7 +37,7 @@ where
     }
 }
 
-pub fn optional_date<'de, D>(deserializer: D) -> Result<Option<Date<Utc>>, D::Error>
+pub fn optional_date<'de, D>(deserializer: D) -> Result<Option<NaiveDate>, D::Error>
 where
     D: Deserializer<'de>,
 {
@@ -45,7 +45,7 @@ where
         Some(s) if !s.is_empty() => {
             let nd = NaiveDate::parse_from_str(&s, "%Y-%m-%d").map_err(serde::de::Error::custom)?;
 
-            Ok(Some(Utc.from_utc_date(&nd)))
+            Ok(Some(nd))
         }
         _ => Ok(None),
     }

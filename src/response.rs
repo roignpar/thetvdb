@@ -4,7 +4,7 @@
 
 use std::fmt;
 
-use chrono::{Date, DateTime, NaiveTime, Utc};
+use chrono::{DateTime, NaiveDate, NaiveTime, Utc};
 use serde::Deserialize;
 use url::Url;
 
@@ -99,9 +99,9 @@ pub struct SearchSeries {
     /// Use [`banner_url`](#method.banner_url) for a full URL.
     #[serde(deserialize_with = "deserialize::optional_string")]
     pub banner: Option<String>,
-    #[serde(deserialize_with = "deserialize::optional_date")]
     /// Date when series was first aired.
-    pub first_aired: Option<Date<Utc>>,
+    #[serde(deserialize_with = "deserialize::optional_date")]
+    pub first_aired: Option<NaiveDate>,
     /// ID of the series.
     pub id: SeriesID,
     /// The series' network.
@@ -181,7 +181,7 @@ pub struct Series {
     pub fanart: Option<String>,
     /// Date when series was first aired.
     #[serde(deserialize_with = "deserialize::optional_date")]
-    pub first_aired: Option<Date<Utc>>,
+    pub first_aired: Option<NaiveDate>,
     /// List of the series' genres.
     pub genre: Vec<String>,
     /// ID of the series.
@@ -313,7 +313,7 @@ pub struct FilteredSeries {
     pub fanart: Option<String>,
     /// Date when series was first aired.
     #[serde(default, deserialize_with = "deserialize::optional_date")]
-    pub first_aired: Option<Date<Utc>>,
+    pub first_aired: Option<NaiveDate>,
     /// List of the series' genres.
     #[serde(default)]
     pub genre: Option<Vec<String>>,
@@ -498,7 +498,7 @@ pub struct Episode {
     pub episode_name: Option<String>,
     /// Date when episode was first aired.
     #[serde(deserialize_with = "deserialize::optional_date")]
-    pub first_aired: Option<Date<Utc>>,
+    pub first_aired: Option<NaiveDate>,
     /// List of guest stars playing in this episode.
     pub guest_stars: Vec<String>,
     /// List of this episode's directors.

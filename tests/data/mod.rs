@@ -1,4 +1,4 @@
-use chrono::{Date, NaiveDate, TimeZone, Utc};
+use chrono::NaiveDate;
 use lazy_static::lazy_static;
 
 use thetvdb::{language::*, response::*};
@@ -7,7 +7,7 @@ use thetvdb::{language::*, response::*};
 pub struct TestSeries {
     pub id: SeriesID,
     pub series_name: String,
-    pub first_aired: Date<Utc>,
+    pub first_aired: NaiveDate,
     pub network: String,
     pub slug: String,
     pub status: SeriesStatus,
@@ -30,7 +30,7 @@ pub struct TestEpisode {
     pub aired_season_id: u32,
     pub aired_episode_number: u16,
     pub episode_name: String,
-    pub first_aired: Date<Utc>,
+    pub first_aired: NaiveDate,
     pub absolute_number: u16,
     pub series_id: SeriesID,
     pub imdb_id: String,
@@ -103,7 +103,7 @@ lazy_static! {
     pub static ref PEII: TestSeries = TestSeries {
         id: SeriesID(318408),
         series_name: "Planet Earth II".to_string(),
-        first_aired: Utc.ymd(2016, 11, 6),
+        first_aired: NaiveDate::from_ymd(2016, 11, 6),
         network: "BBC One".to_string(),
         slug: "planet-earth-ii".to_string(),
         status: SeriesStatus::Ended,
@@ -122,7 +122,7 @@ lazy_static! {
         aired_season_id: 684701,
         aired_episode_number: 1,
         episode_name: "Islands".to_string(),
-        first_aired: Utc.ymd(2016, 11, 6),
+        first_aired: NaiveDate::from_ymd(2016, 11, 6),
         absolute_number: 1,
         series_id: PEII.id,
         imdb_id: "tt5491994".to_string()
