@@ -805,6 +805,39 @@ impl Client {
         Ok(res.json::<ResponseData<Vec<SeriesUpdate>>>().await?.data)
     }
 
+    /// Get a movie by its id.
+    ///
+    /// Sends a `GET` request to the `/movies/{id}` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// let movie = client.movie(190).await?;
+    ///
+    /// assert_eq!(movie.runtime, 142);
+    /// # Ok(()) }
+    /// ```
+    pub async fn movie<I>(&self, id: I) -> Result<Movie>
+    where
+        I: Into<MovieID>,
+    {
+        let res = self
+            .prep_lang_req(Method::GET, self.movies_url(id.into()))
+            .await?
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<ResponseData<Movie>>().await?.data)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -981,6 +1014,12 @@ impl Client {
         self.base_url
             .join("/updated/query")
             .expect("could not parse updated url")
+    }
+
+    fn movies_url(&self, id: MovieID) -> Url {
+        self.base_url
+            .join(&format!("/movies/{}", id))
+            .expect("could not parse movie url")
     }
 }
 
