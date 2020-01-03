@@ -13,6 +13,10 @@ use crate::error::*;
 use crate::params::{EpisodeParams, EpisodeQuery, EpisodeQueryParams};
 use crate::urls::URLS;
 
+mod movie;
+
+pub use movie::*;
+
 #[derive(Debug, Deserialize)]
 pub(crate) struct ResponseData<T> {
     pub(crate) data: T,
