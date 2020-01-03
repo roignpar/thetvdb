@@ -54,7 +54,8 @@ pub struct Movie {
 }
 
 /// Movie genre data.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 pub struct Genre {
     /// Genre path.
@@ -108,7 +109,8 @@ pub struct ReleaseDate {
 }
 
 /// Movie artwork image data.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 pub struct Artwork {
     /// Artwork's ID.
@@ -189,7 +191,8 @@ pub struct People {
 }
 
 /// Movie person (actor, director, etc.) data.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 pub struct Person {
     /// Person ID for this movie.

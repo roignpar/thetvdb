@@ -87,7 +87,8 @@ impl From<&Episode> for EpisodeID {
 /// See [`Client.search`](../client/struct.Client.html#method.search)
 /// and [`Client.series`](../client/struct.Client.html#method.series)
 /// for more info.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SearchSeries {
@@ -141,7 +142,8 @@ impl SearchSeries {
 /// [`Client.series`](../client/struct.Client.html#method.series).
 ///
 /// See linked method for more info.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Series {
@@ -271,82 +273,99 @@ impl Series {
 ///
 /// For more info see
 /// [`Client.series_filter`](../client/struct.Client.html#method.series_filter).
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
-#[serde(rename_all = "camelCase", default)]
+#[serde(rename_all = "camelCase")]
 pub struct FilteredSeries {
     /// The date and time when the series was added to TheTVDB.
-    #[serde(deserialize_with = "deserialize::optional_date_time")]
+    #[serde(default, deserialize_with = "deserialize::optional_date_time")]
     pub added: Option<DateTime<Utc>>,
     /// ID of the user that added the series to TheTVDB.
+    #[serde(default)]
     pub added_by: Option<u32>,
     /// Day or days of week when series airs.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(default, deserialize_with = "deserialize::optional_string")]
     pub airs_day_of_week: Option<String>,
     /// Time of day when the episodes air.
-    #[serde(deserialize_with = "deserialize::optional_naive_time")]
+    #[serde(default, deserialize_with = "deserialize::optional_naive_time")]
     pub airs_time: Option<NaiveTime>,
     /// Series aliases.
+    #[serde(default)]
     pub aliases: Option<Vec<String>>,
     /// Series current season.
+    #[serde(default)]
     pub season: Option<String>,
     /// Path to the series' banner.
     ///
     /// Use [`banner_url`](#method.banner_url) for a full URL.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(default, deserialize_with = "deserialize::optional_string")]
     pub banner: Option<String>,
     /// Path to the series' poster.
     ///
     /// Use [`poster_url`](#method.poster_url) for a full URL.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(default, deserialize_with = "deserialize::optional_string")]
     pub poster: Option<String>,
     /// Path to the series' fanart.
     ///
     /// Use [`fanart_url`](#method.fanart_url) for a full URL.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(default, deserialize_with = "deserialize::optional_string")]
     pub fanart: Option<String>,
     /// Date when series was first aired.
-    #[serde(deserialize_with = "deserialize::optional_date")]
+    #[serde(default, deserialize_with = "deserialize::optional_date")]
     pub first_aired: Option<Date<Utc>>,
     /// List of the series' genres.
+    #[serde(default)]
     pub genre: Option<Vec<String>>,
     /// ID of the series.
+    #[serde(default)]
     pub id: Option<SeriesID>,
     /// IMDb ID of the series.
+    #[serde(default)]
     pub imdb_id: Option<String>,
     /// Time and date when series was last updated.
-    #[serde(deserialize_with = "deserialize::optional_ts_seconds_date_time")]
+    #[serde(
+        default,
+        deserialize_with = "deserialize::optional_ts_seconds_date_time"
+    )]
     pub last_updated: Option<DateTime<Utc>>,
     /// The series' network.
+    #[serde(default)]
     pub network: Option<String>,
     /// The series' network ID.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(default, deserialize_with = "deserialize::optional_string")]
     pub network_id: Option<String>,
     /// Short description of the series.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(default, deserialize_with = "deserialize::optional_string")]
     pub overview: Option<String>,
     /// Series parental guide rating.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(default, deserialize_with = "deserialize::optional_string")]
     pub rating: Option<String>,
     /// Series episode runtime.
+    #[serde(default)]
     pub runtime: Option<String>,
     /// Series language abbreviation.
+    #[serde(default)]
     pub language: Option<String>,
     /// Name of the series.
+    #[serde(default)]
     pub series_name: Option<String>,
     /// Series rating.
-    #[serde(deserialize_with = "deserialize::optional_float")]
+    #[serde(default, deserialize_with = "deserialize::optional_float")]
     pub site_rating: Option<f32>,
     /// Number of rating votes.
+    #[serde(default)]
     pub site_rating_count: Option<u32>,
     /// Series website slug.
+    #[serde(default)]
     pub slug: Option<String>,
     /// Status of the series.
     ///
     /// See [`SeriesStatus`](./enum.SeriesStatus.html) for more info.
+    #[serde(default)]
     pub status: Option<SeriesStatus>,
     /// Zap2it ID of the series.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(default, deserialize_with = "deserialize::optional_string")]
     pub zap2it_id: Option<String>,
 }
 
@@ -403,6 +422,7 @@ pub enum SeriesStatus {
     Unknown,
 }
 
+#[cfg(test)]
 impl Default for SeriesStatus {
     fn default() -> Self {
         Self::Unknown
@@ -413,7 +433,8 @@ impl Default for SeriesStatus {
 /// [`Client.series_actors`](../client/struct.Client.html#method.series_actors).
 ///
 /// See linked method for more info.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Actor {
@@ -458,7 +479,8 @@ impl Actor {
 /// and [`Client.episode`](../client/struct.Client.html#method.episode).
 ///
 /// See linked methods for more info.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Episode {
@@ -561,7 +583,8 @@ impl Episode {
 }
 
 /// Episode language info.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EpisodeLanguage {
@@ -778,7 +801,8 @@ pub struct SeriesImages {
 
 /// Image data returned by
 /// [`Client.series_images_query`](../client/struct.Client.html#method.series_images_query).
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Image {
@@ -823,7 +847,8 @@ impl Image {
 }
 
 /// Image ratings data.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
+#[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ImageRatingsInfo {
@@ -841,14 +866,14 @@ pub struct ImageRatingsInfo {
 /// See [`Client.series_images_query_params`](../client/struct.Client.html#method.series_images_query_params)
 /// and [`Client.series_images_query`](../client/struct.Client.html#method.series_images_query)
 /// for more info.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
 #[non_exhaustive]
-#[serde(rename_all = "camelCase", default)]
+#[serde(rename_all = "camelCase")]
 pub struct ImageQueryKey {
     /// Key type name.
     pub key_type: String,
     /// Key language ID.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(default, deserialize_with = "deserialize::optional_string")]
     pub language_id: Option<String>,
     /// Available resolutions.
     pub resolution: Vec<String>,
