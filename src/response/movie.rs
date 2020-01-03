@@ -28,7 +28,7 @@ impl From<u32> for MovieID {
 
 /// Movie data returned by
 /// [`Client.movie`](../client/struct.Client.html#method.movie).
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[non_exhaustive]
 pub struct Movie {
     /// ID of the movie.
@@ -54,7 +54,7 @@ pub struct Movie {
 }
 
 /// Movie genre data.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 pub struct Genre {
@@ -76,7 +76,7 @@ impl Genre {
 }
 
 /// Movie translation data.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[non_exhaustive]
 pub struct Translation {
     /// Translation language code.
@@ -94,7 +94,7 @@ pub struct Translation {
 }
 
 /// Movie release date data.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[non_exhaustive]
 pub struct ReleaseDate {
     /// Type of release date.
@@ -109,7 +109,7 @@ pub struct ReleaseDate {
 }
 
 /// Movie artwork image data.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 pub struct Artwork {
@@ -149,7 +149,7 @@ impl Artwork {
 }
 
 /// Movie trailer data.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[non_exhaustive]
 pub struct Trailer {
     /// Trailer full URL.
@@ -159,7 +159,7 @@ pub struct Trailer {
 }
 
 /// Movie remote ID data.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[non_exhaustive]
 pub struct RemoteID {
     /// The ID.
@@ -173,7 +173,7 @@ pub struct RemoteID {
 }
 
 /// Movie people data.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[non_exhaustive]
 pub struct People {
     /// List of movie's actors.
@@ -191,7 +191,7 @@ pub struct People {
 }
 
 /// Movie person (actor, director, etc.) data.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 pub struct Person {
