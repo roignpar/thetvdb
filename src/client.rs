@@ -675,13 +675,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        // the API will return an empty episode if id is not found
-        let episode = res.json::<ResponseData<Episode>>().await?.data;
-        if episode.id != id {
-            return Err(Error::NotFound);
-        }
-
-        Ok(episode)
+        Ok(res.json::<ResponseData<Episode>>().await?.data)
     }
 
     /// Get a list of all the available languages.
