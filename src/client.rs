@@ -86,7 +86,7 @@ impl Client {
     /// # Ok(()) }
     /// ```
     pub fn set_language(&mut self, language: Language) {
-        self.lang_abbr = language.abbr().into();
+        self.lang_abbr = language.abbreviation;
     }
 
     /// Set the language abbreviation directly.
@@ -733,7 +733,7 @@ impl Client {
     /// #
     /// let japanese = client.language(25).await?;
     ///
-    /// assert_eq!(japanese.abbr(), "ja".to_string());
+    /// assert_eq!(japanese.abbreviation, "ja".to_string());
     /// assert_eq!(japanese.name, "日本語".to_string());
     /// assert_eq!(japanese.english_name, "Japanese".to_string());
     /// # Ok(()) }

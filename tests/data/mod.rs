@@ -259,7 +259,7 @@ impl PartialEq<TestEpisode> for Episode {
 impl PartialEq<Language> for TestLanguage {
     fn eq(&self, l: &Language) -> bool {
         self.id == l.id
-            && self.abbreviation == l.abbr()
+            && self.abbreviation == l.abbreviation
             && self.name == l.name
             && self.english_name == l.english_name
     }

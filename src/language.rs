@@ -26,37 +26,17 @@ impl From<u16> for LanguageID {
 ///
 /// Can be used to [set the client language](../client/struct.Client.html#method.set_language).
 #[derive(Debug, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Language {
     /// ID of the language.
     pub id: LanguageID,
-    pub(crate) abbreviation: String,
+    /// Language abbreviation.
+    pub abbreviation: String,
     /// Original name of the language.
     pub name: String,
     /// English name of the language.
     pub english_name: String,
-}
-
-impl Language {
-    /// Get the language's abbreviation.
-    ///
-    /// # Examples
-    /// ```no_run
-    /// # use thetvdb::{Client, error::Result};
-    /// #
-    /// # #[tokio::main]
-    /// # async fn main() -> Result<()> {
-    /// #
-    /// # let client = Client::new("KEY").await?;
-    /// #
-    /// let japanese = client.language(25).await?;
-    ///
-    /// assert_eq!(japanese.abbr(), "ja".to_string());
-    /// # Ok(()) }
-    /// ```
-    pub fn abbr(&self) -> &str {
-        &self.abbreviation
-    }
 }
 
 impl From<&Language> for LanguageID {
