@@ -291,23 +291,21 @@ async fn movie() {
     }
 }
 
-// Because there is no way to use async fns in lazy_static blocks
+// Because there is no way to use async in lazy_static blocks
 // CLIENT will be created here.
 async fn get_client() -> MutexGuard<'static, Option<Client>> {
-    {
-        let mut client = CLIENT.lock().await;
+    let mut client = CLIENT.lock().await;
 
-        if client.is_none() {
-            let api_key = std::env::var(ENV_APIKEY)
-                .expect(&format!("Missing or invalid {} env var", ENV_APIKEY));
+    if client.is_none() {
+        let api_key =
+            std::env::var(ENV_APIKEY).expect(&format!("Missing or invalid {} env var", ENV_APIKEY));
 
-            *client = Some(
-                Client::new(api_key)
-                    .await
-                    .expect("Could not authenticate test client"),
-            );
-        }
+        *client = Some(
+            Client::new(api_key)
+                .await
+                .expect("Could not authenticate test client"),
+        );
     }
 
-    CLIENT.lock().await
+    client
 }
