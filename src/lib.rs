@@ -48,3 +48,18 @@ pub mod params;
 pub mod response;
 
 pub use client::Client;
+
+#[cfg(test)]
+mod test_util {
+    use chrono::{DateTime, TimeZone, Utc};
+
+    use crate::error::Error;
+
+    pub fn now_round_seconds() -> DateTime<Utc> {
+        Utc.timestamp(Utc::now().timestamp(), 0)
+    }
+
+    pub fn wrong_error_kind(expected: Error, got: Error) {
+        panic!("Wrong error kind: expected {:?}, got {:?}", expected, got);
+    }
+}

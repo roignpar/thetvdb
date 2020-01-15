@@ -1,6 +1,6 @@
 use super::*;
-use crate::error::test_util::*;
 use crate::params;
+use crate::test_util::*;
 
 const BANNER: &str = "path/to/banner.jpg";
 const POSTER: &str = "path/to/poster.png";

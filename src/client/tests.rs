@@ -1,4 +1,4 @@
-use chrono::{DateTime, Duration, TimeZone, Utc};
+use chrono::{Duration, Utc};
 use futures::executor::block_on;
 use jsonwebtoken as jwt;
 use mockito::{
@@ -11,6 +11,7 @@ use serde_json::json;
 use url::Url;
 
 use super::*;
+use crate::test_util::*;
 
 const POST: &str = "POST";
 const GET: &str = "GET";
@@ -483,10 +484,6 @@ where
     let key = pem::parse(RSA_KEY).unwrap();
 
     jwt::encode(header, claims, &key.contents).unwrap()
-}
-
-fn now_round_seconds() -> DateTime<Utc> {
-    Utc.timestamp(Utc::now().timestamp(), 0)
 }
 
 /// HTTP mock with authorization header.

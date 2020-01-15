@@ -130,15 +130,6 @@ impl From<JWTError> for Error {
 }
 
 #[cfg(test)]
-pub(crate) mod test_util {
-    use super::*;
-
-    pub fn wrong_error_kind(expected: Error, got: Error) {
-        panic!("Wrong error kind: expected {:?}, got {:?}", expected, got);
-    }
-}
-
-#[cfg(test)]
 mod tests {
     use super::*;
 
