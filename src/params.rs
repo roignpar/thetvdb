@@ -6,7 +6,7 @@ use chrono::{DateTime, Utc};
 use serde::Serialize;
 
 use crate::response::SeriesID;
-use crate::serialize;
+use crate::serialization as ser;
 
 /// Parameter used to search for series with
 /// [`Client.search`](../client/struct.Client.html#method.search).
@@ -524,7 +524,7 @@ pub struct UpdatedParams {
     #[serde(serialize_with = "chrono::serde::ts_seconds::serialize")]
     from_time: DateTime<Utc>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    to_time: Option<serialize::Timestamp>,
+    to_time: Option<ser::Timestamp>,
 }
 
 impl UpdatedParams {
@@ -546,7 +546,7 @@ impl UpdatedParams {
     {
         Self {
             from_time: from.into(),
-            to_time: Some(serialize::Timestamp(to.into())),
+            to_time: Some(ser::Timestamp(to.into())),
         }
     }
 
@@ -556,7 +556,7 @@ impl UpdatedParams {
     where
         D: Into<DateTime<Utc>>,
     {
-        self.to_time = Some(serialize::Timestamp(to.into()));
+        self.to_time = Some(ser::Timestamp(to.into()));
 
         self
     }

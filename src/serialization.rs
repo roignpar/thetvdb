@@ -1,5 +1,10 @@
 use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
-use serde::{Deserialize, Deserializer};
+use serde::{Deserialize, Deserializer, Serialize};
+
+#[derive(Debug, Serialize)]
+pub struct Timestamp(
+    #[serde(serialize_with = "chrono::serde::ts_seconds::serialize")] pub DateTime<Utc>,
+);
 
 pub fn optional_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
 where

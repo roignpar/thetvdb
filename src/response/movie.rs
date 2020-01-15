@@ -6,8 +6,8 @@ use chrono::NaiveDate;
 use serde::Deserialize;
 use url::Url;
 
-use crate::deserialize;
 use crate::error::Result;
+use crate::serialization as ser;
 use crate::urls::URLS;
 
 /// Custom type used for [`Movie`](./struct.Movie.html) ids.
@@ -84,12 +84,12 @@ pub struct Translation {
     /// Movie name in this language.
     pub name: String,
     /// Movie overview in this language.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub overview: Option<String>,
     /// Whether this is the movie's primary translation.
     pub is_primary: bool,
     /// Movie tagline in this language.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub tagline: Option<String>,
 }
 
@@ -126,7 +126,7 @@ pub struct Artwork {
     /// For the full URL use [`full_thumb_url`](#method.full_thumb_url).
     pub thumb_url: String,
     /// Artwork's tags.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub tags: Option<String>,
     /// Whether this is the primary artwork of the movie.
     pub is_primary: bool,
@@ -200,29 +200,29 @@ pub struct Person {
     /// Person's name.
     pub name: String,
     /// Person's role in this movie.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub role: Option<String>,
     /// Person's image path.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub people_image: Option<String>,
     /// Person's movie role image path.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub role_image: Option<String>,
     /// Whether this person is featured for this movie.
     pub is_featured: bool,
     /// ID of the person.
     pub people_id: String,
     /// Person's IMDb ID.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub imdb_id: Option<String>,
     /// Person's Twitter.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub people_twitter: Option<String>,
     /// Person's Facebook.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub people_facebook: Option<String>,
     /// Person's Instagram.
-    #[serde(deserialize_with = "deserialize::optional_string")]
+    #[serde(deserialize_with = "ser::optional_string")]
     pub people_instagram: Option<String>,
 }
 

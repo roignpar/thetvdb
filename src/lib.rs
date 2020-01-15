@@ -38,8 +38,7 @@
 //!
 //! For more examples check [Client](./client/struct.Client.html).
 
-mod deserialize;
-mod serialize;
+mod serialization;
 mod urls;
 
 pub mod client;
