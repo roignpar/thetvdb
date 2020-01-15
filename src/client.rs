@@ -7,7 +7,7 @@
 use chrono::{DateTime, Duration, Utc};
 use futures::lock::Mutex;
 use reqwest::{header::HeaderValue, Client as HttpClient, Method, RequestBuilder, Response};
-use serde::{Deserialize, Serialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use url::Url;
 
 use crate::error::{Error, Result};
@@ -22,6 +22,11 @@ const BASE_URL: &str = "https://api.thetvdb.com/";
 /// You will need a valid API key to create a new client.
 /// To generate a key log in and go to the [API Keys
 /// page](https://thetvdb.com/dashboard/account/apikeys).
+///
+/// If you want to use your own types instead of the ones provided by this crate
+/// to deserialize API responses, each client method `<method_name>` has an
+/// alternative named `<method_name>_into` which can return data deserialized
+/// into your types.
 #[derive(Debug)]
 pub struct Client {
     base_url: Url,
@@ -146,6 +151,16 @@ impl Client {
     where
         S: AsRef<str>,
     {
+        self.search_into(param).await
+    }
+
+    /// Same as [search](#method.search), but allows deserializing
+    /// the response search series data into a provided type.
+    pub async fn search_into<T, S>(&self, param: SearchBy<S>) -> Result<Vec<T>>
+    where
+        S: AsRef<str>,
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_lang_req(Method::GET, self.search_url())
             .await?
@@ -155,7 +170,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Vec<SearchSeries>>>().await?.data)
+        Ok(res.json::<ResponseData<Vec<T>>>().await?.data)
     }
 
     /// Get a series by its id.
@@ -210,6 +225,16 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
+        self.series_into(id).await
+    }
+
+    /// Same as [series](#method.series), but allows deserializing
+    /// the response series data into a provided type.
+    pub async fn series_into<T, I>(&self, id: I) -> Result<T>
+    where
+        I: Into<SeriesID>,
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_lang_req(Method::GET, self.series_url(id.into()))
             .await?
@@ -218,7 +243,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Series>>().await?.data)
+        Ok(res.json::<ResponseData<T>>().await?.data)
     }
 
     /// Get the last modified time of a series.
@@ -290,6 +315,16 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
+        self.series_actors_into(id).await
+    }
+
+    /// Same as [series_actors](#method.series_actors), but allows deserializing
+    /// the response actor data into a provided type.
+    pub async fn series_actors_into<T, I>(&self, id: I) -> Result<Vec<T>>
+    where
+        I: Into<SeriesID>,
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_req(Method::GET, self.series_actors_url(id.into()))
             .await?
@@ -298,7 +333,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Vec<Actor>>>().await?.data)
+        Ok(res.json::<ResponseData<Vec<T>>>().await?.data)
     }
 
     /// Get a page of a series' episodes.
@@ -341,6 +376,15 @@ impl Client {
     /// # Errors
     /// Will return an error if the series is not found.
     pub async fn series_episodes(&self, params: &EpisodeParams) -> Result<EpisodePage> {
+        self.series_episodes_into(params).await
+    }
+
+    /// Same as [series_episodes](#method.series_episodes), but allows deserializing
+    /// the response episode data into a provided type.
+    pub async fn series_episodes_into<T>(&self, params: &EpisodeParams) -> Result<EpisodePage<T>>
+    where
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_req(Method::GET, self.series_episodes_url(params.series_id))
             .await?
@@ -350,7 +394,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        let mut page: EpisodePage = res.json().await?;
+        let mut page: EpisodePage<T> = res.json().await?;
         page.series_id = params.series_id;
 
         Ok(page)
@@ -396,6 +440,18 @@ impl Client {
         &self,
         query_params: &EpisodeQueryParams,
     ) -> Result<EpisodeQueryPage> {
+        self.series_episodes_query_into(query_params).await
+    }
+
+    /// Same as [series_episodes_query](#method.series_episodes_query), but allows
+    /// deserializing the response episode data into a provided type.
+    pub async fn series_episodes_query_into<T>(
+        &self,
+        query_params: &EpisodeQueryParams,
+    ) -> Result<EpisodeQueryPage<T>>
+    where
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_lang_req(
                 Method::GET,
@@ -409,7 +465,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        let mut page: EpisodeQueryPage = res.json().await?;
+        let mut page: EpisodeQueryPage<T> = res.json().await?;
         page.series_id = query_params.params.series_id;
         page.query = query_params.query.clone();
 
@@ -441,6 +497,16 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
+        self.series_episodes_summary_into(id).await
+    }
+
+    /// Same as [series_episodes_summary](#method.series_episodes_summary), but allows
+    /// deserializing the response episode summary data into a provided type.
+    pub async fn series_episodes_summary_into<T, I>(&self, id: I) -> Result<T>
+    where
+        I: Into<SeriesID>,
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_req(Method::GET, self.series_episodes_summary_url(id.into()))
             .await?
@@ -449,7 +515,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<EpisodeSummary>>().await?.data)
+        Ok(res.json::<ResponseData<T>>().await?.data)
     }
 
     /// Get only selected fields of a series.
@@ -492,6 +558,16 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
+        self.series_filter_into(id, filter_keys).await
+    }
+
+    /// Same as [series_filter](#method.series_filter), but allows deserializing
+    /// the response series data into a provided type.
+    pub async fn series_filter_into<T, I>(&self, id: I, filter_keys: &SeriesFilterKeys) -> Result<T>
+    where
+        I: Into<SeriesID>,
+        T: DeserializeOwned,
+    {
         if filter_keys.is_empty() {
             return Err(Error::MissingSeriesFilterKeys);
         }
@@ -505,7 +581,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<FilteredSeries>>().await?.data)
+        Ok(res.json::<ResponseData<T>>().await?.data)
     }
 
     /// Get a summary of a series' images.
@@ -533,6 +609,16 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
+        self.series_images_into(id).await
+    }
+
+    /// Same as [series_images](#method.series_images), but allows deserializing
+    /// the response image summary data into a provided type.
+    pub async fn series_images_into<T, I>(&self, id: I) -> Result<T>
+    where
+        I: Into<SeriesID>,
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_lang_req(Method::GET, self.series_images_url(id.into()))
             .await?
@@ -541,7 +627,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<SeriesImages>>().await?.data)
+        Ok(res.json::<ResponseData<T>>().await?.data)
     }
 
     /// Get a series' images based on query parameters.
@@ -588,6 +674,20 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
+        self.series_images_query_into(id, params).await
+    }
+
+    /// Same as [series_images_query](#method.series_images_query), but allows
+    /// deserializing the response image data into a provided type.
+    pub async fn series_images_query_into<T, I>(
+        &self,
+        id: I,
+        params: &ImageQueryParams,
+    ) -> Result<Vec<T>>
+    where
+        I: Into<SeriesID>,
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_lang_req(Method::GET, self.series_images_query_url(id.into()))
             .await?
@@ -597,7 +697,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Vec<Image>>>().await?.data)
+        Ok(res.json::<ResponseData<Vec<T>>>().await?.data)
     }
 
     /// Get a series' available image key types, resolutions and subkeys.
@@ -628,6 +728,16 @@ impl Client {
     where
         I: Into<SeriesID>,
     {
+        self.series_images_query_params_into(id).await
+    }
+
+    /// Same as [series_images_query_params](#method.series_images_query_params), but
+    /// allows deserializing the response image key data into a provided type.
+    pub async fn series_images_query_params_into<T, I>(&self, id: I) -> Result<Vec<T>>
+    where
+        I: Into<SeriesID>,
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_lang_req(Method::GET, self.series_images_query_params_url(id.into()))
             .await?
@@ -636,7 +746,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Vec<ImageQueryKey>>>().await?.data)
+        Ok(res.json::<ResponseData<Vec<T>>>().await?.data)
     }
 
     /// Get an episode by its id.
@@ -665,6 +775,16 @@ impl Client {
     where
         I: Into<EpisodeID>,
     {
+        self.episode_into(id).await
+    }
+
+    /// Same as [episode](#method.episode), but allows deserializing
+    /// the response episode data into a provided type.
+    pub async fn episode_into<T, I>(&self, id: I) -> Result<T>
+    where
+        I: Into<EpisodeID>,
+        T: DeserializeOwned,
+    {
         let id = id.into();
 
         let res = self
@@ -675,7 +795,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Episode>>().await?.data)
+        Ok(res.json::<ResponseData<T>>().await?.data)
     }
 
     /// Get a list of all the available languages.
@@ -701,6 +821,15 @@ impl Client {
     /// # Ok(()) }
     /// ```
     pub async fn languages(&self) -> Result<Vec<Language>> {
+        self.languages_into().await
+    }
+
+    /// Same as [languages](#method.languages), but allows deserializing
+    /// the response language data into a provided type.
+    pub async fn languages_into<T>(&self) -> Result<Vec<T>>
+    where
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_req(Method::GET, self.languages_url())
             .await?
@@ -709,7 +838,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Vec<Language>>>().await?.data)
+        Ok(res.json::<ResponseData<Vec<T>>>().await?.data)
     }
 
     /// Get a language by its id.
@@ -739,6 +868,16 @@ impl Client {
     where
         I: Into<LanguageID>,
     {
+        self.language_into(id).await
+    }
+
+    /// Same as [language](#method.language), but allows deserializing
+    /// the response language data into a provided type.
+    pub async fn language_into<T, I>(&self, id: I) -> Result<T>
+    where
+        I: Into<LanguageID>,
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_req(Method::GET, self.language_url(id.into()))
             .await?
@@ -747,7 +886,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Language>>().await?.data)
+        Ok(res.json::<ResponseData<T>>().await?.data)
     }
 
     /// Get a list of series updated within a given time period.
@@ -787,6 +926,15 @@ impl Client {
     /// Will return an error if there are no updated series within the
     /// given timespan.
     pub async fn updated(&self, params: &UpdatedParams) -> Result<Vec<SeriesUpdate>> {
+        self.updated_into(params).await
+    }
+
+    /// Same as [updated](#method.updated), but allows deserializing
+    /// the response series updated data into a provided type.
+    pub async fn updated_into<T>(&self, params: &UpdatedParams) -> Result<Vec<T>>
+    where
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_lang_req(Method::GET, self.updated_url())
             .await?
@@ -796,7 +944,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Vec<SeriesUpdate>>>().await?.data)
+        Ok(res.json::<ResponseData<Vec<T>>>().await?.data)
     }
 
     /// Get a movie by its id.
@@ -821,6 +969,16 @@ impl Client {
     where
         I: Into<MovieID>,
     {
+        self.movie_into(id).await
+    }
+
+    /// Same as [movie](#method.movie), but allows deserializing
+    /// the response movie data into a provided type.
+    pub async fn movie_into<T, I>(&self, id: I) -> Result<T>
+    where
+        I: Into<MovieID>,
+        T: DeserializeOwned,
+    {
         let res = self
             .prep_lang_req(Method::GET, self.movies_url(id.into()))
             .await?
@@ -829,7 +987,7 @@ impl Client {
 
         api_errors(&res)?;
 
-        Ok(res.json::<ResponseData<Movie>>().await?.data)
+        Ok(res.json::<ResponseData<T>>().await?.data)
     }
 
     fn create<S>(api_key: S) -> Self

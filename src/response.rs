@@ -604,16 +604,16 @@ pub struct EpisodeLanguage {
 /// See [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes)
 /// for more info.
 #[derive(Clone, Debug, PartialEq, Deserialize)]
-pub struct EpisodePage {
+pub struct EpisodePage<E = Episode> {
     /// The episodes on this page.
     #[serde(rename = "data")]
-    pub episodes: Vec<Episode>,
+    pub episodes: Vec<E>,
     #[serde(skip)]
     pub(crate) series_id: SeriesID,
     links: PageLinks,
 }
 
-impl EpisodePage {
+impl<E> EpisodePage<E> {
     /// Generate `EpisodeParams` to fetch the next page with
     /// [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes).
     ///
@@ -654,10 +654,10 @@ impl EpisodePage {
 /// and [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes)
 /// for more info.
 #[derive(Clone, Debug, PartialEq, Deserialize)]
-pub struct EpisodeQueryPage {
+pub struct EpisodeQueryPage<E = Episode> {
     /// The episodes on this page.
     #[serde(rename = "data")]
-    pub episodes: Vec<Episode>,
+    pub episodes: Vec<E>,
     #[serde(skip)]
     pub(crate) series_id: SeriesID,
     #[serde(skip)]
@@ -665,7 +665,7 @@ pub struct EpisodeQueryPage {
     links: PageLinks,
 }
 
-impl EpisodeQueryPage {
+impl<E> EpisodeQueryPage<E> {
     /// Generate `EpisodeQueryParams` to fetch the next page of query results with
     /// [`Client.series_episodes_query`](../client/struct.Client.html#method.series_episodes_query).
     ///
@@ -749,13 +749,13 @@ pub trait Pagination {
     }
 }
 
-impl Pagination for EpisodePage {
+impl<E> Pagination for EpisodePage<E> {
     fn links(&self) -> &PageLinks {
         &self.links
     }
 }
 
-impl Pagination for EpisodeQueryPage {
+impl<E> Pagination for EpisodeQueryPage<E> {
     fn links(&self) -> &PageLinks {
         &self.links
     }

@@ -181,7 +181,7 @@ fn episode_page_params_generation() {
     let sid = SeriesID(123);
 
     let mut ep = EpisodePage {
-        episodes: Vec::new(),
+        episodes: vec![Episode::default()],
         series_id: sid,
         links: PageLinks {
             first: 1,
@@ -221,7 +221,7 @@ fn episode_query_page_params_generation() {
     };
 
     let mut eqp = EpisodeQueryPage {
-        episodes: Vec::new(),
+        episodes: vec![Episode::default()],
         series_id: sid,
         query: query.clone(),
         links: PageLinks {
