@@ -5,7 +5,7 @@
 use std::fmt;
 
 use chrono::{DateTime, NaiveDate, NaiveTime, Utc};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use url::Url;
 
 use crate::error::*;
@@ -23,7 +23,9 @@ pub(crate) struct ResponseData<T> {
 }
 
 /// Custom type used for [`Series`](./struct.Series.html) ids.
-#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize)]
+#[derive(
+    Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize, Serialize,
+)]
 pub struct SeriesID(pub u32);
 
 impl fmt::Display for SeriesID {
@@ -57,7 +59,9 @@ impl From<&SeriesUpdate> for SeriesID {
 }
 
 /// Custom type used for [`Episode`](./struct.Episode.html) ids.
-#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize)]
+#[derive(
+    Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize, Serialize,
+)]
 pub struct EpisodeID(pub u32);
 
 impl fmt::Display for EpisodeID {
@@ -87,7 +91,7 @@ impl From<&Episode> for EpisodeID {
 /// See [`Client.search`](../client/struct.Client.html#method.search)
 /// and [`Client.series`](../client/struct.Client.html#method.series)
 /// for more info.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -142,7 +146,7 @@ impl SearchSeries {
 /// [`Client.series`](../client/struct.Client.html#method.series).
 ///
 /// See linked method for more info.
-#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -273,7 +277,7 @@ impl Series {
 ///
 /// For more info see
 /// [`Client.series_filter`](../client/struct.Client.html#method.series_filter).
-#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -405,7 +409,7 @@ impl FilteredSeries {
 }
 
 /// Possible series status.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub enum SeriesStatus {
     /// Series has ended and no more episodes will be aired.
@@ -430,7 +434,7 @@ impl Default for SeriesStatus {
 /// [`Client.series_actors`](../client/struct.Client.html#method.series_actors).
 ///
 /// See linked method for more info.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -476,7 +480,7 @@ impl Actor {
 /// and [`Client.episode`](../client/struct.Client.html#method.episode).
 ///
 /// See linked methods for more info.
-#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -580,7 +584,7 @@ impl Episode {
 }
 
 /// Episode language info.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -761,7 +765,7 @@ impl Pagination for EpisodeQueryPage {
 /// [`Client.series_episodes_summary`](../client/struct.Client.html#method.series_episodes_summary).
 ///
 /// See linked method for more info.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EpisodeSummary {
@@ -781,7 +785,7 @@ pub struct EpisodeSummary {
 /// [`Client.series_images`](../client/struct.Client.html#method.series_images).
 ///
 /// See linked method for more info.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct SeriesImages {
     /// Number of fan art images.
@@ -798,7 +802,7 @@ pub struct SeriesImages {
 
 /// Image data returned by
 /// [`Client.series_images_query`](../client/struct.Client.html#method.series_images_query).
-#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -844,7 +848,7 @@ impl Image {
 }
 
 /// Image ratings data.
-#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -863,7 +867,7 @@ pub struct ImageRatingsInfo {
 /// See [`Client.series_images_query_params`](../client/struct.Client.html#method.series_images_query_params)
 /// and [`Client.series_images_query`](../client/struct.Client.html#method.series_images_query)
 /// for more info.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ImageQueryKey {
@@ -882,14 +886,14 @@ pub struct ImageQueryKey {
 /// [`Client.updated`](../client/struct.Client.html#method.updated).
 ///
 /// See linked method for more info.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SeriesUpdate {
     /// ID of the series.
     pub id: SeriesID,
     /// Date and time that series was last updated.
-    #[serde(deserialize_with = "chrono::serde::ts_seconds::deserialize")]
+    #[serde(with = "chrono::serde::ts_seconds")]
     pub last_updated: DateTime<Utc>,
 }
 

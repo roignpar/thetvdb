@@ -3,7 +3,7 @@
 use std::fmt;
 
 use chrono::NaiveDate;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use url::Url;
 
 use crate::error::Result;
@@ -11,7 +11,9 @@ use crate::serialization as ser;
 use crate::urls::URLS;
 
 /// Custom type used for [`Movie`](./struct.Movie.html) ids.
-#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize)]
+#[derive(
+    Clone, Copy, Debug, Default, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize, Serialize,
+)]
 pub struct MovieID(pub u32);
 
 impl fmt::Display for MovieID {
@@ -28,7 +30,7 @@ impl From<u32> for MovieID {
 
 /// Movie data returned by
 /// [`Client.movie`](../client/struct.Client.html#method.movie).
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct Movie {
     /// ID of the movie.
@@ -54,7 +56,7 @@ pub struct Movie {
 }
 
 /// Movie genre data.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 pub struct Genre {
@@ -76,7 +78,7 @@ impl Genre {
 }
 
 /// Movie translation data.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct Translation {
     /// Translation language code.
@@ -94,7 +96,7 @@ pub struct Translation {
 }
 
 /// Movie release date data.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct ReleaseDate {
     /// Type of release date.
@@ -109,7 +111,7 @@ pub struct ReleaseDate {
 }
 
 /// Movie artwork image data.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 pub struct Artwork {
@@ -149,7 +151,7 @@ impl Artwork {
 }
 
 /// Movie trailer data.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct Trailer {
     /// Trailer full URL.
@@ -159,7 +161,7 @@ pub struct Trailer {
 }
 
 /// Movie remote ID data.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct RemoteID {
     /// The ID.
@@ -173,7 +175,7 @@ pub struct RemoteID {
 }
 
 /// Movie people data.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct People {
     /// List of movie's actors.
@@ -191,7 +193,7 @@ pub struct People {
 }
 
 /// Movie person (actor, director, etc.) data.
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
 pub struct Person {
