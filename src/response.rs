@@ -100,7 +100,7 @@ pub struct SearchSeries {
     #[serde(deserialize_with = "ser::optional_string")]
     pub banner: Option<String>,
     /// Date when series was first aired.
-    #[serde(deserialize_with = "ser::optional_date")]
+    #[serde(with = "ser::optional_naive_date")]
     pub first_aired: Option<NaiveDate>,
     /// ID of the series.
     pub id: SeriesID,
@@ -148,7 +148,7 @@ impl SearchSeries {
 #[serde(rename_all = "camelCase")]
 pub struct Series {
     /// The date and time when the series was added to TheTVDB.
-    #[serde(deserialize_with = "ser::optional_date_time")]
+    #[serde(with = "ser::optional_date_time")]
     pub added: Option<DateTime<Utc>>,
     // although not in the official docs,
     // `added_by` is returned by the API
@@ -158,7 +158,7 @@ pub struct Series {
     #[serde(deserialize_with = "ser::optional_string")]
     pub airs_day_of_week: Option<String>,
     /// Time of day when the episodes air.
-    #[serde(deserialize_with = "ser::optional_naive_time")]
+    #[serde(with = "ser::optional_naive_time")]
     pub airs_time: Option<NaiveTime>,
     /// Series aliases.
     pub aliases: Vec<String>,
@@ -180,7 +180,7 @@ pub struct Series {
     #[serde(deserialize_with = "ser::optional_string")]
     pub fanart: Option<String>,
     /// Date when series was first aired.
-    #[serde(deserialize_with = "ser::optional_date")]
+    #[serde(with = "ser::optional_naive_date")]
     pub first_aired: Option<NaiveDate>,
     /// List of the series' genres.
     pub genre: Vec<String>,
@@ -189,7 +189,7 @@ pub struct Series {
     /// IMDb ID of the series.
     pub imdb_id: Option<String>,
     /// Time and date when series was last updated.
-    #[serde(deserialize_with = "ser::optional_ts_seconds_date_time")]
+    #[serde(with = "ser::optional_ts_seconds_date_time")]
     pub last_updated: Option<DateTime<Utc>>,
     /// The series' network.
     pub network: Option<String>,
@@ -279,7 +279,7 @@ impl Series {
 #[serde(rename_all = "camelCase")]
 pub struct FilteredSeries {
     /// The date and time when the series was added to TheTVDB.
-    #[serde(default, deserialize_with = "ser::optional_date_time")]
+    #[serde(default, with = "ser::optional_date_time")]
     pub added: Option<DateTime<Utc>>,
     /// ID of the user that added the series to TheTVDB.
     #[serde(default)]
@@ -288,7 +288,7 @@ pub struct FilteredSeries {
     #[serde(default, deserialize_with = "ser::optional_string")]
     pub airs_day_of_week: Option<String>,
     /// Time of day when the episodes air.
-    #[serde(default, deserialize_with = "ser::optional_naive_time")]
+    #[serde(default, with = "ser::optional_naive_time")]
     pub airs_time: Option<NaiveTime>,
     /// Series aliases.
     #[serde(default)]
@@ -312,7 +312,7 @@ pub struct FilteredSeries {
     #[serde(default, deserialize_with = "ser::optional_string")]
     pub fanart: Option<String>,
     /// Date when series was first aired.
-    #[serde(default, deserialize_with = "ser::optional_date")]
+    #[serde(default, with = "ser::optional_naive_date")]
     pub first_aired: Option<NaiveDate>,
     /// List of the series' genres.
     #[serde(default)]
@@ -324,7 +324,7 @@ pub struct FilteredSeries {
     #[serde(default)]
     pub imdb_id: Option<String>,
     /// Time and date when series was last updated.
-    #[serde(default, deserialize_with = "ser::optional_ts_seconds_date_time")]
+    #[serde(default, with = "ser::optional_ts_seconds_date_time")]
     pub last_updated: Option<DateTime<Utc>>,
     /// The series' network.
     #[serde(default)]
@@ -452,11 +452,11 @@ pub struct Actor {
     pub image: Option<String>,
     /// Image author.
     pub image_author: Option<u32>,
-    #[serde(deserialize_with = "ser::optional_date_time")]
+    #[serde(with = "ser::optional_date_time")]
     /// Date and time when the image was added.
     pub image_added: Option<DateTime<Utc>>,
     /// Date and time when this actor/role was last updated.
-    #[serde(deserialize_with = "ser::optional_date_time")]
+    #[serde(with = "ser::optional_date_time")]
     pub last_updated: Option<DateTime<Utc>>,
 }
 
@@ -494,7 +494,7 @@ pub struct Episode {
     #[serde(deserialize_with = "ser::optional_string")]
     pub episode_name: Option<String>,
     /// Date when episode was first aired.
-    #[serde(deserialize_with = "ser::optional_date")]
+    #[serde(with = "ser::optional_naive_date")]
     pub first_aired: Option<NaiveDate>,
     /// List of guest stars playing in this episode.
     pub guest_stars: Vec<String>,
@@ -517,7 +517,7 @@ pub struct Episode {
     #[serde(deserialize_with = "ser::optional_string")]
     pub show_url: Option<String>,
     /// Date and time when episode was last updated.
-    #[serde(deserialize_with = "ser::optional_ts_seconds_date_time")]
+    #[serde(with = "ser::optional_ts_seconds_date_time")]
     pub last_updated: Option<DateTime<Utc>>,
     /// Episode DVD ID.
     #[serde(deserialize_with = "ser::optional_string")]
@@ -548,7 +548,7 @@ pub struct Episode {
     /// Author of episode image.
     pub thumb_author: Option<u32>,
     /// Date and time image was added.
-    #[serde(deserialize_with = "ser::optional_date_time")]
+    #[serde(with = "ser::optional_date_time")]
     pub thumb_added: Option<DateTime<Utc>>,
     /// Image width.
     pub thumb_width: Option<String>,
@@ -565,7 +565,7 @@ pub struct Episode {
     /// Number of rating votes.
     pub site_rating_count: u32,
     /// Is this episode a movie?
-    #[serde(deserialize_with = "ser::int_bool")]
+    #[serde(with = "ser::int_bool")]
     pub is_movie: bool,
 }
 
@@ -768,12 +768,12 @@ pub struct EpisodeSummary {
     /// Number of aired seasons.
     pub aired_seasons: Vec<String>,
     /// Number of aired episodes.
-    #[serde(deserialize_with = "ser::u16_string")]
+    #[serde(with = "ser::u16_string")]
     pub aired_episodes: u16,
     /// Number of seasons on DVD.
     pub dvd_seasons: Vec<String>,
     /// Number of episodes on DVD.
-    #[serde(deserialize_with = "ser::u16_string")]
+    #[serde(with = "ser::u16_string")]
     pub dvd_episodes: u16,
 }
 
