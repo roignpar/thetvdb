@@ -1,8 +1,12 @@
 [package]
-authors = ["Robert Ignat <robert.ignat91@gmail.com>"]
-edition = "2018"
 name = "thetvdb"
-version = "0.0.1"
+version = "0.1.0"
+description = "TheTVDB API async client"
+repository = "https://github.com/roignpar/thetvdb"
+authors = ["Robert Ignat <robert.ignat91@gmail.com>"]
+keywords = ["thetvdb", "api", "client"]
+categories = ["api-bindings", "asynchronous"]
+edition = "2018"
 
 [dependencies]
 failure = "0.1.6"
