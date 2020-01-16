@@ -1,8 +1,7 @@
 #![deny(missing_docs)]
 
-//! This crate provides an async [client](./client/struct.Client.html)
-//! as well as helpful types to request and interact with data from
-//! **TheTVDB API V3**.
+//! This crate provides an async [client] as well as helpful types to request
+//! and interact with data from **TheTVDB API V3**.
 //!
 //! # Examples
 //! Search for a series by name:
@@ -36,7 +35,9 @@
 //! # Ok(()) }
 //! ```
 //!
-//! For more examples check [Client](./client/struct.Client.html).
+//! For more examples check [`Client`][client].
+//!
+//! [client]: ./client/struct.Client.html
 
 mod serialization;
 mod urls;

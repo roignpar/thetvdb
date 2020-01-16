@@ -2,7 +2,9 @@
 
 //! TheTVDB API async client.
 //!
-//! Check [`Client`](./struct.Client.html) documentation for more info.
+//! Check [`Client`] documentation for more info.
+//!
+//! [`Client`]: struct.Client.html
 
 use chrono::{DateTime, Duration, Utc};
 use futures::lock::Mutex;
@@ -20,13 +22,14 @@ const BASE_URL: &str = "https://api.thetvdb.com/";
 /// TheTVDB API async client.
 ///
 /// You will need a valid API key to create a new client.
-/// To generate a key log in and go to the [API Keys
-/// page](https://thetvdb.com/dashboard/account/apikeys).
+/// To generate a key log in and go to the [API Keys page].
 ///
 /// If you want to use your own types instead of the ones provided by this crate
 /// to deserialize API responses, each client method `<method_name>` has an
 /// alternative named `<method_name>_into` which can return data deserialized
 /// into your types.
+///
+/// [API Keys page]: https://thetvdb.com/dashboard/account/apikeys
 #[derive(Debug)]
 pub struct Client {
     base_url: Url,
@@ -96,7 +99,9 @@ impl Client {
 
     /// Set the language abbreviation directly.
     ///
-    /// Read [`set_language`](#method.set_language) documentation for more info.
+    /// Read [`set_language`] documentation for more info.
+    ///
+    /// [`set_language`]: #method.set_language
     ///
     /// # Examples
     /// ```no_run
@@ -124,7 +129,8 @@ impl Client {
         self.lang_abbr = abbr.into();
     }
 
-    /// Search for series providing either a (partial) name, IMDb id, slug or Zap2it id.
+    /// Search for series providing either a (partial) name, IMDb id, slug or
+    /// Zap2it id.
     ///
     /// Sends a `GET` request to the `/search/series` API endpoint.
     ///
@@ -154,8 +160,10 @@ impl Client {
         self.search_into(param).await
     }
 
-    /// Same as [search](#method.search), but allows deserializing
-    /// the response search series data into a provided type.
+    /// Same as [`search`], but allows deserializing the response search series
+    /// data into a provided type.
+    ///
+    /// [`search`]: #method.search
     pub async fn search_into<T, S>(&self, param: SearchBy<S>) -> Result<Vec<T>>
     where
         S: AsRef<str>,
@@ -177,8 +185,8 @@ impl Client {
     ///
     /// Sends a `GET` request to the `/series/{id}` API endpoint.
     ///
-    /// References to `SearchSeries`, `Series`, `SeriesUpdate` or any
-    /// type that impls `Into<SeriesID>` can also be used for ids.
+    /// References to `SearchSeries`, `Series`, `SeriesUpdate` or any type that
+    /// impls `Into<SeriesID>` can also be used for ids.
     ///
     /// # Examples
     /// Use a literal id:
@@ -228,8 +236,10 @@ impl Client {
         self.series_into(id).await
     }
 
-    /// Same as [series](#method.series), but allows deserializing
-    /// the response series data into a provided type.
+    /// Same as [`series`], but allows deserializing the response series data
+    /// into a provided type.
+    ///
+    /// [`series`]: #method.series
     pub async fn series_into<T, I>(&self, id: I) -> Result<T>
     where
         I: Into<SeriesID>,
@@ -318,8 +328,10 @@ impl Client {
         self.series_actors_into(id).await
     }
 
-    /// Same as [series_actors](#method.series_actors), but allows deserializing
-    /// the response actor data into a provided type.
+    /// Same as [`series_actors`], but allows deserializing the response actor
+    /// data into a provided type.
+    ///
+    /// [`series_actors`]: #method.series_actors
     pub async fn series_actors_into<T, I>(&self, id: I) -> Result<Vec<T>>
     where
         I: Into<SeriesID>,
@@ -379,8 +391,10 @@ impl Client {
         self.series_episodes_into(params).await
     }
 
-    /// Same as [series_episodes](#method.series_episodes), but allows deserializing
-    /// the response episode data into a provided type.
+    /// Same as [`series_episodes`], but allows deserializing the response
+    /// episode data into a provided type.
+    ///
+    /// [`series_episodes`]: #method.series_episodes
     pub async fn series_episodes_into<T>(&self, params: &EpisodeParams) -> Result<EpisodePage<T>>
     where
         T: DeserializeOwned,
@@ -404,7 +418,7 @@ impl Client {
     ///
     /// Sends a `GET` request to the `/series/{id}/episodes/query` API endpoint.
     ///
-    /// Check [`series_episodes`](#method.series_episodes) for pagination examples.
+    /// Check [`series_episodes`] for pagination examples.
     ///
     /// # Examples
     /// ```no_run
@@ -434,8 +448,10 @@ impl Client {
     /// ```
     ///
     /// # Errors
-    /// Will return an error if the series is not found or
-    /// the data set is empty.
+    /// Will return an error if the series is not found or the data set is
+    /// empty.
+    ///
+    /// [`series_episodes`]: #method.series_episodes
     pub async fn series_episodes_query(
         &self,
         query_params: &EpisodeQueryParams,
@@ -443,8 +459,10 @@ impl Client {
         self.series_episodes_query_into(query_params).await
     }
 
-    /// Same as [series_episodes_query](#method.series_episodes_query), but allows
-    /// deserializing the response episode data into a provided type.
+    /// Same as [`series_episodes_query`], but allows deserializing the response
+    /// episode data into a provided type.
+    ///
+    /// [`series_episodes_query`]: #method.series_episodes_query
     pub async fn series_episodes_query_into<T>(
         &self,
         query_params: &EpisodeQueryParams,
@@ -474,7 +492,8 @@ impl Client {
 
     /// Get the summary of a series' episodes.
     ///
-    /// Sends a `GET` request to the `/series/{id}/episodes/summary` API endpoint.
+    /// Sends a `GET` request to the `/series/{id}/episodes/summary` API
+    /// endpoint.
     ///
     /// # Examples
     /// ```no_run
@@ -500,8 +519,10 @@ impl Client {
         self.series_episodes_summary_into(id).await
     }
 
-    /// Same as [series_episodes_summary](#method.series_episodes_summary), but allows
-    /// deserializing the response episode summary data into a provided type.
+    /// Same as [`series_episodes_summary`], but allows deserializing the
+    /// response episode summary data into a provided type.
+    ///
+    /// [`series_episodes_summary`]: #method.series_episodes_summary
     pub async fn series_episodes_summary_into<T, I>(&self, id: I) -> Result<T>
     where
         I: Into<SeriesID>,
@@ -561,8 +582,10 @@ impl Client {
         self.series_filter_into(id, filter_keys).await
     }
 
-    /// Same as [series_filter](#method.series_filter), but allows deserializing
-    /// the response series data into a provided type.
+    /// Same as [`series_filter`], but allows deserializing the response series
+    /// data into a provided type.
+    ///
+    /// [`series_filter`]: #method.series_filter
     pub async fn series_filter_into<T, I>(&self, id: I, filter_keys: &SeriesFilterKeys) -> Result<T>
     where
         I: Into<SeriesID>,
@@ -612,8 +635,10 @@ impl Client {
         self.series_images_into(id).await
     }
 
-    /// Same as [series_images](#method.series_images), but allows deserializing
-    /// the response image summary data into a provided type.
+    /// Same as [`series_images`], but allows deserializing the response image
+    /// summary data into a provided type.
+    ///
+    /// [`series_images`]: #method.series_images
     pub async fn series_images_into<T, I>(&self, id: I) -> Result<T>
     where
         I: Into<SeriesID>,
@@ -636,8 +661,7 @@ impl Client {
     ///
     /// Each series may have different available image types.
     /// To find out which key types, resolutions and subkeys are available for
-    /// a series use the [`series_images_query_params`](#method.series_images_query_params)
-    /// method.
+    /// a series use the [`series_images_query_params`] method.
     ///
     /// # Examples
     /// ```no_run
@@ -664,8 +688,10 @@ impl Client {
     /// ```
     ///
     /// # Errors
-    /// Will return an error if the series is not found or
-    /// the data set is empty.
+    /// Will return an error if the series is not found or the data set is
+    /// empty.
+    ///
+    /// [`series_images_query_params`]: #method.series_images_query_params
     pub async fn series_images_query<I>(
         &self,
         id: I,
@@ -677,8 +703,10 @@ impl Client {
         self.series_images_query_into(id, params).await
     }
 
-    /// Same as [series_images_query](#method.series_images_query), but allows
-    /// deserializing the response image data into a provided type.
+    /// Same as [`series_images_query`], but allows deserializing the response
+    /// image data into a provided type.
+    ///
+    /// [`series_images_query`]: #method.series_images_query
     pub async fn series_images_query_into<T, I>(
         &self,
         id: I,
@@ -702,7 +730,8 @@ impl Client {
 
     /// Get a series' available image key types, resolutions and subkeys.
     ///
-    /// Sends a `GET` request to the `/series/{id}/images/query/params` API endpoint.
+    /// Sends a `GET` request to the `/series/{id}/images/query/params` API
+    /// endpoint.
     ///
     /// # Examples
     /// ```no_run
@@ -731,8 +760,10 @@ impl Client {
         self.series_images_query_params_into(id).await
     }
 
-    /// Same as [series_images_query_params](#method.series_images_query_params), but
-    /// allows deserializing the response image key data into a provided type.
+    /// Same as [`series_images_query_params`], but allows deserializing the
+    /// response image key data into a provided type.
+    ///
+    /// [`series_images_query_params`]: #method.series_images_query_params
     pub async fn series_images_query_params_into<T, I>(&self, id: I) -> Result<Vec<T>>
     where
         I: Into<SeriesID>,
@@ -778,8 +809,10 @@ impl Client {
         self.episode_into(id).await
     }
 
-    /// Same as [episode](#method.episode), but allows deserializing
-    /// the response episode data into a provided type.
+    /// Same as [`episode`], but allows deserializing the response episode data
+    /// into a provided type.
+    ///
+    /// [`episode`]: #method.episode
     pub async fn episode_into<T, I>(&self, id: I) -> Result<T>
     where
         I: Into<EpisodeID>,
@@ -802,8 +835,7 @@ impl Client {
     ///
     /// Sends a `GET` request to the `/languages` API endpoint.
     ///
-    /// Languages can be used to [`set_language`](#method.set_language)
-    /// on the client.
+    /// Languages can be used to [`set_language`] on the client.
     ///
     /// # Examples
     /// ```no_run
@@ -820,12 +852,16 @@ impl Client {
     /// println!("{:#?}", languages);
     /// # Ok(()) }
     /// ```
+    ///
+    /// [`set_language`]: #method.set_language
     pub async fn languages(&self) -> Result<Vec<Language>> {
         self.languages_into().await
     }
 
-    /// Same as [languages](#method.languages), but allows deserializing
-    /// the response language data into a provided type.
+    /// Same as [`languages`], but allows deserializing the response language
+    /// data into a provided type.
+    ///
+    /// [`languages`]: #method.languages
     pub async fn languages_into<T>(&self) -> Result<Vec<T>>
     where
         T: DeserializeOwned,
@@ -871,8 +907,10 @@ impl Client {
         self.language_into(id).await
     }
 
-    /// Same as [language](#method.language), but allows deserializing
-    /// the response language data into a provided type.
+    /// Same as [`language`], but allows deserializing the response language
+    /// data into a provided type.
+    ///
+    /// [`language`]: #method.language
     pub async fn language_into<T, I>(&self, id: I) -> Result<T>
     where
         I: Into<LanguageID>,
@@ -893,8 +931,8 @@ impl Client {
     ///
     /// Sends a `GET` request to the `/updated/query` API endpoint.
     ///
-    /// If `to_time` is not set or more than one week after `from_time`,
-    /// the API sets the timespan to one week.
+    /// If `to_time` is not set or more than one week after `from_time`, the API
+    /// sets the timespan to one week.
     ///
     /// # Examples
     /// ```no_run
@@ -929,8 +967,10 @@ impl Client {
         self.updated_into(params).await
     }
 
-    /// Same as [updated](#method.updated), but allows deserializing
-    /// the response series updated data into a provided type.
+    /// Same as [`updated`], but allows deserializing the response series
+    /// updated data into a provided type.
+    ///
+    /// [`updated`]: #method.updated
     pub async fn updated_into<T>(&self, params: &UpdatedParams) -> Result<Vec<T>>
     where
         T: DeserializeOwned,
@@ -972,8 +1012,10 @@ impl Client {
         self.movie_into(id).await
     }
 
-    /// Same as [movie](#method.movie), but allows deserializing
-    /// the response movie data into a provided type.
+    /// Same as [`movie`], but allows deserializing the response movie data into
+    /// a provided type.
+    ///
+    /// [`movie`]: #method.movie
     pub async fn movie_into<T, I>(&self, id: I) -> Result<T>
     where
         I: Into<MovieID>,

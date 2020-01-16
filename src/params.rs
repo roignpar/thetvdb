@@ -229,7 +229,9 @@ impl EpisodeQueryParams {
 ///
 /// Implemented for all types that `impl Into<SeriesID>`.
 ///
-/// Similar to [`GetEpisodeParams`](./trait.GetEpisodeParams.html). Check for examples.
+/// Similar to [`GetEpisodeParams`]. Check for examples.
+///
+/// [`GetEpisodeParams`]: trait.GetEpisodeParams.html
 pub trait GetEpisodeQueryParams<'a> {
     /// Get the series to create the parameters for.
     fn series_id(&'a self) -> SeriesID;
@@ -239,7 +241,8 @@ pub trait GetEpisodeQueryParams<'a> {
         EpisodeQueryParams::new(self.series_id())
     }
 
-    /// Create episode query params with page for the series returned by `series_id`.
+    /// Create episode query params with page for the series returned by
+    /// `series_id`.
     fn episode_query_params_page(&'a self, page: u16) -> EpisodeQueryParams {
         EpisodeQueryParams::with_page(self.series_id(), page)
     }
@@ -255,10 +258,11 @@ where
     }
 }
 
-/// Parameters used to filter series fields with
-/// [`Client.series_filter`](../client/struct.Client.html#method.series_filter).
+/// Parameters used to filter series fields with [`Client.series_filter`].
 ///
 /// The words "key" and "field" are used interchangeably in this context.
+///
+/// [`Client.series_filter`]: ../client/struct.Client.html#method.series_filter
 #[derive(Debug)]
 pub struct SeriesFilterKeys {
     pub(crate) keys_query: String,

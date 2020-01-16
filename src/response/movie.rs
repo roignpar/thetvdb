@@ -28,8 +28,9 @@ impl From<u32> for MovieID {
     }
 }
 
-/// Movie data returned by
-/// [`Client.movie`](../client/struct.Client.html#method.movie).
+/// Movie data returned by [`Client.movie`].
+///
+/// [`Client.movie`]: ../client/struct.Client.html#method.movie
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct Movie {

@@ -14,16 +14,17 @@ use url::ParseError as URLParseError;
 /// `Result` with error case set to `thetvdb::error::Error`.
 pub type Result<T> = std::result::Result<T, Error>;
 
-/// Error type containing possible failure cases
-/// of this crate.
+/// Error type containing possible failure cases of this crate.
 #[derive(Debug, Fail)]
 pub enum Error {
     /// Occurs when parsing JSON data fails.
     #[fail(display = "JSON error: {}", _0)]
     JSON(#[cause] JSONError),
 
-    /// Occurs when [`reqwest`](https://docs.rs/reqwest/latest/reqwest/index.html),
-    /// the HTTP client underlying this crate, returns an error.
+    /// Occurs when [`reqwest`], the HTTP client underlying this crate, returns
+    /// an error.
+    ///
+    /// [`reqwest`]: https://docs.rs/reqwest/latest/reqwest/index.html
     #[fail(display = "HTTP error: {}", _0)]
     HTTP(#[cause] ReqwestError),
 
@@ -39,42 +40,43 @@ pub enum Error {
     #[fail(display = "API Server error")]
     ServerError,
 
-    /// Occurs when resources (series, episodes, etc...) are
-    /// not found.
+    /// Occurs when resources (series, episodes, etc...) are not found.
     #[fail(display = "Not found")]
     NotFound,
 
-    /// Occurs when a header returned by the API is not representable
-    /// as a string.
+    /// Occurs when a header returned by the API is not representable as a
+    /// string.
     ///
-    /// See
-    /// [`reqwest::header::ToStrError`](https://docs.rs/reqwest/latest/reqwest/header/struct.ToStrError.html)
-    /// for more info.
+    /// See [`reqwest::header::ToStrError`] for more info.
+    ///
+    /// [`reqwest::header::ToStrError`]: https://docs.rs/reqwest/latest/reqwest/header/struct.ToStrError.html
     #[fail(display = "Non-parsable HTTP header: {}", _0)]
     InvalidHTTPHeader(#[cause] reqwest::header::ToStrError),
 
-    /// Occurs when the API doesn't return a header containing
-    /// the date and time when the series was last modified.
+    /// Occurs when the API doesn't return a header containing the date and time
+    /// when the series was last modified.
     #[fail(display = "Last modified data missing")]
     MissingLastModified,
 
-    /// Occurs when the API returns dates and times in formats
-    /// that are not known by this crate.
+    /// Occurs when the API returns dates and times in formats that are not
+    /// known by this crate.
     #[fail(display = "Invalid date format: {}", _0)]
     InvalidDateFormat(#[cause] TimeParseError),
 
-    /// Occurs when [`Client.series_filter`](../client/struct.Client.html#method.series_filter)
-    /// is called with empty `SeriesFilterKeys`.
+    /// Occurs when [`Client.series_filter`] is called with empty
+    /// `SeriesFilterKeys`.
+    ///
+    /// [`Client.series_filter`]: ../client/struct.Client.html#method.series_filter
     #[fail(display = "No series filter keys provided")]
     MissingSeriesFilterKeys,
 
-    /// Occurs when a image URL method is called, but the
-    /// image file path is not known.
+    /// Occurs when a image URL method is called, but the image file path is not
+    /// known.
     #[fail(display = "Image data is missing")]
     MissingImage,
 
-    /// Occurs when a series website URL method is called,
-    /// but the slug is not known.
+    /// Occurs when a series website URL method is called, but the slug is not
+    /// known.
     #[fail(display = "Series slug is missing")]
     MissingSeriesSlug,
 
