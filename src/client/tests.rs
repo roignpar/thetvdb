@@ -112,6 +112,38 @@ async fn client_login() -> Result<()> {
     Ok(())
 }
 
+#[tokio::test]
+async fn client_relogin_on_token_exp() -> Result<()> {
+    let client = test_client();
+
+    let now = now_round_seconds();
+    let exp = now + Duration::seconds(TOKEN_EXP_LIMIT - TOKEN_EXP_LIMIT / 2);
+    let token = create_jwt(&TokenPayload { orig_iat: now, exp });
+
+    let req_body = json!({ "apikey": API_KEY });
+    let res_body = serde_json::to_string(&json!({ "token": token }))?;
+
+    let login_mock = mock(POST, LOGIN_PATH).with_body(res_body.clone()).create();
+
+    let _ = client.login_set_token().await;
+
+    login_mock.assert();
+
+    let relogin_mock = mock(POST, LOGIN_PATH)
+        .match_body(Matcher::Json(req_body))
+        .with_body(res_body)
+        .create();
+
+    let series_mock = auth_lang_mock(&client, GET, series_url().as_str()).create();
+
+    let _ = client.series(SERIES_ID).await;
+
+    relogin_mock.assert();
+    series_mock.assert();
+
+    Ok(())
+}
+
 #[test]
 fn client_set_language() {
     let mut client = test_client();
@@ -173,9 +205,7 @@ async fn client_search() {
 async fn client_series() {
     let client = authenticated_test_client().await;
 
-    let url = format!("/series/{}", SERIES_ID);
-
-    let series_mock = auth_lang_mock(&client, GET, url.as_str()).create();
+    let series_mock = auth_lang_mock(&client, GET, series_url().as_str()).create();
 
     let _ = client.series(SERIES_ID).await;
 
@@ -511,4 +541,8 @@ where
     P: Into<Matcher>,
 {
     auth_mock(&client, method, path).match_header("accept-language", client.lang_abbr.as_str())
+}
+
+fn series_url() -> String {
+    format!("/series/{}", SERIES_ID)
 }
