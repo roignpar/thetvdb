@@ -98,13 +98,16 @@ async fn client_login() -> Result<()> {
         .with_body(serde_json::to_string(&res_body)?)
         .create();
 
-    let _ = client.login().await;
+    let _ = client.login_set_token().await;
 
     login_mock.assert();
 
-    assert_eq!(*client.token.lock().await, Some(token));
-    assert_eq!(*client.token_created.lock().await, Some(now));
-    assert_eq!(*client.token_expires.lock().await, Some(later));
+    let guard = client.token.lock().await;
+    let cl_token = guard.as_ref().unwrap();
+
+    assert_eq!(cl_token.token, token);
+    assert_eq!(cl_token.created, now);
+    assert_eq!(cl_token.exp, later);
 
     Ok(())
 }
@@ -469,7 +472,7 @@ async fn authenticated_test_client() -> Client {
         .with_body(serde_json::to_string(&json!({ "token": token })).unwrap())
         .create();
 
-    client.login().await.unwrap();
+    client.login_set_token().await.unwrap();
 
     login_mock.assert();
 
@@ -491,7 +494,12 @@ fn auth_mock<P>(client: &Client, method: &str, path: P) -> Mock
 where
     P: Into<Matcher>,
 {
-    let token = block_on(client.token.lock()).as_ref().unwrap().clone();
+    let guard = block_on(client.token.lock());
+    let token = guard
+        .as_ref()
+        .expect("missing test client token")
+        .token
+        .clone();
     let bearer = format!("Bearer {}", token);
 
     mock(method, path).match_header("authorization", bearer.as_str())

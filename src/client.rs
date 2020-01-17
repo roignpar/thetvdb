@@ -6,6 +6,11 @@
 //!
 //! [`Client`]: struct.Client.html
 
+use std::{
+    convert::{TryFrom, TryInto},
+    fmt,
+};
+
 use chrono::{DateTime, Duration, Utc};
 use futures::lock::Mutex;
 use reqwest::{header::HeaderValue, Client as HttpClient, Method, RequestBuilder, Response};
@@ -18,6 +23,7 @@ use crate::params::*;
 use crate::response::*;
 
 const BASE_URL: &str = "https://api.thetvdb.com/";
+const TOKEN_EXP_LIMIT: i64 = 60;
 
 /// TheTVDB API async client.
 ///
@@ -34,9 +40,7 @@ const BASE_URL: &str = "https://api.thetvdb.com/";
 pub struct Client {
     base_url: Url,
     api_key: String,
-    token: Mutex<Option<String>>,
-    token_created: Mutex<Option<DateTime<Utc>>>,
-    token_expires: Mutex<Option<DateTime<Utc>>>,
+    token: Mutex<Option<TokenData>>,
     http_client: HttpClient,
     lang_abbr: String,
 }
@@ -52,7 +56,7 @@ impl Client {
     {
         let client = Self::create(api_key);
 
-        client.login().await?;
+        client.login_set_token().await?;
 
         Ok(client)
     }
@@ -1040,14 +1044,16 @@ impl Client {
             base_url: Url::parse(BASE_URL).expect("could not parse BASE_URL"),
             api_key: api_key.into(),
             token: Mutex::new(None),
-            token_created: Mutex::new(None),
-            token_expires: Mutex::new(None),
             http_client: HttpClient::new(),
             lang_abbr: "en".to_string(),
         }
     }
 
-    async fn login(&self) -> Result<()> {
+    async fn login_set_token(&self) -> Result<()> {
+        self.set_token(self.login().await?).await
+    }
+
+    async fn login(&self) -> Result<TokenData> {
         let res = self
             .http_client
             .post(self.login_url())
@@ -1059,40 +1065,27 @@ impl Client {
 
         api_errors(&res)?;
 
-        let TokenResp { token } = res.json().await?;
+        let token_res: TokenRes = res.json().await?;
 
-        self.set_token(token).await?;
+        Ok(token_res.try_into()?)
+    }
+
+    async fn ensure_valid_token(&self) -> Result<()> {
+        let mut guard = self.token.lock().await;
+
+        match guard.as_ref() {
+            Some(t) if t.exp - Duration::seconds(TOKEN_EXP_LIMIT) >= Utc::now() => {}
+
+            _ => *guard = Some(self.login().await?),
+        }
 
         Ok(())
     }
 
-    async fn ensure_valid_token(&self) -> Result<()> {
-        match self.token_expires.lock().await.as_ref() {
-            Some(moment) if *moment - Duration::minutes(1) >= Utc::now() => Ok(()),
+    async fn set_token(&self, new_token: TokenData) -> Result<()> {
+        let mut token = self.token.lock().await;
 
-            _ => self.login().await,
-        }
-    }
-
-    async fn set_token(&self, new_token: String) -> Result<()> {
-        // TheTVDB API JWT public key is not available,
-        // thus the use of `dangerous_unsafe_decode`
-        let payload = jsonwebtoken::dangerous_unsafe_decode::<TokenPayload>(&new_token)?.claims;
-
-        futures::join!(
-            async {
-                let mut token = self.token.lock().await;
-                *token = Some(new_token);
-            },
-            async {
-                let mut token_created = self.token_created.lock().await;
-                *token_created = Some(payload.orig_iat);
-            },
-            async {
-                let mut token_expires = self.token_expires.lock().await;
-                *token_expires = Some(payload.exp)
-            }
-        );
+        *token = Some(new_token);
 
         Ok(())
     }
@@ -1104,11 +1097,13 @@ impl Client {
             .request(method, url)
             .header("Content-Type", "application/json")
             .bearer_auth(
-                self.token
+                &self
+                    .token
                     .lock()
                     .await
                     .as_ref()
-                    .expect("missing token although ensured valid"),
+                    .expect("missing token although ensured valid")
+                    .token,
             );
 
         Ok(req)
@@ -1232,7 +1227,7 @@ struct AuthBody<'a> {
 }
 
 #[derive(Debug, Deserialize)]
-struct TokenResp {
+struct TokenRes {
     token: String,
 }
 
@@ -1242,6 +1237,35 @@ struct TokenPayload {
     orig_iat: DateTime<Utc>,
     #[serde(with = "chrono::serde::ts_seconds")]
     exp: DateTime<Utc>,
+}
+
+#[derive(Debug)]
+struct TokenData {
+    token: String,
+    created: DateTime<Utc>,
+    exp: DateTime<Utc>,
+}
+
+impl fmt::Display for TokenData {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self)
+    }
+}
+
+impl TryFrom<TokenRes> for TokenData {
+    type Error = Error;
+
+    fn try_from(res: TokenRes) -> Result<TokenData> {
+        // TheTVDB API JWT public key is not available,
+        // thus the use of `dangerous_unsafe_decode`
+        let payload = jsonwebtoken::dangerous_unsafe_decode::<TokenPayload>(&res.token)?.claims;
+
+        Ok(TokenData {
+            token: res.token,
+            created: payload.orig_iat,
+            exp: payload.exp,
+        })
+    }
 }
 
 #[cfg(test)]
