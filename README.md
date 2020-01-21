@@ -2,7 +2,7 @@
 
 __[TheTVDB]__ [API V3] Rust async client.
 
-##### Minimum Rust version: `1.40.0`
+__Minimum Rust version: `1.40.0`__
 
 In order to use this client you will need an API key. To create a new API key
 [log in] and go to the [API Keys page].
