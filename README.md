@@ -1,3 +1,5 @@
+# thetvdb
+
 __[TheTVDB]__ [API V3] Rust async client.
 
 ##### Minimum Rust version: `1.40.0`
