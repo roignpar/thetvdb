@@ -7,6 +7,9 @@ __Minimum Rust version: `1.40.0`__
 In order to use this client you will need an API key. To create a new API key
 [log in] and go to the [API Keys page].
 
+__NOTE__: Because it depends on [reqwest], thetvdb currently only works with
+[tokio].
+
 ### Install
 
 Add with [cargo edit]:
@@ -76,6 +79,8 @@ or [MIT](LICENSE-MIT) at your option.
 
 [log in]: https://thetvdb.com/auth/login
 [api keys page]: https://thetvdb.com/dashboard/account/apikeys
+[reqwest]: https://github.com/seanmonstar/reqwest
+[tokio]: https://github.com/tokio-rs/tokio
 [cargo edit]: https://github.com/killercup/cargo-edit
 [thetvdb]: https://thetvdb.com/
 [api v3]: https://api.thetvdb.com/swagger
