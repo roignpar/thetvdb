@@ -1,5 +1,8 @@
 # thetvdb
 
+[![CI](https://img.shields.io/github/workflow/status/roignpar/thetvdb/CI)][ci]
+[![Minimum rustc version](https://img.shields.io/badge/rustc-1.40%2B-informational)][rustc]
+
 __[TheTVDB]__ [API V3] Rust async client.
 
 __Minimum Rust version: `1.40.0`__
@@ -77,6 +80,8 @@ cargo t --test client
 Licensed under either of [Apache License, Version 2.0](LICENSE-APACHE)
 or [MIT](LICENSE-MIT) at your option.
 
+[ci]: https://github.com/roignpar/thetvdb/actions?query=workflow%3ACI
+[rustc]: https://blog.rust-lang.org/2019/12/19/Rust-1.40.0.html
 [log in]: https://thetvdb.com/auth/login
 [api keys page]: https://thetvdb.com/dashboard/account/apikeys
 [reqwest]: https://github.com/seanmonstar/reqwest
