@@ -35,7 +35,7 @@ jobs:
 
     check:
         name: Run cargo check with ${{ matrix.rust }} on ${{ matrix.os }}
-        needs: [lints]
+        needs: [lint]
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
