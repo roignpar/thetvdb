@@ -1,7 +1,10 @@
 # thetvdb
 
+[![crates.io](https://img.shields.io/crates/v/thetvdb.svg)][crate]
+[![Released API docs](https://docs.rs/thetvdb/badge.svg)][documentation]
+![License](https://img.shields.io/crates/l/thetvdb/0.1.0-beta.1)
+![Minimum rustc version](https://img.shields.io/badge/rustc-1.40%2B-informational)
 [![CI](https://img.shields.io/github/workflow/status/roignpar/thetvdb/CI)][ci]
-[![Minimum rustc version](https://img.shields.io/badge/rustc-1.40%2B-informational)][rustc]
 
 __[TheTVDB]__ [API V3] Rust async client.
 
@@ -80,6 +83,7 @@ cargo t --test client
 Licensed under either of [Apache License, Version 2.0](LICENSE-APACHE)
 or [MIT](LICENSE-MIT) at your option.
 
+[crate]: https://crates.io/crates/thetvdb
 [ci]: https://github.com/roignpar/thetvdb/actions?query=workflow%3ACI
 [rustc]: https://blog.rust-lang.org/2019/12/19/Rust-1.40.0.html
 [log in]: https://thetvdb.com/auth/login
@@ -89,4 +93,4 @@ or [MIT](LICENSE-MIT) at your option.
 [cargo edit]: https://github.com/killercup/cargo-edit
 [thetvdb]: https://thetvdb.com/
 [api v3]: https://api.thetvdb.com/swagger
-[documentation]: https://docs.rs/thetvdb/latest
+[documentation]: https://docs.rs/thetvdb
