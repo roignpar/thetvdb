@@ -23,7 +23,7 @@ cargo add thetvdb
 _or_ add to `Cargo.toml`:
 ```toml
 [dependencies]
-thetvdb = "0.1.0"
+thetvdb = "0.1.0-beta.1"
 ```
 
 ### Use

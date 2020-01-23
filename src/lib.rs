@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/thetvdb/0.1.0")]
+#![doc(html_root_url = "https://docs.rs/thetvdb/0.1.0-beta.1")]
 #![deny(missing_docs)]
 
 //! This crate provides an async [client] as well as helpful types to request
