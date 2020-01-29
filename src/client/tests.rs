@@ -514,9 +514,9 @@ where
     C: Serialize,
 {
     let header = &jwt::Header::new(jwt::Algorithm::RS256);
-    let key = pem::parse(RSA_KEY).unwrap();
+    let key = jwt::EncodingKey::from_rsa_pem(RSA_KEY).unwrap();
 
-    jwt::encode(header, claims, &key.contents).unwrap()
+    jwt::encode(header, claims, &key).unwrap()
 }
 
 /// HTTP mock with authorization header.
