@@ -53,7 +53,7 @@ For more examples check the [documentation].
 
 #### Movies
 - [x] `GET /movies/{id}`
-- [ ] `GET /movieupdates`
+- [x] `GET /movieupdates`
 
 #### Search
 - [x] `GET /search/series`
