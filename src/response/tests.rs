@@ -349,6 +349,7 @@ fn types_send_sync() {
     assert_send_sync::<RemoteID>();
     assert_send_sync::<People>();
     assert_send_sync::<Person>();
+    assert_send_sync::<MovieUpdates>();
 }
 
 #[test]
