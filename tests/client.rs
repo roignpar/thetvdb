@@ -291,6 +291,23 @@ async fn movie() {
     }
 }
 
+#[tokio::test]
+async fn movie_updates() {
+    let guard = get_client().await;
+    let client = guard.as_ref().unwrap();
+
+    let since = Utc::now() - Duration::days(1);
+
+    let movie_updates = client.movie_updates(since).await;
+
+    if movie_updates.is_err() {
+        panic!(
+            "Error fetching movie updates: {:?}",
+            movie_updates.unwrap_err()
+        );
+    }
+}
+
 // Because there is no way to use async in lazy_static blocks
 // CLIENT will be created here.
 async fn get_client() -> MutexGuard<'static, Option<Client>> {
