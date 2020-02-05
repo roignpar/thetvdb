@@ -126,6 +126,10 @@ fn series_filter_keys() {
     keys = keys.language();
     assert!(keys.keys_query.contains(",language"));
 
+    assert!(!keys.keys_query.contains("lastUpdated"));
+    keys = keys.last_updated();
+    assert!(keys.keys_query.contains(",lastUpdated"));
+
     assert!(keys.is_at_full_capacity());
 }
 

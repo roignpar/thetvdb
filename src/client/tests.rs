@@ -339,7 +339,8 @@ async fn client_series_filter() {
         .season()
         .poster()
         .fanart()
-        .language();
+        .language()
+        .last_updated();
 
     assert!(params.is_at_full_capacity());
 

@@ -270,7 +270,7 @@ pub struct SeriesFilterKeys {
 
 impl SeriesFilterKeys {
     /// If all keys are added, this many bytes would be used.
-    const FULL_CAPACITY: usize = 209;
+    const FULL_CAPACITY: usize = 221;
 
     /// Create a new list of filter keys.
     pub fn new() -> Self {
@@ -284,16 +284,10 @@ impl SeriesFilterKeys {
         self.push_key("networkId")
     }
 
-    // NOTE: V3.0.0 of the API doesn't return the
-    // `lastUpdated` field on series filter requests;
-    //
-    // TODO: enable when API is fixed
-    // https://forums.thetvdb.com/viewtopic.php?f=17&t=22325&p=162247#p162247
-    //
-    ///// Add `last_updated` to key list.
-    //pub fn last_updated(self) -> Self {
-    //self.push_key("lastUpdated")
-    //}
+    /// Add `last_updated` to key list.
+    pub fn last_updated(self) -> Self {
+        self.push_key("lastUpdated")
+    }
 
     /// Add `airs_time` to key list.
     pub fn airs_time(self) -> Self {
