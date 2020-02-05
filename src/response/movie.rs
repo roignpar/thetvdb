@@ -240,3 +240,13 @@ impl Person {
         URLS.opt_image(&self.role_image)
     }
 }
+
+/// List of updated movies as returned by [`Client.movie_updates`].
+///
+/// [`Client.movie_updates`]: ../client/struct.Client.html#method.movie_updates
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[non_exhaustive]
+pub struct MovieUpdates {
+    /// IDs of updated movies.
+    pub movies: Vec<MovieID>,
+}
