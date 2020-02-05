@@ -1036,6 +1036,56 @@ impl Client {
         Ok(res.json::<ResponseData<T>>().await?.data)
     }
 
+    /// Get a list of movies updated since the given time.
+    ///
+    /// Sends a `GET` request to the `/movieupdates` API endpoint.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use thetvdb::{Client, error::Result};
+    /// #
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<()> {
+    /// #
+    /// # let client = Client::new("KEY").await?;
+    /// #
+    /// use chrono::DateTime;
+    ///
+    /// let since = DateTime::parse_from_rfc3339("2020-01-20T00:00:00-00:00")?;
+    ///
+    /// let movie_updates = client.movie_updates(since).await?;
+    ///
+    /// println!("Movie IDs updated since 2020-01-20: {:?}", movie_updates.movies);
+    /// # Ok(())}
+    /// ```
+    pub async fn movie_updates<D>(&self, since: D) -> Result<MovieUpdates>
+    where
+        D: Into<DateTime<Utc>>,
+    {
+        self.movie_updates_into(since).await
+    }
+
+    /// Same as [`movie_updates`], but allows deserializing the response data
+    /// into a provided type.
+    ///
+    /// [`movie_updates`]: #method.movie_updates
+    pub async fn movie_updates_into<T, D>(&self, since: D) -> Result<T>
+    where
+        D: Into<DateTime<Utc>>,
+        T: DeserializeOwned,
+    {
+        let res = self
+            .prep_req(Method::GET, self.movie_updates_url())
+            .await?
+            .query(&[("since", since.into().timestamp())])
+            .send()
+            .await?;
+
+        api_errors(&res)?;
+
+        Ok(res.json::<T>().await?)
+    }
+
     fn create<S>(api_key: S) -> Self
     where
         S: Into<String>,
@@ -1209,6 +1259,12 @@ impl Client {
         self.base_url
             .join(&format!("/movies/{}", id))
             .expect("could not parse movie url")
+    }
+
+    fn movie_updates_url(&self) -> Url {
+        self.base_url
+            .join("/movieupdates")
+            .expect("could not parse movie updates url")
     }
 }
 
