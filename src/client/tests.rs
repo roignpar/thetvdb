@@ -76,6 +76,7 @@ fn urls_must_parse() {
     client.language_url(LanguageID(1));
     client.updated_url();
     client.movies_url(MovieID(1));
+    client.movie_updates_url();
 }
 
 #[tokio::test]
@@ -475,6 +476,24 @@ async fn client_movie() {
     let _ = client.movie(MOVIE_ID).await;
 
     movie_mock.assert();
+}
+
+#[tokio::test]
+async fn client_movie_updates() {
+    let client = authenticated_test_client().await;
+
+    let since = Utc::now();
+
+    let movie_updates_mock = auth_mock(&client, GET, "/movieupdates")
+        .match_query(UrlEncoded(
+            "since".to_string(),
+            since.timestamp().to_string(),
+        ))
+        .create();
+
+    let _ = client.movie_updates(since).await;
+
+    movie_updates_mock.assert();
 }
 
 #[test]
