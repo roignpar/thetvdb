@@ -2,10 +2,11 @@
 
 //! Errors that may occur while using this crate.
 
+use std::error::Error as StdError;
+use std::fmt;
 use std::io::Error as IOError;
 
 use chrono::format::ParseError as TimeParseError;
-use failure::Fail;
 use jsonwebtoken::errors::Error as JWTError;
 use reqwest::Error as ReqwestError;
 use serde_json::error::Error as JSONError;
@@ -15,33 +16,27 @@ use url::ParseError as URLParseError;
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// Error type containing possible failure cases of this crate.
-#[derive(Debug, Fail)]
+#[derive(Debug)]
 pub enum Error {
     /// Occurs when parsing JSON data fails.
-    #[fail(display = "JSON error: {}", _0)]
-    JSON(#[cause] JSONError),
+    JSON(JSONError),
 
     /// Occurs when [`reqwest`], the HTTP client underlying this crate, returns
     /// an error.
     ///
     /// [`reqwest`]: https://docs.rs/reqwest/latest/reqwest/index.html
-    #[fail(display = "HTTP error: {}", _0)]
-    HTTP(#[cause] ReqwestError),
+    HTTP(ReqwestError),
 
     /// IO error from `std`.
-    #[fail(display = "IO error: {}", _0)]
-    IO(#[cause] IOError),
+    IO(IOError),
 
     /// Occurs when the provided API key is not valid.
-    #[fail(display = "Invalid API key")]
     InvalidAPIKey,
 
     /// Occurs when TheTVDB API returns a `5XX` error response.
-    #[fail(display = "API Server error")]
     ServerError,
 
     /// Occurs when resources (series, episodes, etc...) are not found.
-    #[fail(display = "Not found")]
     NotFound,
 
     /// Occurs when a header returned by the API is not representable as a
@@ -50,43 +45,81 @@ pub enum Error {
     /// See [`reqwest::header::ToStrError`] for more info.
     ///
     /// [`reqwest::header::ToStrError`]: https://docs.rs/reqwest/latest/reqwest/header/struct.ToStrError.html
-    #[fail(display = "Non-parsable HTTP header: {}", _0)]
-    InvalidHTTPHeader(#[cause] reqwest::header::ToStrError),
+    InvalidHTTPHeader(reqwest::header::ToStrError),
 
     /// Occurs when the API doesn't return a header containing the date and time
     /// when the series was last modified.
-    #[fail(display = "Last modified data missing")]
     MissingLastModified,
 
     /// Occurs when the API returns dates and times in formats that are not
     /// known by this crate.
-    #[fail(display = "Invalid date format: {}", _0)]
-    InvalidDateFormat(#[cause] TimeParseError),
+    InvalidDateFormat(TimeParseError),
 
     /// Occurs when [`Client.series_filter`] is called with empty
     /// `SeriesFilterKeys`.
     ///
     /// [`Client.series_filter`]: ../client/struct.Client.html#method.series_filter
-    #[fail(display = "No series filter keys provided")]
     MissingSeriesFilterKeys,
 
     /// Occurs when a image URL method is called, but the image file path is not
     /// known.
-    #[fail(display = "Image data is missing")]
     MissingImage,
 
     /// Occurs when a series website URL method is called, but the slug is not
     /// known.
-    #[fail(display = "Series slug is missing")]
     MissingSeriesSlug,
 
     /// Occurs when a URL cannot be parsed.
-    #[fail(display = "Invalid url: {}", _0)]
-    InvalidUrl(#[cause] URLParseError),
+    InvalidUrl(URLParseError),
 
     /// Occurs when the JWT returned by the API on login is invalid.
-    #[fail(display = "Could not decode authentication JWT: {}", _0)]
-    InvalidJWT(#[cause] JWTError),
+    InvalidJWT(JWTError),
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use Error::*;
+
+        match self {
+            JSON(e) => write!(f, "JSON error: {}", e),
+            HTTP(e) => write!(f, "HTTP error: {}", e),
+            IO(e) => write!(f, "IO error: {}", e),
+            InvalidAPIKey => write!(f, "Invalid API key"),
+            ServerError => write!(f, "API Server error"),
+            NotFound => write!(f, "Not found"),
+            InvalidHTTPHeader(e) => write!(f, "Non-parsable HTTP header: {}", e),
+            MissingLastModified => write!(f, "Last modified data missing"),
+            InvalidDateFormat(e) => write!(f, "Invalid date format: {}", e),
+            MissingSeriesFilterKeys => write!(f, "No series filter keys provided"),
+            MissingImage => write!(f, "Image data is missing"),
+            MissingSeriesSlug => write!(f, "Series slug is missing"),
+            InvalidUrl(e) => write!(f, "Invalid URL: {}", e),
+            InvalidJWT(e) => write!(f, "Could not decode authentication JWT: {}", e),
+        }
+    }
+}
+
+impl StdError for Error {
+    fn source(&self) -> Option<&(dyn StdError + 'static)> {
+        use Error::*;
+
+        match self {
+            JSON(e) => Some(e),
+            HTTP(e) => Some(e),
+            IO(e) => Some(e),
+            InvalidHTTPHeader(e) => Some(e),
+            InvalidDateFormat(e) => Some(e),
+            InvalidUrl(e) => Some(e),
+            InvalidJWT(e) => Some(e),
+            InvalidAPIKey
+            | ServerError
+            | NotFound
+            | MissingLastModified
+            | MissingSeriesFilterKeys
+            | MissingImage
+            | MissingSeriesSlug => None,
+        }
+    }
 }
 
 impl From<JSONError> for Error {

@@ -11,7 +11,6 @@ categories = ["api-bindings", "asynchronous"]
 edition = "2018"
 
 [dependencies]
-failure = "0.1.6"
 serde = { version = "1.0.104", features = ["derive"] }
 url = "2.1.1"
 serde_json = "1.0.47"
