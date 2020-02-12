@@ -50,6 +50,7 @@ pub mod params;
 pub mod response;
 
 pub use client::Client;
+pub use error::Error;
 
 #[cfg(test)]
 mod test_util {
