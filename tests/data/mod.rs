@@ -128,9 +128,9 @@ lazy_static! {
         imdb_id: "tt5491994".to_string()
     };
     pub static ref EPISODE_SUMMARY: TestEpisodeSummary = TestEpisodeSummary {
-        aired_seasons: vec!["1".to_string(), "0".to_string()],
+        aired_seasons: vec!["0".to_string(), "1".to_string()],
         aired_episodes: 18,
-        dvd_seasons: vec!["1".to_string(), "0".to_string()],
+        dvd_seasons: vec!["0".to_string(), "1".to_string()],
         dvd_episodes: 7,
     };
     pub static ref SAMOAN: TestLanguage = TestLanguage {
