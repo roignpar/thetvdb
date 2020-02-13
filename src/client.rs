@@ -1,5 +1,3 @@
-#![deny(missing_docs, missing_debug_implementations, unsafe_code)]
-
 //! TheTVDB API async client.
 //!
 //! Check [`Client`] documentation for more info.

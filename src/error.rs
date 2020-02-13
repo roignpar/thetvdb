@@ -1,5 +1,3 @@
-#![deny(missing_docs, missing_debug_implementations, unsafe_code)]
-
 //! Errors that may occur while using this crate.
 
 use std::error::Error as StdError;

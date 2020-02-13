@@ -1,5 +1,3 @@
-#![deny(missing_docs, missing_debug_implementations, unsafe_code)]
-
 //! Language related types and impls.
 
 use std::fmt;

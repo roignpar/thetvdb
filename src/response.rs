@@ -1,5 +1,3 @@
-#![deny(missing_docs, missing_debug_implementations, unsafe_code)]
-
 //! Types used to deserialize and work with data received from the API.
 
 use std::fmt;

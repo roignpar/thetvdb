@@ -1,5 +1,5 @@
 #![doc(html_root_url = "https://docs.rs/thetvdb/0.1.0-beta.2")]
-#![deny(missing_docs)]
+#![deny(missing_docs, missing_debug_implementations, unsafe_code)]
 
 //! This crate provides an async [client] as well as helpful types to request
 //! and interact with data from **TheTVDB API V3**.

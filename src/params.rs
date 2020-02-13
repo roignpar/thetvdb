@@ -1,5 +1,3 @@
-#![deny(missing_docs, missing_debug_implementations, unsafe_code)]
-
 //! Parameters used by `Client` to send API requests.
 
 use chrono::{DateTime, Utc};
