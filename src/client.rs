@@ -260,7 +260,7 @@ impl Client {
 
     /// Get the last modified time of a series.
     ///
-    /// Sends a HEAD request to the `/series/{id}` API endpoint.
+    /// Sends a `HEAD` request to the `/series/{id}` API endpoint.
     ///
     /// # Examples
     /// ```no_run
