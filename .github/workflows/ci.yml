@@ -5,6 +5,8 @@ on:
     push:
         branches:
             - master
+    schedule:
+        - cron: '0 6 * * MON'
 
 jobs:
     lint:
@@ -48,7 +50,7 @@ jobs:
                     - stable
                     - beta
                     - nightly
-        
+
         steps:
             - uses: actions/checkout@v2
 
