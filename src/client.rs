@@ -25,15 +25,10 @@ const TOKEN_EXP_LIMIT: i64 = 60;
 
 /// TheTVDB API async client.
 ///
-/// You will need a valid API key to create a new client.
-/// To generate a key log in and go to the [API Keys page].
-///
 /// If you want to use your own types instead of the ones provided by this crate
 /// to deserialize API responses, each client method `<method_name>` has an
 /// alternative named `<method_name>_into` which can return data deserialized
 /// into your types.
-///
-/// [API Keys page]: https://thetvdb.com/dashboard/account/apikeys
 #[derive(Debug)]
 pub struct Client {
     base_url: Url,

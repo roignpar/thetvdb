@@ -4,6 +4,9 @@
 //! This crate provides an async [client] as well as helpful types to request
 //! and interact with data from **TheTVDB API V3**.
 //!
+//! You will need a valid API key to create a new client.
+//! To generate a key log in and go to the [API Keys page].
+//!
 //! # Examples
 //! Search for a series by name:
 //! ```no_run
@@ -39,7 +42,7 @@
 //! For more examples check [`Client`][client].
 //!
 //! [client]: ./client/struct.Client.html
-
+//! [API Keys page]: https://thetvdb.com/dashboard/account/apikeys
 mod serialization;
 mod urls;
 
