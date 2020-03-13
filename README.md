@@ -42,36 +42,36 @@ For more examples check the [documentation].
 ### Supported requests:
 
 #### Authentication
-- [x] `POST /login` (used internally; cannot be manually requested)
+* `POST /login` (used internally; cannot be manually requested)
 
 #### Episodes
-- [x] `GET /episodes/{id}`
+* `GET /episodes/{id}`
 
 #### Languages
-- [x] `GET /languages`
-- [x] `GET /languages/{id}`
+* `GET /languages`
+* `GET /languages/{id}`
 
 #### Movies
-- [x] `GET /movies/{id}`
-- [x] `GET /movieupdates`
+* `GET /movies/{id}`
+* `GET /movieupdates`
 
 #### Search
-- [x] `GET /search/series`
+* `GET /search/series`
 
 #### Series
-- [x] `GET /series/{id}`
-- [x] `HEAD /series/{id}`
-- [x] `GET /series/{id}/actors`
-- [x] `GET /series/{id}/episodes`
-- [x] `GET /series/{id}/episodes/query`
-- [x] `GET /series/{id}/episodes/summary`
-- [x] `GET /series/{id}/filter`
-- [x] `GET /series/{id}/images`
-- [x] `GET /series/{id}/images/query`
-- [x] `GET /series/{id}/images/query/params`
+* `GET /series/{id}`
+* `HEAD /series/{id}`
+* `GET /series/{id}/actors`
+* `GET /series/{id}/episodes`
+* `GET /series/{id}/episodes/query`
+* `GET /series/{id}/episodes/summary`
+* `GET /series/{id}/filter`
+* `GET /series/{id}/images`
+* `GET /series/{id}/images/query`
+* `GET /series/{id}/images/query/params`
 
 #### Updates
-- [x] `GET /updated/query`
+* `GET /updated/query`
 
 ### Integration tests
 ```
