@@ -837,7 +837,7 @@ impl Client {
     ///
     /// Sends a `GET` request to the `/languages` API endpoint.
     ///
-    /// Languages can be used to [`set_language`] on the client.
+    /// Languages can be used to [`set_language`].
     ///
     /// # Examples
     /// ```no_run
