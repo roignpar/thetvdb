@@ -2,7 +2,6 @@
 
 [![crates.io](https://img.shields.io/crates/v/thetvdb.svg)][crate]
 [![Released API docs](https://docs.rs/thetvdb/badge.svg)][documentation]
-[![License](https://img.shields.io/crates/l/thetvdb/0.1.0-beta.2)](LICENSE-MIT)
 [![Minimum rustc version](https://img.shields.io/badge/rustc-1.40%2B-informational)][rustc]
 [![CI](https://img.shields.io/github/workflow/status/roignpar/thetvdb/CI)][ci]
 
