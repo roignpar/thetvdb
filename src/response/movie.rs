@@ -26,9 +26,9 @@ impl From<u32> for MovieID {
     }
 }
 
-/// Movie data returned by [`Client.movie`].
+/// Movie data returned by [`Client::movie`].
 ///
-/// [`Client.movie`]: ../client/struct.Client.html#method.movie
+/// [`Client::movie`]: ../client/struct.Client.html#method.movie
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct Movie {
@@ -239,9 +239,9 @@ impl Person {
     }
 }
 
-/// List of updated movies as returned by [`Client.movie_updates`].
+/// List of updated movies as returned by [`Client::movie_updates`].
 ///
-/// [`Client.movie_updates`]: ../client/struct.Client.html#method.movie_updates
+/// [`Client::movie_updates`]: ../client/struct.Client.html#method.movie_updates
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct MovieUpdates {

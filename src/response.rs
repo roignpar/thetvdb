@@ -84,15 +84,15 @@ impl From<&Episode> for EpisodeID {
     }
 }
 
-/// Series data returned by [`Client.search`].
+/// Series data returned by [`Client::search`].
 ///
 /// Contains less information than `Series`, but can be used
 /// to get all the data.
 ///
-/// See [`Client.search`] and [`Client.series`] for more info.
+/// See [`Client::search`] and [`Client::series`] for more info.
 ///
-/// [`Client.search`]: ../client/struct.Client.html#method.search
-/// [`Client.series`]: ../client/struct.Client.html#method.series
+/// [`Client::search`]: ../client/struct.Client.html#method.search
+/// [`Client::series`]: ../client/struct.Client.html#method.series
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
@@ -145,11 +145,11 @@ impl SearchSeries {
     }
 }
 
-/// Full series data returned by [`Client.series`].
+/// Full series data returned by [`Client::series`].
 ///
 /// See linked method for more info.
 ///
-/// [`Client.series`]: ../client/struct.Client.html#method.series
+/// [`Client::series`]: ../client/struct.Client.html#method.series
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
@@ -270,15 +270,15 @@ impl Series {
     }
 }
 
-/// Series data returned by [`Client.series_filter`].
+/// Series data returned by [`Client::series_filter`].
 ///
 /// Contains the same fields as [`Series`], but all values are optional.
 ///
 /// Will only contain values of the selected fields that the API returned.
 ///
-/// For more info see [`Client.series_filter`].
+/// For more info see [`Client::series_filter`].
 ///
-/// [`Client.series_filter`]: ../client/struct.Client.html#method.series_filter
+/// [`Client::series_filter`]: ../client/struct.Client.html#method.series_filter
 /// [`Series`]: struct.Series.html
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
@@ -433,11 +433,11 @@ impl Default for SeriesStatus {
     }
 }
 
-/// Actor data returned by [`Client.series_actors`].
+/// Actor data returned by [`Client::series_actors`].
 ///
 /// See linked method for more info.
 ///
-/// [`Client.series_actors`]: ../client/struct.Client.html#method.series_actors
+/// [`Client::series_actors`]: ../client/struct.Client.html#method.series_actors
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
@@ -478,14 +478,14 @@ impl Actor {
     }
 }
 
-/// Episode data returned by [`Client.series_episodes`],
-/// [`Client.series_episodes_query`] and [`Client.episode`].
+/// Episode data returned by [`Client::series_episodes`],
+/// [`Client::series_episodes_query`] and [`Client::episode`].
 ///
 /// See linked methods for more info.
 ///
-/// [`Client.series_episodes`]: ../client/struct.Client.html#method.series_episodes
-/// [`Client.series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
-/// [`Client.episode`]: ../client/struct.Client.html#method.episode
+/// [`Client::series_episodes`]: ../client/struct.Client.html#method.series_episodes
+/// [`Client::series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
+/// [`Client::episode`]: ../client/struct.Client.html#method.episode
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
@@ -601,13 +601,13 @@ pub struct EpisodeLanguage {
     pub overview: String,
 }
 
-/// Struct used for episode pagination returned by [`Client.series_episodes`].
+/// Struct used for episode pagination returned by [`Client::series_episodes`].
 ///
 /// Can be used to generate params for querying the next or previous pages.
 ///
-/// See [`Client.series_episodes`] for more info.
+/// See [`Client::series_episodes`] for more info.
 ///
-/// [`Client.series_episodes`]: ../client/struct.Client.html#method.series_episodes
+/// [`Client::series_episodes`]: ../client/struct.Client.html#method.series_episodes
 #[derive(Clone, Debug, PartialEq, Deserialize)]
 pub struct EpisodePage<E = Episode> {
     /// The episodes on this page.
@@ -620,50 +620,50 @@ pub struct EpisodePage<E = Episode> {
 
 impl<E> EpisodePage<E> {
     /// Generate `EpisodeParams` to fetch the next page with
-    /// [`Client.series_episodes`].
+    /// [`Client::series_episodes`].
     ///
     /// Will return `None` if there is no next page.
     ///
-    /// [`Client.series_episodes`]: ../client/struct.Client.html#method.series_episodes
+    /// [`Client::series_episodes`]: ../client/struct.Client.html#method.series_episodes
     pub fn next_page_params(&self) -> Option<EpisodeParams> {
         self.next_page()
             .map(|n| EpisodeParams::with_page(self.series_id, n))
     }
 
     /// Generate `EpisodeParams` to fetch the previous page with
-    /// [`Client.series_episodes`].
+    /// [`Client::series_episodes`].
     ///
     /// Will return `None` if there is no previous page.
     ///
-    /// [`Client.series_episodes`]: ../client/struct.Client.html#method.series_episodes
+    /// [`Client::series_episodes`]: ../client/struct.Client.html#method.series_episodes
     pub fn prev_page_params(&self) -> Option<EpisodeParams> {
         self.prev_page()
             .map(|p| EpisodeParams::with_page(self.series_id, p))
     }
 
     /// Generate `EpisodeParams` to fetch the first page with
-    /// [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes)
+    /// [`Client::series_episodes`](../client/struct.Client.html#method.series_episodes)
     pub fn first_page_params(&self) -> EpisodeParams {
         EpisodeParams::with_page(self.series_id, self.first_page())
     }
 
     /// Generate `EpisodeParams` to fetch the last page with
-    /// [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes)
+    /// [`Client::series_episodes`](../client/struct.Client.html#method.series_episodes)
     pub fn last_page_params(&self) -> EpisodeParams {
         EpisodeParams::with_page(self.series_id, self.last_page())
     }
 }
 
 /// Struct used for queried episode pagination returned by
-/// [`Client.series_episodes_query`].
+/// [`Client::series_episodes_query`].
 ///
 /// Works the same as [`EpisodePage`].
 ///
-/// See [`Client.series_episodes_query`] and [`Client.series_episodes`] for more
+/// See [`Client::series_episodes_query`] and [`Client::series_episodes`] for more
 /// info.
 ///
-/// [`Client.series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
-/// [`Client.series_episodes`]: ../client/struct.Client.html#method.series_episodes
+/// [`Client::series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
+/// [`Client::series_episodes`]: ../client/struct.Client.html#method.series_episodes
 /// [`EpisodePage`]: struct.EpisodePage.html
 #[derive(Clone, Debug, PartialEq, Deserialize)]
 pub struct EpisodeQueryPage<E = Episode> {
@@ -679,39 +679,39 @@ pub struct EpisodeQueryPage<E = Episode> {
 
 impl<E> EpisodeQueryPage<E> {
     /// Generate `EpisodeQueryParams` to fetch the next page of query results
-    /// with [`Client.series_episodes_query`].
+    /// with [`Client::series_episodes_query`].
     ///
     /// Will return `None` if there is no next page.
     ///
-    /// [`Client.series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
+    /// [`Client::series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
     pub fn next_page_query_params(&self) -> Option<EpisodeQueryParams> {
         self.next_page()
             .map(|n| EpisodeQueryParams::with_page_query(self.series_id, n, self.query.clone()))
     }
 
     /// Generate `EpisodeQueryParams` to fetch the previous page of query
-    /// results with [`Client.series_episodes_query`].
+    /// results with [`Client::series_episodes_query`].
     ///
     /// Will return `None` if there is no previous page.
     ///
-    /// [`Client.series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
+    /// [`Client::series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
     pub fn prev_page_query_params(&self) -> Option<EpisodeQueryParams> {
         self.prev_page()
             .map(|p| EpisodeQueryParams::with_page_query(self.series_id, p, self.query.clone()))
     }
 
     /// Generate `EpisodeQueryParams` to fetch the first page of query results
-    /// with [`Client.series_episodes_query`].
+    /// with [`Client::series_episodes_query`].
     ///
-    /// [`Client.series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
+    /// [`Client::series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
     pub fn first_page_query_params(&self) -> EpisodeQueryParams {
         EpisodeQueryParams::with_page_query(self.series_id, self.first_page(), self.query.clone())
     }
 
     /// Generate `EpisodeQueryParams` to fetch the last page of query results
-    /// with [`Client.series_episodes_query`].
+    /// with [`Client::series_episodes_query`].
     ///
-    /// [`Client.series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
+    /// [`Client::series_episodes_query`]: ../client/struct.Client.html#method.series_episodes_query
     pub fn last_page_query_params(&self) -> EpisodeQueryParams {
         EpisodeQueryParams::with_page_query(self.series_id, self.last_page(), self.query.clone())
     }
@@ -781,11 +781,11 @@ impl<E> Pagination for EpisodeQueryPage<E> {
     }
 }
 
-/// Episode summary data returned by [`Client.series_episodes_summary`].
+/// Episode summary data returned by [`Client::series_episodes_summary`].
 ///
 /// See linked method for more info.
 ///
-/// [`Client.series_episodes_summary`]: ../client/struct.Client.html#method.series_episodes_summary
+/// [`Client::series_episodes_summary`]: ../client/struct.Client.html#method.series_episodes_summary
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -802,11 +802,11 @@ pub struct EpisodeSummary {
     pub dvd_episodes: u16,
 }
 
-/// Series image count data returned by [`Client.series_images`].
+/// Series image count data returned by [`Client::series_images`].
 ///
 /// See linked method for more info.
 ///
-/// [`Client.series_images`]: ../client/struct.Client.html#method.series_images
+/// [`Client::series_images`]: ../client/struct.Client.html#method.series_images
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct SeriesImages {
@@ -822,9 +822,9 @@ pub struct SeriesImages {
     pub series: Option<u32>,
 }
 
-/// Image data returned by [`Client.series_images_query`].
+/// Image data returned by [`Client::series_images_query`].
 ///
-/// [`Client.series_images_query`]: ../client/struct.Client.html#method.series_images_query
+/// [`Client::series_images_query`]: ../client/struct.Client.html#method.series_images_query
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(test, derive(Default))]
 #[non_exhaustive]
@@ -882,15 +882,15 @@ pub struct ImageRatingsInfo {
     pub count: u32,
 }
 
-/// Image query key data returned by [`Client.series_images_query_params`].
+/// Image query key data returned by [`Client::series_images_query_params`].
 ///
 /// Can be used to see what types of images can be queried for a series.
 ///
-/// See [`Client.series_images_query_params`] and [`Client.series_images_query`]
+/// See [`Client::series_images_query_params`] and [`Client::series_images_query`]
 /// for more info.
 ///
-/// [`Client.series_images_query_params`]: ../client/struct.Client.html#method.series_images_query_params
-/// [`Client.series_images_query`]: ../client/struct.Client.html#method.series_images_query
+/// [`Client::series_images_query_params`]: ../client/struct.Client.html#method.series_images_query_params
+/// [`Client::series_images_query`]: ../client/struct.Client.html#method.series_images_query
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -906,11 +906,11 @@ pub struct ImageQueryKey {
     pub sub_key: Vec<String>,
 }
 
-/// Series update data returned by [`Client.updated`].
+/// Series update data returned by [`Client::updated`].
 ///
 /// See linked method for more info.
 ///
-/// [`Client.updated`]: ../client/struct.Client.html#method.updated
+/// [`Client::updated`]: ../client/struct.Client.html#method.updated
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]

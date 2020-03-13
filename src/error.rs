@@ -53,10 +53,10 @@ pub enum Error {
     /// known by this crate.
     InvalidDateFormat(TimeParseError),
 
-    /// Occurs when [`Client.series_filter`] is called with empty
+    /// Occurs when [`Client::series_filter`] is called with empty
     /// `SeriesFilterKeys`.
     ///
-    /// [`Client.series_filter`]: ../client/struct.Client.html#method.series_filter
+    /// [`Client::series_filter`]: ../client/struct.Client.html#method.series_filter
     MissingSeriesFilterKeys,
 
     /// Occurs when a image URL method is called, but the image file path is not

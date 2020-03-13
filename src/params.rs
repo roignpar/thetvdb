@@ -7,7 +7,7 @@ use crate::response::SeriesID;
 use crate::serialization as ser;
 
 /// Parameter used to search for series with
-/// [`Client.search`](../client/struct.Client.html#method.search).
+/// [`Client::search`](../client/struct.Client.html#method.search).
 #[derive(Debug)]
 pub enum SearchBy<S> {
     /// Search by (partial) name.
@@ -37,7 +37,7 @@ where
 }
 
 /// Parameters used to get a series' episodes with
-/// [`Client.series_episodes`](../client/struct.Client.html#method.series_episodes).
+/// [`Client::series_episodes`](../client/struct.Client.html#method.series_episodes).
 #[derive(Debug, PartialEq, Eq)]
 pub struct EpisodeParams {
     pub(crate) series_id: SeriesID,
@@ -137,7 +137,7 @@ pub(crate) struct EpisodeQuery {
 }
 
 /// Parameters used to query for a series episodes with
-/// [`Client.series_episodes_query`](../client/struct.Client.html#method.series_episodes_query).
+/// [`Client::series_episodes_query`](../client/struct.Client.html#method.series_episodes_query).
 #[derive(Debug, PartialEq, Eq)]
 pub struct EpisodeQueryParams {
     pub(crate) params: EpisodeParams,
@@ -256,11 +256,11 @@ where
     }
 }
 
-/// Parameters used to filter series fields with [`Client.series_filter`].
+/// Parameters used to filter series fields with [`Client::series_filter`].
 ///
 /// The words "key" and "field" are used interchangeably in this context.
 ///
-/// [`Client.series_filter`]: ../client/struct.Client.html#method.series_filter
+/// [`Client::series_filter`]: ../client/struct.Client.html#method.series_filter
 #[derive(Debug)]
 pub struct SeriesFilterKeys {
     pub(crate) keys_query: String,
@@ -435,7 +435,7 @@ impl Default for SeriesFilterKeys {
 }
 
 /// Parameters used to get series images with
-/// [`Client.series_images_query`](../client/struct.Client.html#method.series_images_query).
+/// [`Client::series_images_query`](../client/struct.Client.html#method.series_images_query).
 #[derive(Debug, Default, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ImageQueryParams {
@@ -513,7 +513,7 @@ impl ImageQueryParams {
 }
 
 /// Parameters used to get updated series with
-/// [`Client.updated`](../client/struct.Client.html#method.updated).
+/// [`Client::updated`](../client/struct.Client.html#method.updated).
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UpdatedParams {
