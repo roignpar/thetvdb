@@ -266,9 +266,21 @@ impl PartialEq<TestEpisode> for Episode {
 
 impl PartialEq<EpisodeSummary> for TestEpisodeSummary {
     fn eq(&self, e: &EpisodeSummary) -> bool {
-        self.aired_seasons == e.aired_seasons
+        for season in &e.aired_seasons {
+            if !self.aired_seasons.contains(season) {
+                return false;
+            }
+        }
+
+        for season in &e.dvd_seasons {
+            if !self.dvd_seasons.contains(season) {
+                return false;
+            }
+        }
+
+        self.aired_seasons.len() == e.aired_seasons.len()
             && self.aired_episodes == e.aired_episodes
-            && self.dvd_seasons == e.dvd_seasons
+            && self.dvd_seasons.len() == e.dvd_seasons.len()
             && self.dvd_episodes == e.dvd_episodes
     }
 }
