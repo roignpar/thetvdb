@@ -195,6 +195,7 @@ pub struct Series {
     /// ID of the series.
     pub id: SeriesID,
     /// IMDb ID of the series.
+    #[serde(deserialize_with = "ser::optional_string")]
     pub imdb_id: Option<String>,
     /// Time and date when series was last updated.
     #[serde(with = "ser::optional_ts_seconds_date_time")]
