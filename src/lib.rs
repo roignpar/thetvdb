@@ -2,7 +2,7 @@
 #![deny(missing_docs, missing_debug_implementations, unsafe_code)]
 
 //! This crate provides an async [client] as well as helpful types to request
-//! and interact with data from **TheTVDB API V3**.
+//! and interact with data from **TheTVDB API v3**.
 //!
 //! You will need a valid API key to create a new client.
 //! To generate a key log in and go to the [API Keys page].

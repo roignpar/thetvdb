@@ -5,7 +5,7 @@
 [![Minimum rustc version](https://img.shields.io/badge/rustc-1.40%2B-informational)][rustc]
 [![CI](https://img.shields.io/github/workflow/status/roignpar/thetvdb/CI)][ci]
 
-__[TheTVDB]__ [API V3] Rust async client.
+__[TheTVDB]__ [API v3] Rust async client.
 
 __Minimum Rust version: `1.40.0`__
 
