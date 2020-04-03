@@ -155,6 +155,9 @@ impl SearchSeries {
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Series {
+    /// Name of the series.
+    #[serde(deserialize_with = "ser::optional_string")]
+    pub series_name: Option<String>,
     /// The date and time when the series was added to TheTVDB.
     #[serde(with = "ser::optional_date_time")]
     pub added: Option<DateTime<Utc>>,
@@ -215,9 +218,6 @@ pub struct Series {
     pub runtime: String,
     /// Series language abbreviation.
     pub language: String,
-    /// Name of the series.
-    #[serde(deserialize_with = "ser::optional_string")]
-    pub series_name: Option<String>,
     /// Series rating.
     #[serde(deserialize_with = "ser::optional_float")]
     pub site_rating: Option<f32>,
@@ -286,6 +286,9 @@ impl Series {
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FilteredSeries {
+    /// Name of the series.
+    #[serde(default)]
+    pub series_name: Option<String>,
     /// The date and time when the series was added to TheTVDB.
     #[serde(default, with = "ser::optional_date_time")]
     pub added: Option<DateTime<Utc>>,
@@ -352,9 +355,6 @@ pub struct FilteredSeries {
     /// Series language abbreviation.
     #[serde(default)]
     pub language: Option<String>,
-    /// Name of the series.
-    #[serde(default)]
-    pub series_name: Option<String>,
     /// Series rating.
     #[serde(default, deserialize_with = "ser::optional_float")]
     pub site_rating: Option<f32>,
