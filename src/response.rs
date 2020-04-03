@@ -126,23 +126,35 @@ pub struct SearchSeries {
     pub status: SeriesStatus,
 }
 
-impl SearchSeries {
-    /// Returns the full URL to the series' banner.
-    ///
-    /// # Errors
-    /// Will fail if series `banner` is `None`.
-    pub fn banner_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.banner)
+macro_rules! series_banner_url_method {
+    () => {
+        /// Returns the full URL to the series' banner.
+        ///
+        /// # Errors
+        /// Will fail if series `banner` is `None`.
+        pub fn banner_url(&self) -> Result<Url> {
+            URLS.opt_image(&self.banner)
+        }
     }
+}
 
-    /// Returns the full `thetvdb.com` website series URL.
-    ///
-    /// # Errors
-    /// Will fail if the series `slug` is somehow malformed
-    /// and cannot be parsed into an `Url`.
-    pub fn website_url(&self) -> Result<Url> {
-        URLS.series_website(&self.slug)
+macro_rules! series_website_url_method {
+    () => {
+        /// Returns the full `thetvdb.com` website series URL.
+        ///
+        /// # Errors
+        /// Will fail if the series `slug` is somehow malformed
+        /// and cannot be parsed into an `Url`.
+        pub fn website_url(&self) -> Result<Url> {
+            URLS.series_website(&self.slug)
+        }
     }
+}
+
+impl SearchSeries {
+    series_banner_url_method!();
+
+    series_website_url_method!();
 }
 
 /// Full series data returned by [`Client::series`].
@@ -236,39 +248,32 @@ pub struct Series {
     pub zap2it_id: Option<String>,
 }
 
+macro_rules! series_url_methods {
+    () => {
+        series_banner_url_method!();
+
+        /// Returns the full URL to the series' poster.
+        ///
+        /// # Errors
+        /// Will fail if series `poster` is `None`.
+        pub fn poster_url(&self) -> Result<Url> {
+            URLS.opt_image(&self.poster)
+        }
+
+        /// Returns the full URL to the series' fanart.
+        ///
+        /// # Errors
+        /// Will fail if series `fanart` is `None`.
+        pub fn fanart_url(&self) -> Result<Url> {
+            URLS.opt_image(&self.fanart)
+        }
+    }
+}
+
 impl Series {
-    /// Returns the full URL to the series' banner.
-    ///
-    /// # Errors
-    /// Will fail if series `banner` is `None`.
-    pub fn banner_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.banner)
-    }
+    series_url_methods!();
 
-    /// Returns the full URL to the series' poster.
-    ///
-    /// # Errors
-    /// Will fail if series `poster` is `None`.
-    pub fn poster_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.poster)
-    }
-
-    /// Returns the full URL to the series' fanart.
-    ///
-    /// # Errors
-    /// Will fail if series `fanart` is `None`.
-    pub fn fanart_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.fanart)
-    }
-
-    /// Returns the full `thetvdb.com` website series URL.
-    ///
-    /// # Errors
-    /// Will fail if the series `slug` is somehow malformed
-    /// and cannot be parsed into an `Url`.
-    pub fn website_url(&self) -> Result<Url> {
-        URLS.series_website(&self.slug)
-    }
+    series_website_url_method!();
 }
 
 /// Series data returned by [`Client::series_filter`].
@@ -377,35 +382,13 @@ pub struct FilteredSeries {
 }
 
 impl FilteredSeries {
-    /// Returns the full URL to the series' banner.
-    ///
-    /// # Errors
-    /// Will fail if series `banner` is `None`.
-    pub fn banner_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.banner)
-    }
-
-    /// Returns the full URL to the series' poster.
-    ///
-    /// # Errors
-    /// Will fail if series `poster` is `None`.
-    pub fn poster_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.poster)
-    }
-
-    /// Returns the full URL to the series' fanart.
-    ///
-    /// # Errors
-    /// Will fail if series `fanart` is `None`.
-    pub fn fanart_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.fanart)
-    }
+    series_url_methods!();
 
     /// Returns the full `thetvdb.com` website series URL.
     ///
     /// # Errors
-    /// Will fail if the series `slug` is somehow malformed and cannot be parsed
-    /// into an `Url`.
+    /// Will fail if the series `slug` is somehow malformed
+    /// and cannot be parsed into an `Url`.
     pub fn website_url(&self) -> Result<Url> {
         match self.slug.as_ref() {
             Some(s) => URLS.series_website(&s),
