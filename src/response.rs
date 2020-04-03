@@ -248,7 +248,7 @@ impl Series {
     /// Returns the full URL to the series' poster.
     ///
     /// # Errors
-    /// Will fail if series `poster` is `None`.`
+    /// Will fail if series `poster` is `None`.
     pub fn poster_url(&self) -> Result<Url> {
         URLS.opt_image(&self.poster)
     }
@@ -362,6 +362,8 @@ pub struct FilteredSeries {
     #[serde(default)]
     pub site_rating_count: Option<u32>,
     /// Series website slug.
+    ///
+    /// Use [`website_url`](#method.website_url) for the full URL.
     #[serde(default)]
     pub slug: Option<String>,
     /// Status of the series.
@@ -386,7 +388,7 @@ impl FilteredSeries {
     /// Returns the full URL to the series' poster.
     ///
     /// # Errors
-    /// Will fail if series `poster` is `None`.`
+    /// Will fail if series `poster` is `None`.
     pub fn poster_url(&self) -> Result<Url> {
         URLS.opt_image(&self.poster)
     }
