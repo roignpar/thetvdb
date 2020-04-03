@@ -287,7 +287,7 @@ impl Series {
 #[serde(rename_all = "camelCase")]
 pub struct FilteredSeries {
     /// Name of the series.
-    #[serde(default)]
+    #[serde(default, deserialize_with = "ser::optional_string")]
     pub series_name: Option<String>,
     /// The date and time when the series was added to TheTVDB.
     #[serde(default, with = "ser::optional_date_time")]
