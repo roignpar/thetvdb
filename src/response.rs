@@ -155,6 +155,8 @@ impl SearchSeries {
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Series {
+    /// ID of the series.
+    pub id: SeriesID,
     /// Name of the series.
     #[serde(deserialize_with = "ser::optional_string")]
     pub series_name: Option<String>,
@@ -195,8 +197,6 @@ pub struct Series {
     pub first_aired: Option<NaiveDate>,
     /// List of the series' genres.
     pub genre: Vec<String>,
-    /// ID of the series.
-    pub id: SeriesID,
     /// IMDb ID of the series.
     #[serde(deserialize_with = "ser::optional_string")]
     pub imdb_id: Option<String>,
@@ -286,6 +286,9 @@ impl Series {
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FilteredSeries {
+    /// ID of the series.
+    #[serde(default)]
+    pub id: Option<SeriesID>,
     /// Name of the series.
     #[serde(default, deserialize_with = "ser::optional_string")]
     pub series_name: Option<String>,
@@ -328,9 +331,6 @@ pub struct FilteredSeries {
     /// List of the series' genres.
     #[serde(default)]
     pub genre: Option<Vec<String>>,
-    /// ID of the series.
-    #[serde(default)]
-    pub id: Option<SeriesID>,
     /// IMDb ID of the series.
     #[serde(default)]
     pub imdb_id: Option<String>,
