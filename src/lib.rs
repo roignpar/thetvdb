@@ -52,7 +52,9 @@ pub mod language;
 pub mod params;
 pub mod response;
 
+#[doc(inline)]
 pub use client::Client;
+#[doc(inline)]
 pub use error::Error;
 
 #[cfg(test)]
