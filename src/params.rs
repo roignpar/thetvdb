@@ -9,6 +9,7 @@ use crate::serialization as ser;
 /// Parameter used to search for series with
 /// [`Client::search`](../client/struct.Client.html#method.search).
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum SearchBy<S> {
     /// Search by (partial) name.
     Name(S),
