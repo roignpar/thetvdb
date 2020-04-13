@@ -3,6 +3,7 @@
 use std::fmt;
 
 use chrono::{DateTime, NaiveDate, NaiveTime, Utc};
+use optfield::optfield;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -157,6 +158,31 @@ impl SearchSeries {
     series_website_url_method!();
 }
 
+#[optfield(
+    pub FilteredSeries,
+    doc = r#"
+Series data returned by [`Client::series_filter`].
+
+Contains the same fields as [`Series`], but all values are optional.
+
+Will only contain values of the selected fields that the API returned.
+
+For more info see [`Client::series_filter`].
+
+[`Client::series_filter`]: ../client/struct.Client.html#method.series_filter
+[`Series`]: struct.Series.html
+    "#,
+    attrs = (
+        derive(Clone, Debug, PartialEq, Deserialize, Serialize),
+        cfg_attr(test, derive(Default)),
+        non_exhaustive,
+        serde(rename_all = "camelCase")
+    ),
+    field_doc,
+    field_attrs = add(
+        serde(default)
+    )
+)]
 /// Full series data returned by [`Client::series`].
 ///
 /// See linked method for more info.
@@ -274,111 +300,6 @@ impl Series {
     series_url_methods!();
 
     series_website_url_method!();
-}
-
-/// Series data returned by [`Client::series_filter`].
-///
-/// Contains the same fields as [`Series`], but all values are optional.
-///
-/// Will only contain values of the selected fields that the API returned.
-///
-/// For more info see [`Client::series_filter`].
-///
-/// [`Client::series_filter`]: ../client/struct.Client.html#method.series_filter
-/// [`Series`]: struct.Series.html
-#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
-#[cfg_attr(test, derive(Default))]
-#[non_exhaustive]
-#[serde(rename_all = "camelCase")]
-pub struct FilteredSeries {
-    /// ID of the series.
-    #[serde(default)]
-    pub id: Option<SeriesID>,
-    /// Name of the series.
-    #[serde(default, deserialize_with = "ser::optional_string")]
-    pub series_name: Option<String>,
-    /// The date and time when the series was added to TheTVDB.
-    #[serde(default, with = "ser::optional_date_time")]
-    pub added: Option<DateTime<Utc>>,
-    /// ID of the user that added the series to TheTVDB.
-    #[serde(default)]
-    pub added_by: Option<u32>,
-    /// Day or days of week when series airs.
-    #[serde(default, deserialize_with = "ser::optional_string")]
-    pub airs_day_of_week: Option<String>,
-    /// Time of day when the episodes air.
-    #[serde(default, with = "ser::optional_naive_time")]
-    pub airs_time: Option<NaiveTime>,
-    /// Series aliases.
-    #[serde(default)]
-    pub aliases: Option<Vec<String>>,
-    /// Series current season.
-    #[serde(default)]
-    pub season: Option<String>,
-    /// Path to the series' banner.
-    ///
-    /// Use [`banner_url`](#method.banner_url) for a full URL.
-    #[serde(default, deserialize_with = "ser::optional_string")]
-    pub banner: Option<String>,
-    /// Path to the series' poster.
-    ///
-    /// Use [`poster_url`](#method.poster_url) for a full URL.
-    #[serde(default, deserialize_with = "ser::optional_string")]
-    pub poster: Option<String>,
-    /// Path to the series' fanart.
-    ///
-    /// Use [`fanart_url`](#method.fanart_url) for a full URL.
-    #[serde(default, deserialize_with = "ser::optional_string")]
-    pub fanart: Option<String>,
-    /// Date when series was first aired.
-    #[serde(default, with = "ser::optional_naive_date")]
-    pub first_aired: Option<NaiveDate>,
-    /// List of the series' genres.
-    #[serde(default)]
-    pub genre: Option<Vec<String>>,
-    /// IMDb ID of the series.
-    #[serde(default)]
-    pub imdb_id: Option<String>,
-    /// Time and date when series was last updated.
-    #[serde(default, with = "ser::optional_ts_seconds_date_time")]
-    pub last_updated: Option<DateTime<Utc>>,
-    /// The series' network.
-    #[serde(default)]
-    pub network: Option<String>,
-    /// The series' network ID.
-    #[serde(default, deserialize_with = "ser::optional_string")]
-    pub network_id: Option<String>,
-    /// Short description of the series.
-    #[serde(default, deserialize_with = "ser::optional_string")]
-    pub overview: Option<String>,
-    /// Series parental guide rating.
-    #[serde(default, deserialize_with = "ser::optional_string")]
-    pub rating: Option<String>,
-    /// Series episode runtime.
-    #[serde(default)]
-    pub runtime: Option<String>,
-    /// Series language abbreviation.
-    #[serde(default)]
-    pub language: Option<String>,
-    /// Series rating.
-    #[serde(default, deserialize_with = "ser::optional_float")]
-    pub site_rating: Option<f32>,
-    /// Number of rating votes.
-    #[serde(default)]
-    pub site_rating_count: Option<u32>,
-    /// Series website slug.
-    ///
-    /// Use [`website_url`](#method.website_url) for the full URL.
-    #[serde(default)]
-    pub slug: Option<String>,
-    /// Status of the series.
-    ///
-    /// See [`SeriesStatus`](./enum.SeriesStatus.html) for more info.
-    #[serde(default)]
-    pub status: Option<SeriesStatus>,
-    /// Zap2it ID of the series.
-    #[serde(default, deserialize_with = "ser::optional_string")]
-    pub zap2it_id: Option<String>,
 }
 
 impl FilteredSeries {
