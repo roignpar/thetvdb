@@ -38,6 +38,29 @@
 //! );
 //! # Ok(()) }
 //! ```
+//! Use a custom struct to deserialize the API response:
+//! ```no_run
+//! # use thetvdb::error::Result;
+//! # use thetvdb::Client;
+//! use serde::Deserialize;
+//! #
+//! # #[tokio::main]
+//! # async fn main() -> Result<()> {
+//! # let client = Client::new("KEY").await?;
+//!
+//! #[derive(Deserialize)]
+//! struct MySeries {
+//!     #[serde(rename = "seriesName")]
+//!     name: String,
+//!     overview: Option<String>,
+//!     season: String,
+//!     banner: Option<String>,
+//!     genre: Vec<String>,
+//! }
+//!
+//! let series: MySeries = client.series_into(318408).await?;
+//! # Ok(()) }
+//! ```
 //!
 //! For more examples check [`Client`][client].
 //!
