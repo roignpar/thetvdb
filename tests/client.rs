@@ -1,8 +1,10 @@
 use chrono::{Duration, Utc};
 use lazy_static::lazy_static;
+use reqwest;
 use tokio::sync::{Mutex, MutexGuard};
+use url::Url;
 
-use thetvdb::{params::*, Client};
+use thetvdb::{error::Result, params::*, Client};
 
 mod data;
 
@@ -38,6 +40,22 @@ async fn search() {
             panic!("Expected series missing from {} search results", case_name)
         }
     }
+}
+
+#[tokio::test]
+async fn search_urls() {
+    let guard = get_client().await;
+    let client = guard.as_ref().unwrap();
+
+    let search_results = client
+        .search(SearchBy::Name(&PEII.series_name))
+        .await
+        .expect("Error searching for series to test url methods");
+
+    let series = search_results.first().unwrap();
+
+    assert_get_url_ok(series.banner_url()).await;
+    assert_get_url_ok(series.website_url()).await;
 }
 
 #[tokio::test]
@@ -306,6 +324,12 @@ async fn movie_updates() {
             movie_updates.unwrap_err()
         );
     }
+}
+
+async fn assert_get_url_ok(url: Result<Url>) {
+    let res = reqwest::get(url.unwrap()).await.unwrap();
+
+    assert!(res.status().is_success());
 }
 
 // Because there is no way to use async in lazy_static blocks
