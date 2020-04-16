@@ -151,6 +151,22 @@ async fn series_episodes() {
 }
 
 #[tokio::test]
+async fn series_episodes_urls() {
+    let guard = get_client().await;
+    let client = guard.as_ref().unwrap();
+
+    let params = EpisodeParams::new(PEII.id);
+    let page = client
+        .series_episodes(&params)
+        .await
+        .expect("Error fetching series episodes to test url methods");
+
+    let episode = page.episodes.first().unwrap();
+
+    assert_get_url_ok(episode.filename_url()).await;
+}
+
+#[tokio::test]
 async fn series_episodes_query() {
     let guard = get_client().await;
     let client = guard.as_ref().unwrap();
