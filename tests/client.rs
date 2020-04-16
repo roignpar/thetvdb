@@ -116,6 +116,21 @@ async fn series_actors() {
 }
 
 #[tokio::test]
+async fn series_actors_urls() {
+    let guard = get_client().await;
+    let client = guard.as_ref().unwrap();
+
+    let actors = client
+        .series_actors(PEII.id)
+        .await
+        .expect("Error fetching series actors to test url methods");
+
+    let actor = actors.first().unwrap();
+
+    assert_get_url_ok(actor.image_url()).await;
+}
+
+#[tokio::test]
 async fn series_episodes() {
     let guard = get_client().await;
     let client = guard.as_ref().unwrap();
