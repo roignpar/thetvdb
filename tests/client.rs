@@ -69,6 +69,25 @@ async fn series() {
 }
 
 #[tokio::test]
+async fn series_urls() {
+    let guard = get_client().await;
+    let client = guard.as_ref().unwrap();
+
+    let series = client
+        .series(PEII.id)
+        .await
+        .expect("Error fetching series to test url methods");
+
+    assert_get_urls_ok(vec![
+        series.banner_url(),
+        series.poster_url(),
+        series.fanart_url(),
+        series.website_url(),
+    ])
+    .await;
+}
+
+#[tokio::test]
 async fn series_last_modified() {
     let guard = get_client().await;
     let client = guard.as_ref().unwrap();
