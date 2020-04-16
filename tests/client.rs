@@ -1,4 +1,5 @@
 use chrono::{Duration, Utc};
+use futures::future::join_all;
 use lazy_static::lazy_static;
 use reqwest;
 use tokio::sync::{Mutex, MutexGuard};
@@ -54,8 +55,7 @@ async fn search_urls() {
 
     let series = search_results.first().unwrap();
 
-    assert_get_url_ok(series.banner_url()).await;
-    assert_get_url_ok(series.website_url()).await;
+    assert_get_urls_ok(vec![series.banner_url(), series.website_url()]).await;
 }
 
 #[tokio::test]
@@ -330,6 +330,13 @@ async fn assert_get_url_ok(url: Result<Url>) {
     let res = reqwest::get(url.unwrap()).await.unwrap();
 
     assert!(res.status().is_success());
+}
+
+async fn assert_get_urls_ok<I>(urls: I)
+where
+    I: IntoIterator<Item = Result<Url>>,
+{
+    join_all(urls.into_iter().map(assert_get_url_ok)).await;
 }
 
 // Because there is no way to use async in lazy_static blocks
