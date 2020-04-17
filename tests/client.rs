@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use chrono::{Duration, Utc};
 use futures::future::join_all;
 use lazy_static::lazy_static;
@@ -5,7 +7,11 @@ use reqwest;
 use tokio::sync::{Mutex, MutexGuard};
 use url::Url;
 
-use thetvdb::{error::Result, params::*, Client};
+use thetvdb::{
+    error::{Error, Result},
+    params::*,
+    Client,
+};
 
 mod data;
 
@@ -385,6 +391,34 @@ async fn movie() {
     if actor.is_none() {
         panic!("Expected actor missing from movie actor list");
     }
+}
+
+#[tokio::test]
+async fn movie_urls() {
+    let guard = get_client().await;
+    let client = guard.as_ref().unwrap();
+
+    let movie = client
+        .movie(TSR.id)
+        .await
+        .expect("Error fetching movie to test url methods");
+
+    let genre = movie.genres.first().unwrap();
+    let artwork = movie.artworks.first().unwrap();
+    let trailer = movie.trailers.first().unwrap();
+    let person = movie.people.actors.first().unwrap();
+    let remote_id = movie.remoteids.first().unwrap();
+
+    // person.role_image_url left out because most role images are missing
+    assert_get_urls_ok(vec![
+        genre.full_url(),
+        artwork.full_url(),
+        artwork.full_thumb_url(),
+        Url::from_str(&trailer.url).map_err(Error::from),
+        Url::from_str(&remote_id.url).map_err(Error::from),
+        person.people_image_url(),
+    ])
+    .await;
 }
 
 #[tokio::test]
