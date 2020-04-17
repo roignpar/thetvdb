@@ -224,6 +224,27 @@ async fn series_filter() {
 }
 
 #[tokio::test]
+async fn series_filter_urls() {
+    let guard = get_client().await;
+    let client = guard.as_ref().unwrap();
+
+    let keys = SeriesFilterKeys::new().banner().poster().fanart().slug();
+
+    let series = client
+        .series_filter(PEII.id, &keys)
+        .await
+        .expect("Error fetching filtered series to test url methods");
+
+    assert_get_urls_ok(vec![
+        series.banner_url(),
+        series.poster_url(),
+        series.fanart_url(),
+        series.website_url(),
+    ])
+    .await;
+}
+
+#[tokio::test]
 async fn series_images() {
     let guard = get_client().await;
     let client = guard.as_ref().unwrap();
