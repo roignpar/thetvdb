@@ -96,7 +96,7 @@ async fn client_login() -> Result<()> {
 
     let login_mock = mock(POST, LOGIN_PATH)
         .match_body(Matcher::Json(req_body))
-        .with_body(serde_json::to_string(&res_body)?)
+        .with_body(serde_json::to_string(&res_body).unwrap())
         .create();
 
     let _ = client.login_set_token().await;
@@ -122,7 +122,7 @@ async fn client_relogin_on_token_exp() -> Result<()> {
     let token = create_jwt(&TokenPayload { orig_iat: now, exp });
 
     let req_body = json!({ "apikey": API_KEY });
-    let res_body = serde_json::to_string(&json!({ "token": token }))?;
+    let res_body = serde_json::to_string(&json!({ "token": token })).unwrap();
 
     let login_mock = mock(POST, LOGIN_PATH).with_body(res_body.clone()).create();
 

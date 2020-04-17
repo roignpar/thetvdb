@@ -1,5 +1,5 @@
 use serde::de::DeserializeOwned;
-use serde_json as json;
+use serde_json::{self as json, error::Result as JSONResult};
 
 use super::*;
 use crate::params;
@@ -645,7 +645,7 @@ where
     }
 }
 
-fn ser_deser<T>(t: &T) -> Result<T>
+fn ser_deser<T>(t: &T) -> JSONResult<T>
 where
     T: DeserializeOwned + Serialize,
 {

@@ -7,7 +7,6 @@ use std::io::Error as IOError;
 use chrono::format::ParseError as TimeParseError;
 use jsonwebtoken::errors::Error as JWTError;
 use reqwest::Error as ReqwestError;
-use serde_json::error::Error as JSONError;
 use url::ParseError as URLParseError;
 
 /// `Result` with error case set to `thetvdb::error::Error`.
@@ -16,9 +15,6 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// Error type containing possible failure cases of this crate.
 #[derive(Debug)]
 pub enum Error {
-    /// Occurs when parsing JSON data fails.
-    JSON(JSONError),
-
     /// Occurs when [`reqwest`], the HTTP client underlying this crate, returns
     /// an error.
     ///
@@ -79,7 +75,6 @@ impl fmt::Display for Error {
         use Error::*;
 
         match self {
-            JSON(e) => write!(f, "JSON error: {}", e),
             HTTP(e) => write!(f, "HTTP error: {}", e),
             IO(e) => write!(f, "IO error: {}", e),
             InvalidAPIKey => write!(f, "Invalid API key"),
@@ -102,7 +97,6 @@ impl StdError for Error {
         use Error::*;
 
         match self {
-            JSON(e) => Some(e),
             HTTP(e) => Some(e),
             IO(e) => Some(e),
             InvalidHTTPHeader(e) => Some(e),
@@ -117,12 +111,6 @@ impl StdError for Error {
             | MissingImage
             | MissingSeriesSlug => None,
         }
-    }
-}
-
-impl From<JSONError> for Error {
-    fn from(e: JSONError) -> Self {
-        Self::JSON(e)
     }
 }
 
