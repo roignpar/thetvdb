@@ -21,8 +21,8 @@ fn search_series_urls() -> Result<()> {
         ..Default::default()
     };
 
-    assert_eq!(ss.banner_url()?, URLS.banner.join(BANNER)?);
-    assert_eq!(ss.website_url()?, URLS.series.join(SLUG)?);
+    assert_eq!(ss.banner_url()?, urls::BANNER.join(BANNER)?);
+    assert_eq!(ss.website_url()?, urls::SERIES.join(SLUG)?);
 
     Ok(())
 }
@@ -45,10 +45,10 @@ fn series_urls() -> Result<()> {
         ..Default::default()
     };
 
-    assert_eq!(s.banner_url()?, URLS.banner.join(BANNER)?);
-    assert_eq!(s.poster_url()?, URLS.banner.join(POSTER)?);
-    assert_eq!(s.fanart_url()?, URLS.banner.join(FANART)?);
-    assert_eq!(s.website_url()?, URLS.series.join(SLUG)?);
+    assert_eq!(s.banner_url()?, urls::BANNER.join(BANNER)?);
+    assert_eq!(s.poster_url()?, urls::BANNER.join(POSTER)?);
+    assert_eq!(s.fanart_url()?, urls::BANNER.join(FANART)?);
+    assert_eq!(s.website_url()?, urls::SERIES.join(SLUG)?);
 
     Ok(())
 }
@@ -75,10 +75,10 @@ fn filtered_series_urls() -> Result<()> {
         ..Default::default()
     };
 
-    assert_eq!(fs.banner_url()?, URLS.banner.join(BANNER)?);
-    assert_eq!(fs.poster_url()?, URLS.banner.join(POSTER)?);
-    assert_eq!(fs.fanart_url()?, URLS.banner.join(FANART)?);
-    assert_eq!(fs.website_url()?, URLS.series.join(SLUG)?);
+    assert_eq!(fs.banner_url()?, urls::BANNER.join(BANNER)?);
+    assert_eq!(fs.poster_url()?, urls::BANNER.join(POSTER)?);
+    assert_eq!(fs.fanart_url()?, urls::BANNER.join(FANART)?);
+    assert_eq!(fs.website_url()?, urls::SERIES.join(SLUG)?);
 
     Ok(())
 }
@@ -107,7 +107,7 @@ fn actor_urls() -> Result<()> {
         ..Default::default()
     };
 
-    assert_eq!(a.image_url()?, URLS.banner.join(BANNER)?);
+    assert_eq!(a.image_url()?, urls::BANNER.join(BANNER)?);
 
     Ok(())
 }
@@ -127,7 +127,7 @@ fn episode_urls() -> Result<()> {
         ..Default::default()
     };
 
-    assert_eq!(e.filename_url()?, URLS.banner.join(BANNER)?);
+    assert_eq!(e.filename_url()?, urls::BANNER.join(BANNER)?);
 
     Ok(())
 }
@@ -257,8 +257,8 @@ fn image_urls() -> Result<()> {
         ..Default::default()
     };
 
-    assert_eq!(i.file_name_url()?, URLS.banner.join(BANNER)?);
-    assert_eq!(i.thumbnail_url()?, URLS.banner.join(THUMB)?);
+    assert_eq!(i.file_name_url()?, urls::BANNER.join(BANNER)?);
+    assert_eq!(i.thumbnail_url()?, urls::BANNER.join(THUMB)?);
 
     Ok(())
 }
@@ -271,7 +271,7 @@ fn genre_url() -> Result<()> {
         ..Default::default()
     };
 
-    assert_eq!(g.full_url()?, URLS.genre.join(GENRE)?);
+    assert_eq!(g.full_url()?, urls::GENRE.join(GENRE)?);
 
     Ok(())
 }
@@ -285,8 +285,8 @@ fn artwork_urls() -> Result<()> {
         ..Default::default()
     };
 
-    assert_eq!(a.full_url()?, URLS.banner.join(BANNER)?);
-    assert_eq!(a.full_thumb_url()?, URLS.banner.join(THUMB)?);
+    assert_eq!(a.full_url()?, urls::BANNER.join(BANNER)?);
+    assert_eq!(a.full_thumb_url()?, urls::BANNER.join(THUMB)?);
 
     Ok(())
 }
@@ -300,8 +300,8 @@ fn person_urls() -> Result<()> {
         ..Default::default()
     };
 
-    assert_eq!(p.people_image_url()?, URLS.banner.join(BANNER)?);
-    assert_eq!(p.role_image_url()?, URLS.banner.join(POSTER)?);
+    assert_eq!(p.people_image_url()?, urls::BANNER.join(BANNER)?);
+    assert_eq!(p.role_image_url()?, urls::BANNER.join(POSTER)?);
 
     Ok(())
 }

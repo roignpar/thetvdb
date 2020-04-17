@@ -10,7 +10,7 @@ use url::Url;
 use crate::error::*;
 use crate::params::{EpisodeParams, EpisodeQuery, EpisodeQueryParams};
 use crate::serialization as ser;
-use crate::urls::URLS;
+use crate::urls;
 
 mod movie;
 
@@ -134,7 +134,7 @@ macro_rules! series_banner_url_method {
         /// # Errors
         /// Will fail if series `banner` is `None`.
         pub fn banner_url(&self) -> Result<Url> {
-            URLS.opt_image(&self.banner)
+            urls::opt_image(&self.banner)
         }
     }
 }
@@ -147,7 +147,7 @@ macro_rules! series_website_url_method {
         /// Will fail if the series `slug` is somehow malformed
         /// and cannot be parsed into an `Url`.
         pub fn website_url(&self) -> Result<Url> {
-            URLS.series_website(&self.slug)
+            urls::series_website(&self.slug)
         }
     }
 }
@@ -283,7 +283,7 @@ macro_rules! series_url_methods {
         /// # Errors
         /// Will fail if series `poster` is `None`.
         pub fn poster_url(&self) -> Result<Url> {
-            URLS.opt_image(&self.poster)
+            urls::opt_image(&self.poster)
         }
 
         /// Returns the full URL to the series' fanart.
@@ -291,7 +291,7 @@ macro_rules! series_url_methods {
         /// # Errors
         /// Will fail if series `fanart` is `None`.
         pub fn fanart_url(&self) -> Result<Url> {
-            URLS.opt_image(&self.fanart)
+            urls::opt_image(&self.fanart)
         }
     }
 }
@@ -312,7 +312,7 @@ impl FilteredSeries {
     /// and cannot be parsed into an `Url`.
     pub fn website_url(&self) -> Result<Url> {
         match self.slug.as_ref() {
-            Some(s) => URLS.series_website(&s),
+            Some(s) => urls::series_website(&s),
             None => Err(Error::MissingSeriesSlug),
         }
     }
@@ -381,7 +381,7 @@ impl Actor {
     /// # Errors
     /// Will fail if series `image` is `None`.
     pub fn image_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.image)
+        urls::opt_image(&self.image)
     }
 }
 
@@ -492,7 +492,7 @@ impl Episode {
     /// # Errors
     /// Will fail if episode `filename` is `None`.
     pub fn filename_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.filename)
+        urls::opt_image(&self.filename)
     }
 }
 
@@ -768,12 +768,12 @@ pub struct Image {
 impl Image {
     /// Returns the full URL of the image file.
     pub fn file_name_url(&self) -> Result<Url> {
-        URLS.image(&self.file_name)
+        urls::image(&self.file_name)
     }
 
     /// Returns the full URL of the image's thumbnail.
     pub fn thumbnail_url(&self) -> Result<Url> {
-        URLS.image(&self.thumbnail)
+        urls::image(&self.thumbnail)
     }
 }
 

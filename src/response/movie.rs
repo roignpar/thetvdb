@@ -6,7 +6,7 @@ use url::Url;
 
 use crate::error::Result;
 use crate::serialization as ser;
-use crate::urls::URLS;
+use crate::urls;
 
 /// Custom type used for [`Movie`](./struct.Movie.html) ids.
 #[derive(
@@ -72,7 +72,7 @@ pub struct Genre {
 impl Genre {
     /// Returns the full URL of the genre page.
     pub fn full_url(&self) -> Result<Url> {
-        URLS.genre_page(&self.url)
+        urls::genre_page(&self.url)
     }
 }
 
@@ -140,12 +140,12 @@ pub struct Artwork {
 impl Artwork {
     /// Returns the full URL of the artwork image.
     pub fn full_url(&self) -> Result<Url> {
-        URLS.image(&self.url)
+        urls::image(&self.url)
     }
 
     /// Returns the full URL of the artwork thumbnail.
     pub fn full_thumb_url(&self) -> Result<Url> {
-        URLS.image(&self.thumb_url)
+        urls::image(&self.thumb_url)
     }
 }
 
@@ -230,12 +230,12 @@ pub struct Person {
 impl Person {
     /// Returns the full URL of the person's image.
     pub fn people_image_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.people_image)
+        urls::opt_image(&self.people_image)
     }
 
     /// Returns the full URL of the person's role image.
     pub fn role_image_url(&self) -> Result<Url> {
-        URLS.opt_image(&self.role_image)
+        urls::opt_image(&self.role_image)
     }
 }
 
