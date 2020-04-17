@@ -249,11 +249,10 @@ async fn series_images() {
     let guard = get_client().await;
     let client = guard.as_ref().unwrap();
 
-    let images = client.series_images(PEII.id).await;
-
-    if images.is_err() {
-        panic!("Error fetching series images: {:?}", images.unwrap_err());
-    }
+    client
+        .series_images(PEII.id)
+        .await
+        .expect("Error fetching series images");
 }
 
 #[tokio::test]
@@ -263,14 +262,10 @@ async fn series_images_query() {
 
     let params = ImageQueryParams::with_key_type("series");
 
-    let images = client.series_images_query(PEII.id, &params).await;
-
-    if images.is_err() {
-        panic!(
-            "Error fetching series images query: {:?}",
-            images.unwrap_err()
-        );
-    }
+    client
+        .series_images_query(PEII.id, &params)
+        .await
+        .expect("Error fetching series images query");
 }
 
 #[tokio::test]
@@ -278,14 +273,10 @@ async fn series_images_query_params() {
     let guard = get_client().await;
     let client = guard.as_ref().unwrap();
 
-    let image_keys = client.series_images_query_params(PEII.id).await;
-
-    if image_keys.is_err() {
-        panic!(
-            "Error fetching series images query params: {:?}",
-            image_keys.unwrap_err()
-        );
-    }
+    client
+        .series_images_query_params(PEII.id)
+        .await
+        .expect("Error fetching series images query params");
 }
 
 #[tokio::test]
@@ -338,11 +329,10 @@ async fn updated() {
 
     let params = UpdatedParams::new(Utc::now() - Duration::days(1));
 
-    let updates = client.updated(&params).await;
-
-    if updates.is_err() {
-        panic!("Error fetching updated series: {:?}", updates.unwrap_err());
-    }
+    client
+        .updated(&params)
+        .await
+        .expect("Error fetching updated series");
 }
 
 #[tokio::test]
@@ -387,14 +377,10 @@ async fn movie_updates() {
 
     let since = Utc::now() - Duration::days(1);
 
-    let movie_updates = client.movie_updates(since).await;
-
-    if movie_updates.is_err() {
-        panic!(
-            "Error fetching movie updates: {:?}",
-            movie_updates.unwrap_err()
-        );
-    }
+    client
+        .movie_updates(since)
+        .await
+        .expect("Error fetching movie updates");
 }
 
 async fn assert_get_url_ok(url: Result<Url>) {
