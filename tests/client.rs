@@ -269,6 +269,23 @@ async fn series_images_query() {
 }
 
 #[tokio::test]
+async fn series_images_query_urls() {
+    let guard = get_client().await;
+    let client = guard.as_ref().unwrap();
+
+    let params = ImageQueryParams::with_key_type("series");
+
+    let images = client
+        .series_images_query(PEII.id, &params)
+        .await
+        .expect("Error fetching series images query to test url methods");
+
+    let image = images.first().unwrap();
+
+    assert_get_urls_ok(vec![image.file_name_url(), image.thumbnail_url()]).await;
+}
+
+#[tokio::test]
 async fn series_images_query_params() {
     let guard = get_client().await;
     let client = guard.as_ref().unwrap();
