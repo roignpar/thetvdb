@@ -136,7 +136,7 @@ macro_rules! series_banner_url_method {
         pub fn banner_url(&self) -> Result<Url> {
             urls::opt_image(&self.banner)
         }
-    }
+    };
 }
 
 macro_rules! series_website_url_method {
@@ -149,7 +149,7 @@ macro_rules! series_website_url_method {
         pub fn website_url(&self) -> Result<Url> {
             urls::series_website(&self.slug)
         }
-    }
+    };
 }
 
 impl SearchSeries {
@@ -293,7 +293,7 @@ macro_rules! series_url_methods {
         pub fn fanart_url(&self) -> Result<Url> {
             urls::opt_image(&self.fanart)
         }
-    }
+    };
 }
 
 impl Series {
