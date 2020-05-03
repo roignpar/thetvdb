@@ -14,6 +14,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 /// Error type containing possible failure cases of this crate.
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum Error {
     /// Occurs when [`reqwest`], the HTTP client underlying this crate, returns
     /// an error.
