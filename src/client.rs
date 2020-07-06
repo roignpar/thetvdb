@@ -1307,7 +1307,7 @@ impl TryFrom<TokenRes> for TokenData {
     fn try_from(res: TokenRes) -> Result<TokenData> {
         // TheTVDB API JWT public key is not available,
         // thus the use of `dangerous_unsafe_decode`
-        let payload = jsonwebtoken::dangerous_unsafe_decode::<TokenPayload>(&res.token)?.claims;
+        let payload = jsonwebtoken::dangerous_insecure_decode::<TokenPayload>(&res.token)?.claims;
 
         Ok(TokenData {
             token: res.token,
