@@ -156,7 +156,7 @@ lazy_static! {
     };
     pub static ref RELEASE: TestReleaseDate = TestReleaseDate {
         kind: "release_date".to_string(),
-        date: NaiveDate::from_ymd(1994, 9, 23),
+        date: NaiveDate::from_ymd(1995, 2, 9),
         country: "global".to_string()
     };
     pub static ref TSR_IMDB: TestRemoteID = TestRemoteID {
