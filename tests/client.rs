@@ -94,6 +94,7 @@ async fn series_urls() {
 }
 
 #[tokio::test]
+#[ignore]
 async fn series_last_modified() {
     let guard = get_client().await;
     let client = guard.as_ref().unwrap();
