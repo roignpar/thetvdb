@@ -78,7 +78,7 @@ pub mod response;
 #[doc(inline)]
 pub use client::Client;
 #[doc(inline)]
-pub use error::Error;
+pub use error::{Error, Result};
 
 #[cfg(test)]
 mod test_util {
