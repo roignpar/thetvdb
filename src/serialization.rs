@@ -129,10 +129,10 @@ pub mod optional_date_time {
     }
 }
 
-pub mod u16_string {
+pub mod u32_string {
     use super::*;
 
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<u16, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<u32, D::Error>
     where
         D: Deserializer<'de>,
     {
@@ -142,7 +142,7 @@ pub mod u16_string {
     }
 
     #[allow(clippy::trivially_copy_pass_by_ref)]
-    pub fn serialize<S>(u: &u16, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(u: &u32, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {

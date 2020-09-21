@@ -401,12 +401,12 @@ pub struct Episode {
     /// ID of the episode.
     pub id: EpisodeID,
     /// Season that episode is part of.
-    pub aired_season: Option<u16>,
+    pub aired_season: Option<u32>,
     /// Episode season ID.
     #[serde(rename = "airedSeasonID")]
     pub aired_season_id: Option<u32>,
     /// Episode number in season.
-    pub aired_episode_number: u16,
+    pub aired_episode_number: u32,
     /// Name of the episode.
     #[serde(deserialize_with = "ser::optional_string")]
     pub episode_name: Option<String>,
@@ -440,13 +440,13 @@ pub struct Episode {
     #[serde(deserialize_with = "ser::optional_string")]
     pub dvd_discid: Option<String>,
     /// DVD season.
-    pub dvd_season: Option<u16>,
+    pub dvd_season: Option<u32>,
     /// Episode's number on DVD.
-    pub dvd_episode_number: Option<u16>,
+    pub dvd_episode_number: Option<u32>,
     /// DVD chapter.
-    pub dvd_chapter: Option<u16>,
+    pub dvd_chapter: Option<u32>,
     /// Episode's absolute number.
-    pub absolute_number: Option<u16>,
+    pub absolute_number: Option<u32>,
     /// Path to episode's image.
     ///
     /// For the full URL use [`filename_url`](#method.filename_url).
@@ -457,11 +457,11 @@ pub struct Episode {
     /// User ID that last updated this episode.
     pub last_updated_by: Option<u32>,
     /// Season this episode airs after.
-    pub airs_after_season: Option<u16>,
+    pub airs_after_season: Option<u32>,
     /// Season thie episode airs before.
-    pub airs_before_season: Option<u16>,
+    pub airs_before_season: Option<u32>,
     /// Episode this episode airs before.
-    pub airs_before_episode: Option<u16>,
+    pub airs_before_episode: Option<u32>,
     /// Author of episode image.
     pub thumb_author: Option<u32>,
     /// Date and time image was added.
@@ -700,13 +700,13 @@ pub struct EpisodeSummary {
     /// Number of aired seasons.
     pub aired_seasons: Vec<String>,
     /// Number of aired episodes.
-    #[serde(with = "ser::u16_string")]
-    pub aired_episodes: u16,
+    #[serde(with = "ser::u32_string")]
+    pub aired_episodes: u32,
     /// Number of seasons on DVD.
     pub dvd_seasons: Vec<String>,
     /// Number of episodes on DVD.
-    #[serde(with = "ser::u16_string")]
-    pub dvd_episodes: u16,
+    #[serde(with = "ser::u32_string")]
+    pub dvd_episodes: u32,
 }
 
 /// Series image count data returned by [`Client::series_images`].

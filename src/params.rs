@@ -126,13 +126,13 @@ pub(crate) struct EpisodeQuery {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) absolute_number: Option<u16>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) aired_season: Option<u16>,
+    pub(crate) aired_season: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) aired_episode: Option<u16>,
+    pub(crate) aired_episode: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) dvd_season: Option<u16>,
+    pub(crate) dvd_season: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) dvd_episode: Option<u16>,
+    pub(crate) dvd_episode: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) imdb_id: Option<String>,
 }
@@ -191,25 +191,25 @@ impl EpisodeQueryParams {
     }
 
     /// Set the `airedSeason` parameter.
-    pub fn aired_season(mut self, season: u16) -> Self {
+    pub fn aired_season(mut self, season: u32) -> Self {
         self.query.aired_season = Some(season);
         self
     }
 
     /// Set the `airedEpisode` parameter.
-    pub fn aired_episode(mut self, episode: u16) -> Self {
+    pub fn aired_episode(mut self, episode: u32) -> Self {
         self.query.aired_episode = Some(episode);
         self
     }
 
     /// Set the `dvdSeason` parameter.
-    pub fn dvd_season(mut self, season: u16) -> Self {
+    pub fn dvd_season(mut self, season: u32) -> Self {
         self.query.dvd_season = Some(season);
         self
     }
 
     /// Set the `dvdEpisode` parameter.
-    pub fn dvd_episode(mut self, episode: u16) -> Self {
+    pub fn dvd_episode(mut self, episode: u32) -> Self {
         self.query.dvd_episode = Some(episode);
         self
     }

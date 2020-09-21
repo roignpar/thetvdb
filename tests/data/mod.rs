@@ -26,12 +26,12 @@ pub struct TestActor {
 #[derive(Debug)]
 pub struct TestEpisode {
     pub id: EpisodeID,
-    pub aired_season: u16,
+    pub aired_season: u32,
     pub aired_season_id: u32,
-    pub aired_episode_number: u16,
+    pub aired_episode_number: u32,
     pub episode_name: String,
     pub first_aired: NaiveDate,
-    pub absolute_number: u16,
+    pub absolute_number: u32,
     pub series_id: SeriesID,
     pub imdb_id: String,
 }
@@ -39,9 +39,9 @@ pub struct TestEpisode {
 #[derive(Debug)]
 pub struct TestEpisodeSummary {
     pub aired_seasons: Vec<String>,
-    pub aired_episodes: u16,
+    pub aired_episodes: u32,
     pub dvd_seasons: Vec<String>,
-    pub dvd_episodes: u16,
+    pub dvd_episodes: u32,
 }
 
 #[derive(Debug)]
