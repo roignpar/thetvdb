@@ -61,7 +61,7 @@ async fn search_urls() {
 
     let series = search_results.first().unwrap();
 
-    assert_get_urls_ok(vec![series.banner_url(), series.website_url()]).await;
+    assert_get_urls_ok(vec![/*series.banner_url(),*/ series.website_url()]).await;
 }
 
 #[tokio::test]
