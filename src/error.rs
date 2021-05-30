@@ -20,7 +20,7 @@ pub enum Error {
     /// an error.
     ///
     /// [`reqwest`]: https://docs.rs/reqwest/latest/reqwest/index.html
-    HTTP(ReqwestError),
+    Http(ReqwestError),
 
     /// IO error from `std`.
     IO(IOError),
@@ -76,7 +76,7 @@ impl fmt::Display for Error {
         use Error::*;
 
         match self {
-            HTTP(e) => write!(f, "HTTP error: {}", e),
+            Http(e) => write!(f, "HTTP error: {}", e),
             IO(e) => write!(f, "IO error: {}", e),
             InvalidAPIKey => write!(f, "Invalid API key"),
             ServerError => write!(f, "API Server error"),
@@ -98,7 +98,7 @@ impl StdError for Error {
         use Error::*;
 
         match self {
-            HTTP(e) => Some(e),
+            Http(e) => Some(e),
             IO(e) => Some(e),
             InvalidHTTPHeader(e) => Some(e),
             InvalidDateFormat(e) => Some(e),
@@ -117,7 +117,7 @@ impl StdError for Error {
 
 impl From<ReqwestError> for Error {
     fn from(e: ReqwestError) -> Self {
-        Self::HTTP(e)
+        Self::Http(e)
     }
 }
 
