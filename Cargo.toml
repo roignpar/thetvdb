@@ -11,21 +11,21 @@ categories = ["api-bindings", "asynchronous"]
 edition = "2018"
 
 [dependencies]
-serde = { version = "1.0.115", features = ["derive"] }
-url = "2.1.1"
-chrono = { version = "0.4.15", features = ["serde"] }
-futures = "0.3.5"
+serde = { version = "1.0.126", features = ["derive"] }
+url = "2.2.2"
+chrono = { version = "0.4.19", features = ["serde"] }
+futures = "0.3.15"
 jsonwebtoken = "7.2.0"
 lazy_static = "1.4.0"
-optfield = "0.1.0"
+optfield = "0.2.0"
 
 [dependencies.reqwest]
-version = "0.10.7"
+version = "0.11.3"
 default-features = false
 features = ["json", "rustls-tls"]
 
 [dev-dependencies]
-serde_json = "1.0.57"
-tokio = { version = "0.2.22", features = ["macros"] }
-mockito = "0.27.0"
-version-sync = "0.9.1"
+serde_json = "1.0.64"
+tokio = { version = "1.6.1", features = ["macros", "rt-multi-thread"] }
+mockito = "0.30.0"
+version-sync = "0.9.2"
